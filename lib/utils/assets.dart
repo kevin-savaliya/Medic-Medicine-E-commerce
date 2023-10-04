@@ -19,7 +19,10 @@ class AppIcons {
   static const String verify = 'asset/icons/verify.svg';
   static const String homeIcon = 'asset/icons/home.svg';
   static const String pin = 'asset/icons/pin.svg';
+  static const String explore = 'asset/icons/explore.svg';
+  static const String add = 'asset/icons/addIcon.svg';
   static const String like = 'asset/icons/like.svg';
+  static const String favourite = 'asset/icons/favourite.svg';
   static const String back = 'asset/icons/backIcon.svg';
   static const String bag = 'asset/icons/bag.svg';
   static const String search = 'asset/icons/searchMedic.svg';

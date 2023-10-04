@@ -537,6 +537,13 @@ class HomeScreen extends StatelessWidget {
                     label: "Home"),
                 BottomNavigationBarItem(
                     icon: SvgPicture.asset(
+                      AppIcons.explore,
+                      color: controller.pageIndex.value == 1
+                          ? AppColors.primaryColor
+                          : AppColors.txtGrey,
+                    ),
+                    label: "Explore"), BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
                       AppIcons.cartIcon,
                       color: controller.pageIndex.value == 1
                           ? AppColors.primaryColor
@@ -545,12 +552,12 @@ class HomeScreen extends StatelessWidget {
                     label: "Cart"),
                 BottomNavigationBarItem(
                     icon: SvgPicture.asset(
-                      AppIcons.reminderIcon,
+                      AppIcons.favourite,
                       color: controller.pageIndex.value == 2
                           ? AppColors.primaryColor
                           : AppColors.txtGrey,
                     ),
-                    label: "Reminder"),
+                    label: "Favourite"),
                 BottomNavigationBarItem(
                     icon: SvgPicture.asset(
                       AppIcons.profileIcon,
