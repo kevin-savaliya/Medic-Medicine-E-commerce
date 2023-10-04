@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/home_controller.dart';
 import 'package:medic/screen/medicine_category.dart';
+import 'package:medic/screen/medicine_details.dart';
 import 'package:medic/screen/medicine_screen.dart';
 import 'package:medic/screen/popular_medicine.dart';
+import 'package:medic/screen/profile_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -28,7 +31,7 @@ class HomeScreen extends StatelessWidget {
           return Scaffold(
             body: Center(
                 child: Container(
-              child: const Text("Cart"),
+              child: const Text("Explore"),
             )),
             bottomNavigationBar: bottomNavigationBar(context),
           );
@@ -36,7 +39,7 @@ class HomeScreen extends StatelessWidget {
           return Scaffold(
             body: Center(
                 child: Container(
-              child: const Text("Reminder"),
+              child: const Text("Cart"),
             )),
             bottomNavigationBar: bottomNavigationBar(context),
           );
@@ -44,8 +47,13 @@ class HomeScreen extends StatelessWidget {
           return Scaffold(
             body: Center(
                 child: Container(
-              child: const Text("Profile"),
+              child: const Text("Favourite"),
             )),
+            bottomNavigationBar: bottomNavigationBar(context),
+          );
+        } else if (controller.pageIndex.value == 4) {
+          return Scaffold(
+            body: ProfileScreen(),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         }
@@ -103,6 +111,33 @@ class HomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(5.0),
                   child: SvgPicture.asset(AppIcons.notification),
                 ))
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+        floatingActionButton: SpeedDial(
+          icon: Icons.add,
+          mini: false,
+          spaceBetweenChildren: 4,
+          activeIcon: Icons.close,
+          closeDialOnPop: true,
+          overlayColor: AppColors.darkPrimaryColor,
+          childrenButtonSize: Size(60, 60),
+          iconTheme: IconThemeData(color: AppColors.white),
+          backgroundColor: AppColors.primaryColor,
+          children: [
+            SpeedDialChild(
+                onTap: () {},
+                child: SvgPicture.asset(
+                  AppIcons.notification,
+                  color: AppColors.primaryColor,
+                ),
+                backgroundColor: AppColors.white,
+                label: "Add Reminders",labelStyle: Theme.of(context).textTheme.titleMedium),
+            SpeedDialChild(
+                onTap: () {},
+                child: SvgPicture.asset(AppIcons.copy),
+                backgroundColor: AppColors.white,
+                label: "Add Prescription",labelStyle: Theme.of(context).textTheme.titleMedium),
           ],
         ),
         body: SingleChildScrollView(
@@ -328,167 +363,176 @@ class HomeScreen extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: 3,
                     itemBuilder: (context, index) {
-                      return Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                        width: 200,
-                        decoration: BoxDecoration(
-                            color: AppColors.decsGrey,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppColors.decsGrey)),
-                        child: Column(
-                          children: [
-                            Expanded(
-                                flex: 5,
-                                child: Container(
-                                  width: double.infinity,
-                                  child: Center(
-                                    child: Stack(
-                                      fit: StackFit.expand,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(25.0),
-                                          child: Image.asset(
-                                            AppImages.medicineBox4,
-                                            height: 50,
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(() => MedicineDetails());
+                        },
+                        child: Container(
+                          margin:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                          width: 200,
+                          decoration: BoxDecoration(
+                              color: AppColors.decsGrey,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: AppColors.decsGrey)),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                    width: double.infinity,
+                                    child: Center(
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(25.0),
+                                            child: Image.asset(
+                                              AppImages.medicineBox4,
+                                              height: 50,
+                                            ),
                                           ),
-                                        ),
-                                        Positioned(
-                                            top: 10,
-                                            right: 10,
-                                            child:
-                                                SvgPicture.asset(AppIcons.like))
-                                      ],
+                                          Positioned(
+                                              top: 10,
+                                              right: 10,
+                                              child: SvgPicture.asset(
+                                                  AppIcons.like))
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                )),
-                            Expanded(
-                              flex: 6,
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(12),
-                                        bottomRight: Radius.circular(12))),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Iconic Remedies",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(
-                                              fontFamily: AppFont.fontMedium,
-                                              color: AppColors.darkPrimaryColor,
-                                              fontSize: 13.5),
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ),
-                                    Text(
-                                      "Aspirin",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(
-                                              fontFamily: AppFont.fontRegular,
-                                              color: AppColors.txtGrey,
-                                              fontSize: 12),
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ),
-                                    SmoothStarRating(
-                                      rating: 3,
-                                      allowHalfRating: true,
-                                      defaultIconData: Icons.star,
-                                      filledIconData: Icons.star,
-                                      halfFilledIconData: Icons.star_half,
-                                      starCount: 5,
-                                      spacing: 2,
-                                      onRatingChanged: (rating) {},
-                                      size: 15,
-                                      color: AppColors.secondaryColor,
-                                      borderColor: AppColors.indGrey,
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "SLE 120",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .displayMedium!
-                                                  .copyWith(
-                                                      color: AppColors
-                                                          .darkPrimaryColor,
-                                                      fontFamily:
-                                                          AppFont.fontMedium),
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              "30% Off",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                      fontSize: 10,
-                                                      color: AppColors
-                                                          .primaryColor,
-                                                      fontFamily:
-                                                          AppFont.fontMedium),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Expanded(
-                                          child: ElevatedButton(
-                                              onPressed: () {},
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor: AppColors
-                                                      .tilePrimaryColor,
-                                                  fixedSize: Size(110, 20),
-                                                  elevation: 0,
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30))),
-                                              child: Text(
-                                                "Add to cart",
+                                  )),
+                              Expanded(
+                                flex: 6,
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(12),
+                                          bottomRight: Radius.circular(12))),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Iconic Remedies",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                                fontFamily: AppFont.fontMedium,
+                                                color:
+                                                    AppColors.darkPrimaryColor,
+                                                fontSize: 13.5),
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      Text(
+                                        "Aspirin",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                                fontFamily: AppFont.fontRegular,
+                                                color: AppColors.txtGrey,
+                                                fontSize: 12),
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      SmoothStarRating(
+                                        rating: 3,
+                                        allowHalfRating: true,
+                                        defaultIconData: Icons.star,
+                                        filledIconData: Icons.star,
+                                        halfFilledIconData: Icons.star_half,
+                                        starCount: 5,
+                                        spacing: 2,
+                                        onRatingChanged: (rating) {},
+                                        size: 15,
+                                        color: AppColors.secondaryColor,
+                                        borderColor: AppColors.indGrey,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "SLE 120",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .displayMedium!
+                                                    .copyWith(
+                                                        color: AppColors
+                                                            .darkPrimaryColor,
+                                                        fontFamily:
+                                                            AppFont.fontMedium),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                "30% Off",
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleSmall!
                                                     .copyWith(
+                                                        fontSize: 10,
                                                         color: AppColors
                                                             .primaryColor,
                                                         fontFamily:
                                                             AppFont.fontMedium),
-                                              )),
-                                        )
-                                      ],
-                                    )
-                                  ],
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Expanded(
+                                            child: ElevatedButton(
+                                                onPressed: () {},
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor: AppColors
+                                                        .tilePrimaryColor,
+                                                    fixedSize: Size(110, 20),
+                                                    elevation: 0,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        30))),
+                                                child: Text(
+                                                  "Add to cart",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleSmall!
+                                                      .copyWith(
+                                                          color: AppColors
+                                                              .primaryColor,
+                                                          fontFamily: AppFont
+                                                              .fontMedium),
+                                                )),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -528,42 +572,58 @@ class HomeScreen extends StatelessWidget {
               },
               items: [
                 BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      AppIcons.homeIcon,
-                      color: controller.pageIndex.value == 0
-                          ? AppColors.primaryColor
-                          : AppColors.txtGrey,
+                    icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: SvgPicture.asset(
+                        AppIcons.homeIcon,
+                        color: controller.pageIndex.value == 0
+                            ? AppColors.primaryColor
+                            : AppColors.txtGrey,
+                      ),
                     ),
                     label: "Home"),
                 BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      AppIcons.explore,
-                      color: controller.pageIndex.value == 1
-                          ? AppColors.primaryColor
-                          : AppColors.txtGrey,
+                    icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: SvgPicture.asset(
+                        AppIcons.explore,
+                        color: controller.pageIndex.value == 1
+                            ? AppColors.primaryColor
+                            : AppColors.txtGrey,
+                      ),
                     ),
-                    label: "Explore"), BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      AppIcons.cartIcon,
-                      color: controller.pageIndex.value == 1
-                          ? AppColors.primaryColor
-                          : AppColors.txtGrey,
+                    label: "Explore"),
+                BottomNavigationBarItem(
+                    icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: SvgPicture.asset(
+                        AppIcons.cartIcon,
+                        color: controller.pageIndex.value == 2
+                            ? AppColors.primaryColor
+                            : AppColors.txtGrey,
+                      ),
                     ),
                     label: "Cart"),
                 BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      AppIcons.favourite,
-                      color: controller.pageIndex.value == 2
-                          ? AppColors.primaryColor
-                          : AppColors.txtGrey,
+                    icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: SvgPicture.asset(
+                        AppIcons.favourite,
+                        color: controller.pageIndex.value == 3
+                            ? AppColors.primaryColor
+                            : AppColors.txtGrey,
+                      ),
                     ),
                     label: "Favourite"),
                 BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      AppIcons.profileIcon,
-                      color: controller.pageIndex.value == 3
-                          ? AppColors.primaryColor
-                          : AppColors.txtGrey,
+                    icon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: SvgPicture.asset(
+                        AppIcons.profileIcon,
+                        color: controller.pageIndex.value == 4
+                            ? AppColors.primaryColor
+                            : AppColors.txtGrey,
+                      ),
                     ),
                     label: "Profile"),
               ]),

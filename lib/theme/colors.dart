@@ -32,6 +32,7 @@ class AppColors {
   static Color skipGrey = const Color(0xff7C7C7C);
   static Color decsGrey = const Color(0xffF7F7F7);
   static Color phoneGrey = const Color(0xffBFBFBF);
+  static Color lineGrey = const Color(0xffE5E5E5);
   static Color indGrey = const Color(0xffd9d9d9);
   static Color splashdetail = const Color(0xFFF2F2F2);
   static Color transparentDetails = const Color(0xFFF7F7F7);
@@ -41,4 +42,7 @@ class AppColors {
   static Color listColor3 = const Color(0xFFD26293);
   static Color listColor4 = const Color(0xFF25A79A);
   static Color listColor5 = const Color(0xFF6CDC06);
+
+
+  static Color red = const Color(0xFFE83A0E);
 }
