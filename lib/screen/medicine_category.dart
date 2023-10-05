@@ -27,7 +27,7 @@ class MedicineCategory extends StatelessWidget {
           ),
         ),
         titleSpacing: 0,
-        title: Text(ConstString.medicineCategory,style: Theme.of(context).textTheme.titleLarge),
+        title: Text(ConstString.medicineCategory,style: Theme.of(context).textTheme.titleLarge!.copyWith(fontFamily: AppFont.fontBold)),
         elevation: 1.5,shadowColor: AppColors.txtGrey.withOpacity(0.2),
         actions: [
           GestureDetector(onTap: () {

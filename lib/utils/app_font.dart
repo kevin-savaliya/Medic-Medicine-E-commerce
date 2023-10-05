@@ -4,4 +4,5 @@ class AppFont {
   static String fontBold = 'Bold';
   static String fontExtraBold = 'ExtraBold';
   static String fontLight = 'Light';
+  static String fontSemiBold = 'SemiBold';
 }

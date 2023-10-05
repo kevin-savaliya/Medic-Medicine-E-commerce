@@ -14,7 +14,6 @@ class AppImages {
   static const String medicineBox2 = 'asset/images/medicinebox2.png';
   static const String medicineBox3 = 'asset/images/medicinebox3.png';
 
-
   static const String medicineBox4 = 'asset/medicineboxPng.png';
   static const String medicineBox = 'asset/medicinebox.jpg';
 }
@@ -24,19 +23,33 @@ class AppIcons {
   static const String verify = 'asset/icons/verify.svg';
   static const String homeIcon = 'asset/icons/home.svg';
   static const String fillpin = 'asset/icons/pin.svg';
+  static const String fillpinround = 'asset/icons/fillpinround.svg';
   static const String pin = 'asset/icons/pin1.svg';
+  static const String delete = 'asset/icons/deleteMedic.svg';
+  static const String edit = 'asset/icons/edit.svg';
+  static const String homeAdd = 'asset/icons/homeAdd.svg';
+  static const String work = 'asset/icons/work.svg';
+  static const String hotel = 'asset/icons/hotel.svg';
+  static const String other = 'asset/icons/other.svg';
+  static const String checkFill = 'asset/icons/checkFill.svg';
+  static const String more = 'asset/icons/moreMedic.svg';
   static const String explore = 'asset/icons/explore.svg';
   static const String add = 'asset/icons/addIcon.svg';
   static const String gallery = 'asset/icons/gallery.svg';
   static const String camera = 'asset/icons/camera.svg';
   static const String file = 'asset/icons/fileIcon.svg';
+  static const String creditCard = 'asset/icons/creditCard.svg';
+  static const String phone = 'asset/icons/phone.svg';
   static const String copy = 'asset/icons/copyMedic.svg';
   static const String like = 'asset/icons/like.svg';
   static const String favourite = 'asset/icons/favourite.svg';
   static const String back = 'asset/icons/backIcon.svg';
   static const String timer = 'asset/icons/timerMedic.svg';
+  static const String fillAdd = 'asset/icons/filladd.svg';
   static const String logout = 'asset/icons/logout.svg';
   static const String reminder = 'asset/icons/notification2.svg';
+  static const String addReminder = 'asset/icons/addReminder.svg';
+  static const String uploadPres = 'asset/icons/uploadPres.svg';
   static const String bag = 'asset/icons/bag.svg';
   static const String search = 'asset/icons/searchMedic.svg';
   static const String notification = 'asset/icons/notification.svg';

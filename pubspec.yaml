@@ -74,19 +74,22 @@ flutter:
   fonts:
     - family: Regular
       fonts:
-        - asset: asset/fonts/Gilmer_Regular.otf
+        - asset: asset/fonts/Inter-Regular.ttf
     - family: Medium
       fonts:
-        - asset: asset/fonts/Gilmer_Medium.otf
+        - asset: asset/fonts/Inter-Medium.ttf
     - family: Light
       fonts:
-        - asset: asset/fonts/Gilmer_Light.otf
+        - asset: asset/fonts/Inter-Light.ttf
     - family: Bold
       fonts:
-        - asset: asset/fonts/Gilmer_Bold.otf
+        - asset: asset/fonts/Inter-Bold.ttf
+    - family: SemiBold
+      fonts:
+        - asset: asset/fonts/Inter-SemiBold.ttf
     - family: ExtraBold
       fonts:
-        - asset: asset/fonts/Gilmer_Heavy.otf
+        - asset: asset/fonts/Inter-ExtraBold.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

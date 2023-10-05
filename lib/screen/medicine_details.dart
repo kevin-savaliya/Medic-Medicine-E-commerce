@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
+import 'package:medic/screen/order_placement_screen.dart';
 import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
@@ -806,7 +807,7 @@ class MedicineDetails extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Container(
-                height: 250,
+                height: 260,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: 3,
@@ -942,7 +943,9 @@ class MedicineDetails extends StatelessWidget {
                                       ),
                                       Expanded(
                                         child: ElevatedButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+
+                                            },
                                             style: ElevatedButton.styleFrom(
                                                 backgroundColor:
                                                     AppColors.tilePrimaryColor,

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/screen/myaddress_screen.dart';
+import 'package:medic/screen/notification_screen.dart';
+import 'package:medic/screen/order_history.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/app_dialogue.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -51,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium!
-                    .copyWith(fontFamily: AppFont.fontMedium),
+                    .copyWith(fontFamily: AppFont.fontBold),
               ),
               SizedBox(
                 height: 5,
@@ -78,10 +81,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 title: Text(
                   ConstString.myAddress,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(fontFamily: AppFont.fontMedium),
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
                 ),
               ),
               Padding(
@@ -94,7 +95,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Get.to(() => OrderHistory());
+                },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(AppIcons.timer, height: 22),
                 trailing: Icon(
@@ -104,10 +107,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 title: Text(
                   ConstString.orderHistory,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(fontFamily: AppFont.fontMedium),
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
                 ),
               ),
               Padding(
@@ -133,10 +134,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 title: Text(
                   ConstString.reminder,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(fontFamily: AppFont.fontMedium),
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
                 ),
               ),
               Padding(
@@ -163,10 +162,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 title: Text(
                   ConstString.prescription,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(fontFamily: AppFont.fontMedium),
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
                 ),
               ),
               Padding(
@@ -179,7 +176,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Get.to(() => NotificationScreen());
+                },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(
                   AppIcons.notification,
@@ -192,10 +191,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 title: Text(
                   ConstString.notification,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(fontFamily: AppFont.fontMedium),
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
                 ),
               ),
               Padding(
@@ -208,7 +205,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  logoutDialogue(context);
+                },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(
                   AppIcons.logout,
@@ -217,7 +216,7 @@ class ProfileScreen extends StatelessWidget {
                 title: Text(
                   ConstString.logout,
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontFamily: AppFont.fontMedium, color: AppColors.red),
+                      fontFamily: AppFont.fontBold, color: AppColors.red),
                 ),
               ),
             ],
