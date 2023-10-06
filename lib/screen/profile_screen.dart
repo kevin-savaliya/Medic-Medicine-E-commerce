@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:medic/screen/myaddress_screen.dart';
 import 'package:medic/screen/notification_screen.dart';
 import 'package:medic/screen/order_history.dart';
+import 'package:medic/screen/reminder_screen.dart';
+import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -121,7 +123,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Get.to(()=>ReminderScreen());
+                },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(
                   AppIcons.reminder,
@@ -148,7 +152,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  Get.to(()=>UploadPrescription());
+                },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(
                   AppIcons.file,

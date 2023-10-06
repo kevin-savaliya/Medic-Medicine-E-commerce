@@ -47,17 +47,23 @@ class ThemeColor {
           backgroundColor: Colors.white,
           hourMinuteColor: MaterialStateColor.resolveWith((states) =>
               states.contains(MaterialState.selected)
-                  ? AppColors.lightGrey
-                  : AppColors.lightGrey),
+                  ? AppColors.tilePrimaryColor
+                  : AppColors.decsGrey),
           hourMinuteTextColor: MaterialStateColor.resolveWith(
               (states) => AppColors.primaryColor),
-          dialHandColor: Colors.pink.shade200,
-          dialBackgroundColor: AppColors.lightGrey,
-          dayPeriodColor: AppColors.primaryColor,
-          dialTextColor: MaterialStateColor.resolveWith((states) =>
+          dialHandColor: AppColors.primaryColor,
+          dialBackgroundColor: AppColors.tilePrimaryColor,
+          dayPeriodColor: MaterialStateColor.resolveWith((states) =>
               states.contains(MaterialState.selected)
-                  ? Colors.black
-                  : Colors.black),
+                  ? AppColors.primaryColor
+                  : AppColors.decsGrey),
+          dayPeriodTextColor: MaterialStateColor.resolveWith((states) =>
+              states.contains(MaterialState.selected)
+                  ? AppColors.tilePrimaryColor
+                  : AppColors.primaryColor),
+          dayPeriodBorderSide: BorderSide(color: AppColors.white),
+          dialTextColor: MaterialStateColor.resolveWith(
+              (states) => states.contains(MaterialState.selected) ? Colors.white : Colors.black),
           entryModeIconColor: AppColors.primaryColor),
       buttonTheme: ButtonThemeData(
         height: 50,
@@ -210,7 +216,6 @@ class ThemeColor {
           fontSize: 16.5,
           fontFamily: AppFont.fontMedium,
           color: AppColors.darkPrimaryColor),
-
     );
   }
 }

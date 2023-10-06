@@ -28,7 +28,10 @@ class UploadPrescription extends StatelessWidget {
         ),
         titleSpacing: 0,
         title: Text(ConstString.uploadPres,
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(fontFamily: AppFont.fontBold)),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(fontFamily: AppFont.fontBold)),
         elevation: 1.5,
         shadowColor: AppColors.txtGrey.withOpacity(0.2),
       ),
@@ -228,7 +231,8 @@ class UploadPrescription extends StatelessWidget {
                                           .textTheme
                                           .titleSmall!
                                           .copyWith(
-                                              fontFamily: AppFont.fontMedium),
+                                              fontFamily: AppFont.fontMedium,
+                                              fontSize: 14),
                                     )
                                   ],
                                 ),
@@ -262,7 +266,8 @@ class UploadPrescription extends StatelessWidget {
                                           .textTheme
                                           .titleSmall!
                                           .copyWith(
-                                              fontFamily: AppFont.fontMedium),
+                                              fontFamily: AppFont.fontMedium,
+                                              fontSize: 14),
                                     )
                                   ],
                                 ),
@@ -300,7 +305,8 @@ class UploadPrescription extends StatelessWidget {
                                         .textTheme
                                         .titleSmall!
                                         .copyWith(
-                                            fontFamily: AppFont.fontMedium),
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 14),
                                   ),
                                   SizedBox(height: 5),
                                   Text(
@@ -309,7 +315,7 @@ class UploadPrescription extends StatelessWidget {
                                         .textTheme
                                         .titleSmall!
                                         .copyWith(
-                                            fontSize: 11,
+                                            fontSize: 12,
                                             color: AppColors.txtGrey),
                                   ),
                                 ],
@@ -345,7 +351,8 @@ class UploadPrescription extends StatelessWidget {
                                         .textTheme
                                         .titleSmall!
                                         .copyWith(
-                                            fontFamily: AppFont.fontMedium),
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 14),
                                   ),
                                   SizedBox(height: 5),
                                   Text(
@@ -354,7 +361,7 @@ class UploadPrescription extends StatelessWidget {
                                         .textTheme
                                         .titleSmall!
                                         .copyWith(
-                                            fontSize: 11,
+                                            fontSize: 12,
                                             color: AppColors.txtGrey),
                                   ),
                                 ],

@@ -337,7 +337,7 @@ class AddAddressDetail extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 220,
+              height: 180,
             ),
             ElevatedButton(
                 onPressed: () {

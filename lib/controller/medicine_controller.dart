@@ -1,8 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/assets.dart';
+import 'package:medic/utils/string.dart';
 
 class MedicineController extends GetxController {
+  RxString selectedPaymentMethod = "".obs;
+
+  RxString frequencyValue = "".obs;
+
+  TimeOfDay selectedTime = TimeOfDay.now();
+  TextEditingController timeController = TextEditingController();
+
   List medicineCategoryList = [
     "Allopathy",
     "Ayurveda",
@@ -61,4 +70,18 @@ class MedicineController extends GetxController {
     "Benadryl",
     "Nexium"
   ];
+
+  List paymentMethod = [
+    ConstString.creditCard,
+    ConstString.orangeMoney,
+    ConstString.afriMoney
+  ];
+
+  List paymentMethodIcon = [
+    AppIcons.creditCard,
+    AppIcons.orangeMoney,
+    AppIcons.africell,
+  ];
+
+  List<String> frequencyList = ["Everyday","Weekly","Monthly","Yearly"];
 }

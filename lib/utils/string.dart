@@ -2,12 +2,16 @@ class ConstString {
   static const String next = "Next";
   static const String btnContinue = "Continue";
   static const String sendOTP = "Send OTP";
+  static const String save = "Save";
   static const String resendOTP = "Resend OTP";
   static const String saveDetails = "Save details";
   static const String completed = "Completed";
   static const String reorder = "Reorder";
   static const String cancle = "Cancle";
+  static const String delete = "Delete";
+  static const String takeMedicine = "Take Medicine";
   static const String home = "Home";
+  static const String placeOrder = "Place Order";
   static const String patient = "Patient";
   static const String orderNo = "Order No";
   static const String billDetail = "Bill Details";
@@ -15,8 +19,15 @@ class ConstString {
   static const String cartValue = "Cart value";
   static const String shipping = "Shipping/Delivery Fee";
   static const String total = "Total";
+  static const String subtotal = "Subtotal";
+  static const String discount = "Discount";
+  static const String totalAmount = "Total Amount";
+  static const String paymentMethod = "Payment Method";
   static const String paymentDetails = "Payment Details";
+  static const String deliveryAddress = "Delivery Address";
   static const String creditCard = "Credit Card";
+  static const String orangeMoney = "Orange Money";
+  static const String afriMoney = "Afri Money";
   static const String addressDetail = "Address Details";
   static const String seller = "Seller Details";
   static const String byMedic = "By Medic";
@@ -45,14 +56,20 @@ class ConstString {
   static const String enterPhone = "Enter Your Phone Number To Continue";
   static const String enterOTP = "Enter OTP Received Your Phone Number";
   static const String verifyPhone = "Verify Your Phone Number";
-  static const String accountVerified = "Your account has been verified successfully ";
-
+  static const String accountVerified =
+      "Your account has been verified successfully ";
 
   static const String medicineCategory = "Medicines Categories";
   static const String viewAll = "View all";
   static const String popularMedicine = "Popular Medicines";
   static const String orderPlacement = "Order Placement";
+  static const String addMedicine = "Add Medicines";
   static const String medicine = "Medicines";
+  static const String medicineName = "Medicine Name";
+  static const String amount = "Amount";
+  static const String dosage = "Dosage";
+  static const String frequency = "Frequency";
+  static const String time = "Time";
   static const String recommended = "Recommended For You";
   static const String uploadPres = "Upload Prescription";
   static const String myAddress = "My Address";
@@ -69,15 +86,14 @@ class ConstString {
   static const String area = "Area, Sector, Locality*";
   static const String landmark = "Landmark";
 
-
   static const String Analgesics = "Analgesics";
   static const String Antivirals = "Antivirals";
   static const String Antibiotics = "Antibiotics";
   static const String Antacids = "Antacids";
   static const String Abilify = "Abilify";
 
-
-  static const String prescriptionRequirement = "Prescription Requirement For \nThis Medicine";
+  static const String prescriptionRequirement =
+      "Prescription Requirement For \nThis Medicine";
   static const String description = "Description";
   static const String benefits = "Benefits";
   static const String uses = "Uses";
@@ -87,7 +103,6 @@ class ConstString {
   static const String rating_review = "Ratings and Reviews";
   static const String howwork = "How it Works";
   static const String quickOrder = "Quick Order via \nPrescriptions";
-  static const String uploadphoto = "Upload the photo and we will deliver \nthe medicines";
-
-
+  static const String uploadphoto =
+      "Upload the photo and we will deliver \nthe medicines";
 }

@@ -8,9 +8,12 @@ import 'package:medic/controller/home_controller.dart';
 import 'package:medic/screen/medicine_category.dart';
 import 'package:medic/screen/medicine_details.dart';
 import 'package:medic/screen/medicine_screen.dart';
+import 'package:medic/screen/notification_screen.dart';
 import 'package:medic/screen/order_placement_screen.dart';
 import 'package:medic/screen/popular_medicine.dart';
 import 'package:medic/screen/profile_screen.dart';
+import 'package:medic/screen/reminder_screen.dart';
+import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -32,20 +35,17 @@ class HomeScreen extends StatelessWidget {
           );
         } else if (controller.pageIndex.value == 1) {
           return Scaffold(
-            body: const Center(
-                child: Text("Explore")),
+            body: const Center(child: Text("Explore")),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 2) {
           return Scaffold(
-            body: const Center(
-                child: Text("Cart")),
+            body: const Center(child: Text("Cart")),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 3) {
           return Scaffold(
-            body: const Center(
-                child: Text("Favourite")),
+            body: const Center(child: Text("Favourite")),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 4) {
@@ -102,7 +102,9 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(() => NotificationScreen());
+              },
               icon: Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: SvgPicture.asset(AppIcons.notification),
@@ -122,7 +124,9 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: AppColors.primaryColor,
         children: [
           SpeedDialChild(
-              onTap: () {},
+              onTap: () {
+                Get.to(() => ReminderScreen());
+              },
               child: SvgPicture.asset(
                 AppIcons.addReminder,
                 color: AppColors.primaryColor,
@@ -131,7 +135,9 @@ class HomeScreen extends StatelessWidget {
               label: "Add Reminders",
               labelStyle: Theme.of(context).textTheme.titleMedium),
           SpeedDialChild(
-              onTap: () {},
+              onTap: () {
+                Get.to(() => UploadPrescription());
+              },
               child: SvgPicture.asset(AppIcons.uploadPres),
               backgroundColor: AppColors.white,
               label: "Upload Prescription",
@@ -165,23 +171,23 @@ class HomeScreen extends StatelessWidget {
                       fontSize: 14,
                       color: AppColors.skipGrey),
                   border: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                        color: Colors.transparent, width: 0.5),
+                    borderSide:
+                        const BorderSide(color: Colors.transparent, width: 0.5),
                     borderRadius: BorderRadius.circular(30),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                        color: Colors.transparent, width: 0.5),
+                    borderSide:
+                        const BorderSide(color: Colors.transparent, width: 0.5),
                     borderRadius: BorderRadius.circular(30),
                   ),
                   disabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                        color: Colors.transparent, width: 0.5),
+                    borderSide:
+                        const BorderSide(color: Colors.transparent, width: 0.5),
                     borderRadius: BorderRadius.circular(30),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                        color: Colors.transparent, width: 0.5),
+                    borderSide:
+                        const BorderSide(color: Colors.transparent, width: 0.5),
                     borderRadius: BorderRadius.circular(30),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
@@ -198,12 +204,11 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Text(
                     ConstString.medicineCategory,
-                    style:
-                        Theme.of(context).textTheme.displayMedium!.copyWith(
-                              color: AppColors.darkPrimaryColor,
-                              fontFamily: AppFont.fontMedium,
-                              fontSize: 15.5,
-                            ),
+                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                          color: AppColors.darkPrimaryColor,
+                          fontFamily: AppFont.fontMedium,
+                          fontSize: 15.5,
+                        ),
                   ),
                   TextButton(
                       onPressed: () {
@@ -211,13 +216,10 @@ class HomeScreen extends StatelessWidget {
                       },
                       child: Text(
                         ConstString.viewAll,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(
-                                color: AppColors.primaryColor,
-                                fontFamily: AppFont.fontMedium,
-                                fontSize: 14),
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: AppColors.primaryColor,
+                            fontFamily: AppFont.fontMedium,
+                            fontSize: 14),
                       ))
                 ],
               ),
@@ -231,8 +233,7 @@ class HomeScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          SvgPicture.asset(
-                              controller.categoryImageList[index]),
+                          SvgPicture.asset(controller.categoryImageList[index]),
                           const SizedBox(
                             height: 10,
                           ),
@@ -259,12 +260,11 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Text(
                     ConstString.popularMedicine,
-                    style:
-                        Theme.of(context).textTheme.displayMedium!.copyWith(
-                              color: AppColors.darkPrimaryColor,
-                              fontFamily: AppFont.fontMedium,
-                              fontSize: 15.5,
-                            ),
+                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                          color: AppColors.darkPrimaryColor,
+                          fontFamily: AppFont.fontMedium,
+                          fontSize: 15.5,
+                        ),
                   ),
                   TextButton(
                       onPressed: () {
@@ -272,13 +272,10 @@ class HomeScreen extends StatelessWidget {
                       },
                       child: Text(
                         ConstString.viewAll,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(
-                                color: AppColors.primaryColor,
-                                fontFamily: AppFont.fontMedium,
-                                fontSize: 14),
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: AppColors.primaryColor,
+                            fontFamily: AppFont.fontMedium,
+                            fontSize: 14),
                       ))
                 ],
               ),
@@ -332,12 +329,11 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Text(
                     ConstString.recommended,
-                    style:
-                        Theme.of(context).textTheme.displayMedium!.copyWith(
-                              color: AppColors.darkPrimaryColor,
-                              fontFamily: AppFont.fontMedium,
-                              fontSize: 15.5,
-                            ),
+                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                          color: AppColors.darkPrimaryColor,
+                          fontFamily: AppFont.fontMedium,
+                          fontSize: 15.5,
+                        ),
                   ),
                   TextButton(
                       onPressed: () {
@@ -345,13 +341,10 @@ class HomeScreen extends StatelessWidget {
                       },
                       child: Text(
                         ConstString.viewAll,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(
-                                color: AppColors.primaryColor,
-                                fontFamily: AppFont.fontMedium,
-                                fontSize: 14),
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: AppColors.primaryColor,
+                            fontFamily: AppFont.fontMedium,
+                            fontSize: 14),
                       ))
                 ],
               ),
@@ -366,8 +359,8 @@ class HomeScreen extends StatelessWidget {
                         Get.to(() => const MedicineDetails());
                       },
                       child: Container(
-                        margin:
-                            const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 5),
                         width: 200,
                         decoration: BoxDecoration(
                             color: AppColors.decsGrey,
@@ -393,8 +386,8 @@ class HomeScreen extends StatelessWidget {
                                         Positioned(
                                             top: 10,
                                             right: 10,
-                                            child: SvgPicture.asset(
-                                                AppIcons.like))
+                                            child:
+                                                SvgPicture.asset(AppIcons.like))
                                       ],
                                     ),
                                   ),
@@ -412,8 +405,7 @@ class HomeScreen extends StatelessWidget {
                                 child: Column(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       "Iconic Remedies",
@@ -422,8 +414,7 @@ class HomeScreen extends StatelessWidget {
                                           .titleSmall!
                                           .copyWith(
                                               fontFamily: AppFont.fontMedium,
-                                              color:
-                                                  AppColors.darkPrimaryColor,
+                                              color: AppColors.darkPrimaryColor,
                                               fontSize: 13.5),
                                     ),
                                     const SizedBox(
@@ -500,19 +491,18 @@ class HomeScreen extends StatelessWidget {
                                         Expanded(
                                           child: ElevatedButton(
                                               onPressed: () {
-                                                Get.to(() => const OrderPlacement());
+                                                Get.to(() => OrderPlacement());
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor: AppColors
                                                       .tilePrimaryColor,
-                                                  fixedSize: const Size(110, 20),
+                                                  fixedSize:
+                                                      const Size(110, 20),
                                                   elevation: 0,
-                                                  shape:
-                                                      RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      30))),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30))),
                                               child: Text(
                                                 "Add to cart",
                                                 style: Theme.of(context)
@@ -521,8 +511,8 @@ class HomeScreen extends StatelessWidget {
                                                     .copyWith(
                                                         color: AppColors
                                                             .primaryColor,
-                                                        fontFamily: AppFont
-                                                            .fontMedium),
+                                                        fontFamily:
+                                                            AppFont.fontMedium),
                                               )),
                                         )
                                       ],
@@ -574,7 +564,9 @@ class HomeScreen extends StatelessWidget {
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 3),
                       child: SvgPicture.asset(
-                        AppIcons.homeIcon,
+                        controller.pageIndex.value == 0
+                            ? AppIcons.homeIcon
+                            : AppIcons.homeHome,
                         color: controller.pageIndex.value == 0
                             ? AppColors.primaryColor
                             : AppColors.txtGrey,
@@ -585,7 +577,9 @@ class HomeScreen extends StatelessWidget {
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: SvgPicture.asset(
-                        AppIcons.explore,
+                        controller.pageIndex.value == 1
+                            ? AppIcons.exploreFill
+                            : AppIcons.explore,
                         color: controller.pageIndex.value == 1
                             ? AppColors.primaryColor
                             : AppColors.txtGrey,
@@ -596,7 +590,9 @@ class HomeScreen extends StatelessWidget {
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 3),
                       child: SvgPicture.asset(
-                        AppIcons.cartIcon,
+                        controller.pageIndex.value == 2
+                            ? AppIcons.cartFill
+                            : AppIcons.cartIcon,
                         color: controller.pageIndex.value == 2
                             ? AppColors.primaryColor
                             : AppColors.txtGrey,
@@ -607,7 +603,9 @@ class HomeScreen extends StatelessWidget {
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 3),
                       child: SvgPicture.asset(
-                        AppIcons.favourite,
+                        controller.pageIndex.value == 3
+                            ? AppIcons.favFill
+                            : AppIcons.favourite,
                         color: controller.pageIndex.value == 3
                             ? AppColors.primaryColor
                             : AppColors.txtGrey,
@@ -618,7 +616,9 @@ class HomeScreen extends StatelessWidget {
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 3),
                       child: SvgPicture.asset(
-                        AppIcons.profileIcon,
+                        controller.pageIndex.value == 4
+                            ? AppIcons.profileFillIcon
+                            : AppIcons.profileIcon,
                         color: controller.pageIndex.value == 4
                             ? AppColors.primaryColor
                             : AppColors.txtGrey,
