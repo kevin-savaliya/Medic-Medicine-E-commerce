@@ -6,6 +6,8 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/assets.dart';
 
 class SplashScreen extends GetWidget<SplashController> {
+  const SplashScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
@@ -14,7 +16,7 @@ class SplashScreen extends GetWidget<SplashController> {
         return Scaffold(
           backgroundColor: AppColors.primaryColor,
           body: Center(
-            child: SvgPicture.asset(AppImages.medic_white_text,height: 60),
+            child: SvgPicture.asset(AppImages.medic_white_text, height: 60),
           ),
         );
       },

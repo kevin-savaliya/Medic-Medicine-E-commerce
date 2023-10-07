@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "894988944297",
+    "project_id": "medic-87909",
+    "storage_bucket": "medic-87909.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894988944297:android:ecc0d750b2cab244b57ab8",
+        "android_client_info": {
+          "package_name": "com.corange.medic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDO5S-EUy0ZSNCtTHlDrA-ZzYsyZxoLzTY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

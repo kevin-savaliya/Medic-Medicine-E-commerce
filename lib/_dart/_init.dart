@@ -1,0 +1,10 @@
+export 'package:medic/theme/colors.dart';
+export 'package:firebase_core/firebase_core.dart';
+export 'package:flutter/material.dart';
+export 'package:flutter/services.dart';
+export 'package:get/get.dart';
+export 'package:medic/controller/user_controller.dart';
+export 'package:medic/firebase_options.dart';
+export 'package:medic/screen/splash_screen.dart';
+export 'package:medic/theme/colors_theme.dart';
+export 'package:medic/utils/app_storage.dart';

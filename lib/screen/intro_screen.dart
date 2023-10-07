@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/intro_controller.dart';
-import 'package:medic/screen/home_screen.dart';
 import 'package:medic/screen/phone_login_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/assets.dart';
@@ -20,15 +19,6 @@ class IntroScreen extends StatelessWidget {
             backgroundColor: controller.selectedPageIndex.value == 3
                 ? AppColors.primaryColor
                 : Colors.white,
-            // appBar: AppBar(
-            //   backgroundColor: controller.selectedPageIndex.value == 3
-            //       ? AppColors.primaryColor
-            //       : Colors.white,
-            //   leading: ,
-            //   actions: [
-            //
-            //   ],
-            // ),
             body: SafeArea(
               child: Stack(
                 children: [
@@ -212,7 +202,7 @@ class IntroScreen extends StatelessWidget {
                             ),
                           )))),
                   Positioned(
-                    right: 0,
+                      right: 0,
                       child: Obx(() => Visibility(
                             visible: controller.selectedPageIndex.value != 3,
                             child: TextButton(

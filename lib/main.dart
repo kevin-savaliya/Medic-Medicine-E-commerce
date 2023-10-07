@@ -1,10 +1,22 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:medic/screen/splash_screen.dart';
-import 'package:medic/theme/colors_theme.dart';
+import 'package:medic/_dart/_init.dart';
 
-void main(){
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await AppStorage().initStorage();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.black,
+    statusBarColor: Colors.transparent,
+    statusBarBrightness: Brightness.dark,
+    statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarDividerColor: AppColors.lightGrey,
+    systemNavigationBarIconBrightness: Brightness.light,
+  ));
+
   runApp(const MyApp());
 }
 
@@ -21,13 +33,20 @@ class MyApp extends StatelessWidget {
         title: 'Medic',
         theme: ThemeColor.mThemeData(context),
         darkTheme: ThemeColor.mThemeData(context, isDark: true),
-        // initialBinding: GlobalBindings(),
         defaultTransition: Transition.cupertino,
         opaqueRoute: Get.isOpaqueRouteDefault,
         popGesture: Get.isPopGestureEnable,
         transitionDuration: const Duration(milliseconds: 500),
         defaultGlobalState: true,
+        initialBinding: GlobalBindings(),
         themeMode: ThemeMode.light,
-        home: SplashScreen());
+        home: const SplashScreen());
+  }
+}
+
+class GlobalBindings extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => UserController(), fenix: true);
   }
 }
