@@ -47,6 +47,7 @@ class MyApp extends StatelessWidget {
 class GlobalBindings extends Bindings {
   @override
   void dependencies() {
+    Get.lazyPut(() => AuthController(), fenix: true);
     Get.lazyPut(() => UserController(), fenix: true);
   }
 }

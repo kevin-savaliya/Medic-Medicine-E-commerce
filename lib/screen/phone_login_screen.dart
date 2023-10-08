@@ -2,13 +2,14 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:medic/screen/verify_otp_screen.dart';
+import 'package:medic/controller/auth_controller.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/custom_loading_widget.dart';
 
-class PhoneLoginScreen extends StatelessWidget {
+class PhoneLoginScreen extends GetWidget<AuthController> {
   const PhoneLoginScreen({super.key});
 
   @override
@@ -29,7 +30,7 @@ class PhoneLoginScreen extends StatelessWidget {
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           Text(
@@ -39,16 +40,64 @@ class PhoneLoginScreen extends StatelessWidget {
                 .displayLarge!
                 .copyWith(fontSize: 20),
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           Text(
             ConstString.enterPhone,
             style: Theme.of(context).textTheme.displaySmall!,
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
+          Text(
+            ConstString.userName,
+            style: Theme.of(context)
+                .textTheme
+                .displaySmall!
+                .copyWith(color: AppColors.txtGrey2, fontSize: 14),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  keyboardType: TextInputType.phone,
+                  controller: controller.firstNameController,
+                  decoration: InputDecoration(
+                      hintText: ConstString.enterFirstName,
+                      hintStyle: TextStyle(
+                          fontFamily: AppFont.fontMedium,
+                          color: AppColors.phoneGrey,
+                          fontSize: 14),
+                      border: InputBorder.none,
+                      disabledBorder: const UnderlineInputBorder(),
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: const UnderlineInputBorder(),
+                      errorBorder: const UnderlineInputBorder(),
+                      focusedErrorBorder: const UnderlineInputBorder()),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  keyboardType: TextInputType.phone,
+                  controller: controller.lastNameController,
+                  decoration: InputDecoration(
+                      hintText: ConstString.enterLastName,
+                      hintStyle: TextStyle(
+                          fontFamily: AppFont.fontMedium,
+                          color: AppColors.phoneGrey,
+                          fontSize: 14),
+                      border: InputBorder.none,
+                      disabledBorder: const UnderlineInputBorder(),
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: const UnderlineInputBorder(),
+                      errorBorder: const UnderlineInputBorder(),
+                      focusedErrorBorder: const UnderlineInputBorder()),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
           Text(
             ConstString.mobileNumber,
             style: Theme.of(context)
@@ -60,7 +109,10 @@ class PhoneLoginScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: CountryCodePicker(
-                  onChanged: print,
+                  onChanged: (CountryCode? countryData) {
+                    controller.countryData = countryData;
+                  },
+                  initialSelection: 'SL',
                   showFlag: false,
                   showFlagDialog: true,
                   dialogTextStyle: TextStyle(fontFamily: AppFont.fontRegular),
@@ -75,6 +127,7 @@ class PhoneLoginScreen extends StatelessWidget {
                 flex: 3,
                 child: TextField(
                   keyboardType: TextInputType.phone,
+                  controller: controller.phoneNumberController,
                   decoration: InputDecoration(
                       hintText: ConstString.enterMobile,
                       hintStyle: TextStyle(
@@ -82,37 +135,59 @@ class PhoneLoginScreen extends StatelessWidget {
                           color: AppColors.phoneGrey,
                           fontSize: 14),
                       border: InputBorder.none,
-                      disabledBorder: UnderlineInputBorder(),
+                      disabledBorder: const UnderlineInputBorder(),
                       enabledBorder: InputBorder.none,
-                      focusedBorder: UnderlineInputBorder(),
-                      errorBorder: UnderlineInputBorder(),
-                      focusedErrorBorder: UnderlineInputBorder()),
+                      focusedBorder: const UnderlineInputBorder(),
+                      errorBorder: const UnderlineInputBorder(),
+                      focusedErrorBorder: const UnderlineInputBorder()),
                 ),
               )
             ],
           ),
-          SizedBox(height: 100),
-          Align(
-            alignment: Alignment.center,
-            child: ElevatedButton(
-                onPressed: () {
-                  Get.to(() => VerifyOtpScreen());
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    fixedSize: Size(200, 50),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30))),
-                child: Text(
-                  ConstString.sendOTP,
-                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                        color: Colors.white,
-                      ),
-                )),
-          ),
+          const SizedBox(height: 100),
+          continueButton(context),
         ]),
       )),
+    );
+  }
+
+  GetBuilder<AuthController> continueButton(BuildContext context) {
+    return GetBuilder<AuthController>(
+      id: AuthController.continueButtonId,
+      builder: (ctrl) {
+        if (controller.isOtpSent.value) {
+          return Center(
+            child: Container(
+                height: 50,
+                width: 50,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: const CustomLoadingWidget()),
+          );
+        }
+        return Align(
+          alignment: Alignment.center,
+          child: ElevatedButton(
+              onPressed: controller.isLoading
+                  ? null
+                  : () async {
+                      if (controller.validateData()) {
+                        await controller.actionVerifyPhone();
+                      }
+                    },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor,
+                  fixedSize: const Size(200, 50),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30))),
+              child: Text(
+                ConstString.sendOTP,
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                      color: Colors.white,
+                    ),
+              )),
+        );
+      },
     );
   }
 }

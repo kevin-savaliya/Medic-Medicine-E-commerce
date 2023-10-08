@@ -26,6 +26,7 @@ class AppColors {
 
   static Color darkPrimaryColor = const Color(0xff292929);
   static Color lightGrey = const Color(0xff818181);
+  static Color dark = const Color(0xff474747);
   static Color white = const Color(0xffffffff);
   static Color txtGrey = const Color(0xff656565);
   static Color txtGrey2 = const Color(0xff6E6E6E);
@@ -43,7 +44,11 @@ class AppColors {
   static Color listColor4 = const Color(0xFF25A79A);
   static Color listColor5 = const Color(0xFF6CDC06);
 
-
   static Color red = const Color(0xFFE83A0E);
   static Color green = const Color(0xFF2DB044);
+
+  static Color black = const Color(0xff180E02);
+  static Color textColor = const Color(0xffFFFFFF);
+
+  static Color alertBoxTextColot = const Color(0xff00211f);
 }

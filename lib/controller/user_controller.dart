@@ -15,17 +15,17 @@ class UserController extends GetxController {
       FirebaseFirestore.instance.collection('users');
 
   // current logged in user detail from users collection from firestore database
-  Rx<UserModel> loggedInUser = UserModel.newUser().obs;
+  Rx<UserModel?> loggedInUser = UserModel.newUser().obs;
 
   @override
   void onInit() {
     super.onInit();
-    fetchUser();
+    _fetchUser();
   }
 
   // fetch current logged in user detail using currentUser.uid from users collection from firestore database
-  Future<void> fetchUser({
-    void Function(UserModel userModel)? onSuccess,
+  Future<void> _fetchUser({
+    void Function(UserModel? userModel)? onSuccess,
   }) async {
     try {
       streamUser(currentUserId!).listen((updatedUserData) {
@@ -39,9 +39,30 @@ class UserController extends GetxController {
     }
   }
 
+  // fetch current logged in user detail using currentUser.uid from users collection from firestore database
+  Future<void> fetchUser({
+    void Function(UserModel userModel)? onSuccess,
+  }) async {
+    try {
+      streamUser(currentUserId!).listen((updatedUserData) {
+        loggedInUser.value = updatedUserData;
+        if (onSuccess != null && updatedUserData != null) {
+          onSuccess(updatedUserData);
+        }
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   // create a method to update user data when update on firestore in stream and convert it to UserModel
-  Stream<UserModel> streamUser(String id) {
-    return _usersCollection.doc(id).snapshots().map((documentSnapshot) =>
-        UserModel.fromMap(documentSnapshot.data()! as Map<String, dynamic>));
+  Stream<UserModel?> streamUser(String id) {
+    return _usersCollection.doc(id).snapshots().map((documentSnapshot) {
+      if (documentSnapshot.data() == null) {
+        return null;
+      }
+      return UserModel.fromMap(
+          documentSnapshot.data()! as Map<String, dynamic>);
+    });
   }
 }

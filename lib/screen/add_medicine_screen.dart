@@ -10,7 +10,9 @@ import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
 
 class AddMedicineScreen extends StatelessWidget {
-  MedicineController controller = Get.put(MedicineController());
+  final MedicineController controller = Get.put(MedicineController());
+
+  AddMedicineScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 class IntroModel {
-  late String? description;
-  late String? image;
-  late String? title;
+  String? description;
+  String? image;
+  String? title;
 
   IntroModel(this.image, this.title, this.description);
 
@@ -39,16 +39,4 @@ class IntroModel {
 
   factory IntroModel.fromJson(String source) =>
       IntroModel.fromMap(json.decode(source));
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is IntroModel &&
-          runtimeType == other.runtimeType &&
-          image == other.image &&
-          title == other.title &&
-          description == other.description;
-
-  @override
-  int get hashCode => image.hashCode ^ title.hashCode ^ description.hashCode;
 }

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:medic/controller/user_controller.dart';
 import 'package:medic/screen/home_screen.dart';
 import 'package:medic/screen/intro_screen.dart';
+import 'package:medic/screen/phone_login_screen.dart';
 import 'package:medic/utils/app_storage.dart';
 
 class SplashController extends GetxController {
@@ -39,10 +40,14 @@ class SplashController extends GetxController {
     if (Get.find<UserController>().firebaseUser != null) {
       final String? token = await FirebaseMessaging.instance.getToken();
       if (token != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(Get.find<UserController>().loggedInUser.value.id)
-            .update({'fcmToken': token});
+        try {
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(Get.find<UserController>().loggedInUser.value!.id)
+              .update({'fcmToken': token});
+        } catch (e) {
+          print(e);
+        }
       }
       return;
     }
@@ -53,7 +58,11 @@ class SplashController extends GetxController {
     if (appStorage.checkLoginAndUserData()) {
       await Get.offAll(() => const HomeScreen());
     } else {
-      await Get.offAll(() => const IntroScreen());
+      if (appStorage.isBoardWatched()) {
+        await Get.offAll(() => const IntroScreen());
+      } else {
+        await Get.offAll(() => const PhoneLoginScreen());
+      }
     }
   }
 }

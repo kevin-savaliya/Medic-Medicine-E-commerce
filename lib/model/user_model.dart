@@ -6,7 +6,6 @@ class UserModel {
   final String? id;
   final String? name;
   final String? gender;
-  final String? email;
   final String? fcmToken;
   final int? countryCode;
   final String? mobileNo;
@@ -17,7 +16,6 @@ class UserModel {
     this.id,
     this.name,
     this.gender,
-    this.email,
     this.mobileNo,
     this.fcmToken,
     this.countryCode,
@@ -29,7 +27,6 @@ class UserModel {
     this.id,
     this.name,
     this.gender,
-    this.email,
     this.mobileNo,
     this.fcmToken,
     this.countryCode,
@@ -41,7 +38,6 @@ class UserModel {
     String? id,
     String? name,
     String? gender,
-    String? email,
     int? countryCode,
     String? mobileNo,
     String? fcmToken,
@@ -52,7 +48,6 @@ class UserModel {
       id: id ?? this.id,
       name: name ?? this.name,
       gender: gender ?? this.gender,
-      email: email ?? this.email,
       mobileNo: mobileNo ?? this.mobileNo,
       fcmToken: fcmToken ?? this.fcmToken,
       countryCode: countryCode ?? this.countryCode,
@@ -65,7 +60,6 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return {
       'countryCode': countryCode,
-      'email': email,
       'enablePushNotification': enablePushNotification,
       'fcmToken': fcmToken,
       'id': id,
@@ -81,7 +75,6 @@ class UserModel {
       id: map['id'],
       name: map['name'],
       gender: map['gender'],
-      email: map['email'],
       fcmToken: map['fcmToken'],
       countryCode: map['countryCode'],
       mobileNo: map['mobileNo'],
@@ -109,7 +102,6 @@ class UserModel {
       id: map['id'],
       name: map['name'],
       gender: map['gender'],
-      email: map['email'],
       fcmToken: map['fcmToken'],
       countryCode: map['countryCode'],
       mobileNo: map['mobileNo'],

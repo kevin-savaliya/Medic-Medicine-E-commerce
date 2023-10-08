@@ -1,20 +1,20 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
+import 'package:medic/_dart/_init.dart';
 import 'package:medic/screen/myaddress_screen.dart';
 import 'package:medic/screen/notification_screen.dart';
 import 'package:medic/screen/order_history.dart';
 import 'package:medic/screen/reminder_screen.dart';
 import 'package:medic/screen/upload_pres_screen.dart';
-import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
 import 'package:medic/widgets/app_dialogue.dart';
+import 'package:medic/widgets/user/my_name_text_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  ProfileScreen({super.key});
 
+  final AuthController _authController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,31 +48,27 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text(
-                "Henry, Arthur",
-                style: Theme.of(context)
+              MyNameTextWidget(
+                textStyle: Theme.of(context)
                     .textTheme
                     .titleMedium!
                     .copyWith(fontFamily: AppFont.fontBold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
-              Text(
-                "+91 2847456342",
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              MyNumberTextWidget(
+                textStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
                     color: AppColors.txtGrey.withOpacity(0.8),
                     fontFamily: AppFont.fontMedium),
               ),
-              SizedBox(
-                height: 25,
-              ),
+              const SizedBox(height: 25),
               ListTile(
                 onTap: () {
-                  Get.to(() => MyAddressScreen());
+                  Get.to(() => const MyAddressScreen());
                 },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(AppIcons.pin, height: 22),
@@ -98,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  Get.to(() => OrderHistory());
+                  Get.to(() => const OrderHistory());
                 },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(AppIcons.timer, height: 22),
@@ -124,7 +120,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  Get.to(()=>ReminderScreen());
+                  Get.to(() => const ReminderScreen());
                 },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(
@@ -153,7 +149,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  Get.to(()=>UploadPrescription());
+                  Get.to(() => const UploadPrescription());
                 },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(
@@ -183,7 +179,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  Get.to(() => NotificationScreen());
+                  Get.to(() => const NotificationScreen());
                 },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(
@@ -211,8 +207,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               ListTile(
-                onTap: () {
-                  logoutDialogue(context);
+                onTap: () async {
+                  await logoutDialogue(context, _authController);
                 },
                 horizontalTitleGap: 0,
                 leading: SvgPicture.asset(

@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:medic/model/intro_model.dart';
+import 'package:medic/screen/phone_login_screen.dart';
+import 'package:medic/utils/app_storage.dart';
 
 class IntroController extends GetxController {
   var selectedPageIndex = 0.obs;
 
   var pageController = PageController().obs;
+
+  final AppStorage appStorage = AppStorage();
 
   List<IntroModel> introList = [
     IntroModel(
@@ -17,4 +21,9 @@ class IntroController extends GetxController {
     IntroModel("", 'Timely Medicine \nReminders.',
         'Never miss a dose with our timely \nreminders.')
   ];
+
+  Future<void> redirectToLogin() async {
+    appStorage.write(StorageKey.kIsBoardWatched, true);
+    Get.offAll(() => const PhoneLoginScreen());
+  }
 }

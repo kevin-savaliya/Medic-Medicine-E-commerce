@@ -16,6 +16,9 @@ class AppImages {
 
   static const String medicineBox4 = 'asset/medicineboxPng.png';
   static const String medicineBox = 'asset/medicinebox.jpg';
+
+  static const String errorImage =
+      'assets/error_image.png'; // todo: add image to assets
 }
 
 class AppIcons {

@@ -50,8 +50,11 @@ class ConstString {
   static const String getstarted = "Get Started";
   static const String dontgetOTP = "Don’t get OTP? ";
   static const String mobileNumber = "Mobile Number";
+  static const String userName = "Your Name";
   static const String OTP = "Enter OTP";
   static const String enterMobile = "Enter Mobile Number";
+  static const String enterFirstName = "Enter First name";
+  static const String enterLastName = "Enter Last name";
   static const String welcome = "Welcome To The Medic";
   static const String enterPhone = "Enter Your Phone Number To Continue";
   static const String enterOTP = "Enter OTP Received Your Phone Number";
@@ -105,4 +108,63 @@ class ConstString {
   static const String quickOrder = "Quick Order via \nPrescriptions";
   static const String uploadphoto =
       "Upload the photo and we will deliver \nthe medicines";
+  static const String successLogin = 'You are logged-in successfully';
+  static const String otpSent = 'OTP is sent to your emali';
+  static const String enterOtp = "OTP is Required!";
+  static const String enterOtpMessage = "Please enter OTP";
+
+  static String somethingWentWrong = "Something went wrong";
+  static const String ERROR_WHILE_UPLODING_PICTURE =
+      "Error while uploading picture";
+
+  // ---------------------------- Authentication Error Codes ---------------------------- //
+
+  static const String invalidVerificationCode = "invalid-verification-code";
+  static const String invalidPhoneNumber = 'invalid-phone-number';
+  static const String networkRequestFailed = 'network-request-failed';
+  static const String userDisabled = 'user-disabled';
+  static const String alreadyInUse = 'credential-already-in-use';
+  static const String sessionExpired = "session-expired";
+  static const String quotaExceed = "quota-exceeded";
+  static const String tooManyRequest = "too-many-requests";
+  static const String captchaCheckFailed = 'captcha-check-failed';
+  static const String missingPhoneNumber = 'missing-phone-number';
+
+// ---------------------------- Authentication Error Messages ---------------------------- //
+  static const String tooManyRequestMessage =
+      "To ensure the safety of your account, we've temporarily disabled access from this device due to suspicious activity. Please try again later.";
+  static const String captchaFailedMessage =
+      "Unable to verify Captcha. Please try again later.";
+  static const String missingPhoneNumberMessage =
+      "Missing phone number. Please make sure to provide a valid contact number.";
+  static const String quotaExceedMessage =
+      "The requested operation cannot be completed as it exceeds the project quota limit.";
+  static const String sessionExpiredMessage =
+      "The sms code has expired. Please re-send the verification code";
+  static const String invalidVerificationMessage =
+      "Oops! The OTP you entered is invalid. Please check and try again.";
+  static const String emptyPhoneNumber = "Phone number is required!";
+  static const String invalidPhoneFormat =
+      "The format of the phone number provided is incorrect";
+  static const String invalidPhoneMessage = "Invalid Phone Number";
+  static const String emptyPhoneNumberMessage = "Required Phone Number";
+  static const String checkNetworkConnection =
+      'Check Your Network Connection and try again';
+  static const String accountDisabled =
+      "Your account has been disabled by an admin";
+  static const String phoneAlreadyInUse =
+      "This phone number is already used by another existing user. Please enter different number";
+  static const String canNotOpenProfile =
+      "Sorry, you can't access your own profile from this section.";
+
+  static const String validPostCode = "Please enter valid postcode";
+  static const String enterPostCode = "Please enter postcode";
+  static const String enterValidPostCode = "Please enter valid postcode";
+  static const String chooseImage = "Please choose image";
+  static const String noMoreReaction = "No More Reaction";
+  static const String noMoreTopic = "Topick has expired";
+  static const String noProfileUploaded = "No Profile Image Uploaded";
+  static const String newTopickComingSoon = "New Topick coming soon.";
+  static const String noLeaderboardData = "No scores are available";
+  static const String noComment = "No Comments";
 }

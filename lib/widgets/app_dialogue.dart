@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medic/controller/auth_controller.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/string.dart';
 
-Future logoutDialogue(BuildContext context) {
+Future logoutDialogue(BuildContext context, AuthController authController) {
   return showDialog(
     context: context,
     builder: (context) {
@@ -64,8 +66,9 @@ Future logoutDialogue(BuildContext context) {
                 ),
                 Expanded(
                   child: ElevatedButton(
-                      onPressed: () {
-                        Get.back();
+                      onPressed: () async {
+                        showProgressDialogue(context);
+                        await authController.signOut();
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor,
@@ -85,6 +88,47 @@ Future logoutDialogue(BuildContext context) {
             )
           ],
         ),
+      );
+    },
+  );
+}
+
+// show progress dialog
+Future showProgressDialogue(BuildContext context) {
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                )
+              ],
+            ),
+            child: SizedBox(
+              height: 35,
+              width: 35,
+              child: CupertinoActivityIndicator(
+                radius: 15,
+                animating: true,
+                color: AppColors.primaryColor,
+              ),
+            ),
+          ),
+        ],
       );
     },
   );

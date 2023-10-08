@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,6 +16,7 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/user/my_name_text_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -50,7 +49,7 @@ class HomeScreen extends StatelessWidget {
           );
         } else if (controller.pageIndex.value == 4) {
           return Scaffold(
-            body: const ProfileScreen(),
+            body: ProfileScreen(),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         }
@@ -91,9 +90,8 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            Text(
-              "Henry, Arthur",
-              style: Theme.of(context)
+            MyNameTextWidget(
+              textStyle: Theme.of(context)
                   .textTheme
                   .titleMedium!
                   .copyWith(fontFamily: AppFont.fontMedium),
@@ -103,7 +101,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                Get.to(() => NotificationScreen());
+                Get.to(() => const NotificationScreen());
               },
               icon: Padding(
                 padding: const EdgeInsets.all(5.0),
@@ -125,7 +123,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           SpeedDialChild(
               onTap: () {
-                Get.to(() => ReminderScreen());
+                Get.to(() => const ReminderScreen());
               },
               child: SvgPicture.asset(
                 AppIcons.addReminder,
@@ -136,7 +134,7 @@ class HomeScreen extends StatelessWidget {
               labelStyle: Theme.of(context).textTheme.titleMedium),
           SpeedDialChild(
               onTap: () {
-                Get.to(() => UploadPrescription());
+                Get.to(() => const UploadPrescription());
               },
               child: SvgPicture.asset(AppIcons.uploadPres),
               backgroundColor: AppColors.white,

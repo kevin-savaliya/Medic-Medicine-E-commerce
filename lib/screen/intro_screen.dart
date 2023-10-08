@@ -22,7 +22,7 @@ class IntroScreen extends StatelessWidget {
             body: SafeArea(
               child: Stack(
                 children: [
-                  Container(
+                  SizedBox(
                       width: double.infinity,
                       child: Image.asset(AppImages.pattern, fit: BoxFit.fill)),
                   Positioned(
@@ -120,27 +120,25 @@ class IntroScreen extends StatelessWidget {
                                         )
                               ],
                             )),
-                        SizedBox(
-                          height: 40,
-                        ),
+                        const SizedBox(height: 40),
                         ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               if (controller.selectedPageIndex.value == 0) {
                                 controller.pageController.value.animateToPage(1,
-                                    duration: Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeIn);
                               } else if (controller.selectedPageIndex.value ==
                                   1) {
                                 controller.pageController.value.animateToPage(2,
-                                    duration: Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeIn);
                               } else if (controller.selectedPageIndex.value ==
                                   2) {
                                 controller.pageController.value.animateToPage(3,
-                                    duration: Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeIn);
                               } else {
-                                Get.offAll(() => PhoneLoginScreen());
+                                await controller.redirectToLogin();
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -148,7 +146,7 @@ class IntroScreen extends StatelessWidget {
                                     controller.selectedPageIndex.value == 3
                                         ? AppColors.white
                                         : AppColors.primaryColor,
-                                fixedSize: Size(200, 50),
+                                fixedSize: const Size(200, 50),
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30))),
@@ -166,7 +164,7 @@ class IntroScreen extends StatelessWidget {
                                             : Colors.white,
                                   ),
                             )),
-                        SizedBox(
+                        const SizedBox(
                           height: 50,
                         )
                       ],
@@ -180,17 +178,17 @@ class IntroScreen extends StatelessWidget {
                             onPressed: () {
                               if (controller.selectedPageIndex.value == 1) {
                                 controller.pageController.value.animateToPage(0,
-                                    duration: Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeOut);
                               } else if (controller.selectedPageIndex.value ==
                                   2) {
                                 controller.pageController.value.animateToPage(1,
-                                    duration: Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeOut);
                               } else if (controller.selectedPageIndex.value ==
                                   3) {
                                 controller.pageController.value.animateToPage(2,
-                                    duration: Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeOut);
                               }
                             },
@@ -209,31 +207,28 @@ class IntroScreen extends StatelessWidget {
                                 onPressed: () {
                                   if (controller.selectedPageIndex.value == 0) {
                                     controller.pageController.value
-                                        .animateToPage(
-                                            1,
-                                            duration:
-                                                Duration(milliseconds: 300),
+                                        .animateToPage(1,
+                                            duration: const Duration(
+                                                milliseconds: 300),
                                             curve: Curves.easeIn);
                                   } else if (controller
                                           .selectedPageIndex.value ==
                                       1) {
                                     controller.pageController.value
-                                        .animateToPage(
-                                            2,
-                                            duration:
-                                                Duration(milliseconds: 300),
+                                        .animateToPage(2,
+                                            duration: const Duration(
+                                                milliseconds: 300),
                                             curve: Curves.easeIn);
                                   } else if (controller
                                           .selectedPageIndex.value ==
                                       2) {
                                     controller.pageController.value
-                                        .animateToPage(
-                                            3,
-                                            duration:
-                                                Duration(milliseconds: 300),
+                                        .animateToPage(3,
+                                            duration: const Duration(
+                                                milliseconds: 300),
                                             curve: Curves.easeIn);
                                   } else {
-                                    Get.offAll(() => PhoneLoginScreen());
+                                    Get.offAll(() => const PhoneLoginScreen());
                                   }
                                 },
                                 child: Text(
