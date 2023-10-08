@@ -21,9 +21,9 @@ class UserRepository {
   * */
   UserRepository._internal();
 
-  static UserRepository getInstance() {
+  /*static UserRepository getInstance() {
     return _singleton;
-  }
+  }*/
 
   Future<UserModel> createNewUser(UserModel user) async {
     final newDocRef = _usersCollection.doc(user.id);

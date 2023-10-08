@@ -18,6 +18,7 @@ import 'package:medic/utils/app_storage.dart';
 import 'package:medic/utils/controller_ids.dart';
 import 'package:medic/utils/string.dart';
 import 'package:medic/utils/utils.dart';
+import 'package:medic/widgets/app_dialogue.dart';
 
 class AuthController extends GetxController {
   RxString verificationId = "".obs;
@@ -40,6 +41,7 @@ class AuthController extends GetxController {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
+  Rx<UserGender> selectedGender = UserGender.male.obs;
   FocusNode phoneNumberTextField = FocusNode();
   AppStorage appStorage = AppStorage();
 
@@ -149,9 +151,7 @@ class AuthController extends GetxController {
             }
 
             if (!second) {
-              Get.off(() => VerifyOtpScreen(
-                  phoneNumber: getPhoneNumber(),
-                  verificationId: verificationId()));
+              Get.off(() => VerifyOtpScreen(phoneNumber: getPhoneNumber()));
             }
           },
           codeAutoRetrievalTimeout: (String verificationId) {
@@ -162,7 +162,7 @@ class AuthController extends GetxController {
           },
         );
       } catch (e) {
-        log("------verifi number with otp sent-----$e");
+        log("------verify number with otp sent-----$e");
       }
     }
   }
@@ -242,7 +242,7 @@ class AuthController extends GetxController {
     update([AuthController.continueButtonId]);
   }
 
-  Future<void> verifyOtp(User? user) async {
+  Future<void> verifyOtp(BuildContext context, User? user) async {
     if (otp.value.isEmpty) {
       showInSnackBar(
         ConstString.enterOtp,
@@ -253,6 +253,7 @@ class AuthController extends GetxController {
     isLoading = true;
     update([ControllerIds.verifyButtonKey]);
     try {
+      showProgressDialogue(context);
       final UserCredential result;
       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
           verificationId: verificationId.value, smsCode: otp.value);
@@ -298,10 +299,12 @@ class AuthController extends GetxController {
       isLoading = false;
       update([ControllerIds.verifyButtonKey]);
     } on FirebaseAuthException catch (e) {
+      Get.back();
       authException(e);
       isLoading = false;
       update([ControllerIds.verifyButtonKey]);
     } catch (e) {
+      Get.back();
       isLoading = false;
       update([ControllerIds.verifyButtonKey]);
     }
@@ -313,7 +316,7 @@ class AuthController extends GetxController {
   }) async {
     late UserModel userModel;
     bool isUserExist =
-        await UserRepository.getInstance().isUserExist(credentials.user!.uid);
+        await UserRepository.instance.isUserExist(credentials.user!.uid);
     if (!isUserExist) {
       List<String> name = getFirstLastName(credentials);
       String? fcmToken = await _firebaseMessaging.getToken();
@@ -325,12 +328,12 @@ class AuthController extends GetxController {
         countryCode: int.parse(countryData!.dialCode!.replaceAll('+', '')),
         mobileNo: phoneNumberController.text.trim().replaceAll('+', ''),
         enablePushNotification: true,
-        gender: 'male', // FIXME: need to change
+        gender: selectedGender.value.name,
       );
-      await UserRepository.getInstance().createNewUser(userModel);
+      await UserRepository.instance.createNewUser(userModel);
     } else {
       userModel =
-          await UserRepository.getInstance().fetchUser(credentials.user!.uid);
+          await UserRepository.instance.fetchUser(credentials.user!.uid);
     }
     return userModel;
   }

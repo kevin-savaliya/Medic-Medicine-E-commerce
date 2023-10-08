@@ -38,33 +38,25 @@ class ProfileScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ClipOval(
-                child: Container(
-                  height: 90,
-                  width: 90,
-                  color: AppColors.primaryColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(AppImages.medic_white_text),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
+                  child: Container(
+                      height: 90,
+                      width: 90,
+                      color: AppColors.primaryColor,
+                      child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              SvgPicture.asset(AppImages.medic_white_text)))),
+              const SizedBox(height: 10),
               MyNameTextWidget(
-                textStyle: Theme.of(context)
-                    .textTheme
-                    .titleMedium!
-                    .copyWith(fontFamily: AppFont.fontBold),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
+                  textStyle: Theme.of(context)
+                      .textTheme
+                      .titleMedium!
+                      .copyWith(fontFamily: AppFont.fontBold)),
+              const SizedBox(height: 5),
               MyNumberTextWidget(
-                textStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: AppColors.txtGrey.withOpacity(0.8),
-                    fontFamily: AppFont.fontMedium),
-              ),
+                  textStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: AppColors.txtGrey.withOpacity(0.8),
+                      fontFamily: AppFont.fontMedium)),
               const SizedBox(height: 25),
               ListTile(
                 onTap: () {

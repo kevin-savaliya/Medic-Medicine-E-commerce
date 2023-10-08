@@ -2,11 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:medic/utils/assets.dart';
 
-class AddressController extends GetxController{
+class AddressController extends GetxController {
+  RxList<String> addressList =
+      RxList<String>(["Home", "Work", "Hotel", "Other"]);
 
-  RxList<String> addressList = RxList<String>(["Home","Work","Hotel","Other"]);
-
-  RxList<String> addressImgList = RxList<String>([AppIcons.homeAdd,AppIcons.work,AppIcons.hotel,AppIcons.other]);
+  RxList<String> addressImgList = RxList<String>(
+      [AppIcons.homeAdd, AppIcons.work, AppIcons.hotel, AppIcons.other]);
 
   RxString selectAdd = "".obs;
 
@@ -15,4 +16,9 @@ class AddressController extends GetxController{
   TextEditingController areaController = TextEditingController();
   TextEditingController landmarkController = TextEditingController();
 
+  @override
+  void onInit() {
+    selectAdd.value = addressList.first;
+    super.onInit();
+  }
 }

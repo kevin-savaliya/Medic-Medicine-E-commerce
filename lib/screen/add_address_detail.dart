@@ -10,7 +10,9 @@ import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
 
 class AddAddressDetail extends StatelessWidget {
-  AddressController controller = Get.put(AddressController());
+  final AddressController addressController = Get.put(AddressController());
+
+  AddAddressDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +40,11 @@ class AddAddressDetail extends StatelessWidget {
         elevation: 1.5,
         shadowColor: AppColors.txtGrey.withOpacity(0.2),
       ),
-      body: addAddressWidget(context, controller),
+      body: addAddressWidget(context, addressController),
     );
   }
 
-  Widget addAddressWidget(
-      BuildContext context, AddressController controller) {
+  Widget addAddressWidget(BuildContext context, AddressController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: SingleChildScrollView(
@@ -69,7 +70,7 @@ class AddAddressDetail extends StatelessWidget {
               height: 35,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 4,
+                itemCount: controller.addressList.length,
                 itemBuilder: (context, index) {
                   return Obx(() => GestureDetector(
                         onTap: () {
@@ -152,18 +153,18 @@ class AddAddressDetail extends StatelessWidget {
                               borderSide:
                                   BorderSide(color: AppColors.decsGrey)),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: AppColors.decsGrey, width: 1),
+                            borderSide:
+                                BorderSide(color: AppColors.decsGrey, width: 1),
                             borderRadius: BorderRadius.circular(30),
                           ),
                           disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: AppColors.decsGrey, width: 1),
+                            borderSide:
+                                BorderSide(color: AppColors.decsGrey, width: 1),
                             borderRadius: BorderRadius.circular(30),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: AppColors.decsGrey, width: 1),
+                            borderSide:
+                                BorderSide(color: AppColors.decsGrey, width: 1),
                             borderRadius: BorderRadius.circular(30),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
@@ -219,8 +220,8 @@ class AddAddressDetail extends StatelessWidget {
                             BorderSide(color: AppColors.decsGrey, width: 1),
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 20)),
                 ),
               ),
             ),
@@ -275,8 +276,8 @@ class AddAddressDetail extends StatelessWidget {
                             BorderSide(color: AppColors.decsGrey, width: 1),
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 20)),
                 ),
               ),
             ),
@@ -331,8 +332,8 @@ class AddAddressDetail extends StatelessWidget {
                             BorderSide(color: AppColors.decsGrey, width: 1),
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 20)),
                 ),
               ),
             ),

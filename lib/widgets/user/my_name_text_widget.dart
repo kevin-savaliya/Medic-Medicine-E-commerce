@@ -52,7 +52,7 @@ class MyNumberTextWidget extends GetWidget<HomeController> {
 
     int? countryCode = controller.loggedInUser.value?.countryCode;
     String? mobileNo = controller.loggedInUser.value?.mobileNo ?? '';
-    return '+${countryCode != null ? '': countryCode} $mobileNo';
+    return '+${countryCode ?? ''} $mobileNo';
   }
 }
 

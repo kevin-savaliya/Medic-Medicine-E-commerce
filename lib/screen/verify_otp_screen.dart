@@ -11,11 +11,9 @@ import 'package:medic/utils/utils.dart';
 import 'package:medic/widgets/custom_widget.dart';
 
 class VerifyOtpScreen extends GetWidget<AuthController> {
-  final String verificationId;
   final String phoneNumber;
   const VerifyOtpScreen({
     super.key,
-    required this.verificationId,
     required this.phoneNumber,
   });
 
@@ -67,7 +65,6 @@ class VerifyOtpScreen extends GetWidget<AuthController> {
                     controller.otp.value =
                         controller.otp.value.trim() + element!.text.trim();
                   }
-                  print('OTP input ${controller.otp.value}');
                 },
                 numberOfFields: 6,
                 cursorColor: AppColors.primaryColor,
@@ -99,7 +96,7 @@ class VerifyOtpScreen extends GetWidget<AuthController> {
                   }
                   AuthController auth = Get.find<AuthController>();
                   FocusManager.instance.primaryFocus?.unfocus();
-                  await controller.verifyOtp(auth.user);
+                  await controller.verifyOtp(context, auth.user);
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,

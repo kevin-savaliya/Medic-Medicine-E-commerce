@@ -19,7 +19,7 @@ import 'package:medic/utils/string.dart';
 import 'package:medic/widgets/user/my_name_text_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends GetWidget<HomeController> {
   const HomeScreen({super.key});
 
   @override

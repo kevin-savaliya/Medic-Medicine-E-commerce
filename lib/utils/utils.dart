@@ -526,8 +526,8 @@ Map<String, dynamic> reactionMap = {
 final Map<NotificationType, String> notificationtype = {
   NotificationType.reaction: 'reaction',
   NotificationType.suggestion: 'suggestion',
-  NotificationType.adminreply: 'admin_reply',
-  NotificationType.topicpublished: 'topic_published',
+  NotificationType.adminReply: 'admin_reply',
+  NotificationType.topicPublished: 'topic_published',
   NotificationType.following: 'following',
 };
 
@@ -537,8 +537,14 @@ enum NotificationType {
   reaction,
   suggestion,
   following,
-  topicpublished,
-  adminreply,
+  topicPublished,
+  adminReply,
+}
+
+enum UserGender {
+  male,
+  female,
+  other,
 }
 
 void showInSnackBar(String? message,

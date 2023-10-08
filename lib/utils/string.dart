@@ -7,8 +7,9 @@ class ConstString {
   static const String saveDetails = "Save details";
   static const String completed = "Completed";
   static const String reorder = "Reorder";
-  static const String cancle = "Cancle";
+  static const String cancle = "Cancel";
   static const String delete = "Delete";
+  static const String gender = "Gender";
   static const String takeMedicine = "Take Medicine";
   static const String home = "Home";
   static const String placeOrder = "Place Order";
