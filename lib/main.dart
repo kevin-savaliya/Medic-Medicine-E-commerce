@@ -16,7 +16,6 @@ Future<void> main() async {
     systemNavigationBarDividerColor: AppColors.lightGrey,
     systemNavigationBarIconBrightness: Brightness.light,
   ));
-
   runApp(const MyApp());
 }
 

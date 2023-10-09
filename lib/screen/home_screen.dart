@@ -3,6 +3,8 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/home_controller.dart';
+import 'package:medic/screen/cart_screen.dart';
+import 'package:medic/screen/favourite_screen.dart';
 import 'package:medic/screen/medicine_category.dart';
 import 'package:medic/screen/medicine_details.dart';
 import 'package:medic/screen/medicine_screen.dart';
@@ -39,12 +41,12 @@ class HomeScreen extends GetWidget<HomeController> {
           );
         } else if (controller.pageIndex.value == 2) {
           return Scaffold(
-            body: const Center(child: Text("Cart")),
+            body: const CartScreen(),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 3) {
           return Scaffold(
-            body: const Center(child: Text("Favourite")),
+            body: const FavouriteScreen(),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 4) {

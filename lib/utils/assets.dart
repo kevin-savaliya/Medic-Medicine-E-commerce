@@ -54,6 +54,7 @@ class AppIcons {
   static const String phone = 'asset/icons/phone.svg';
   static const String copy = 'asset/icons/copyMedic.svg';
   static const String like = 'asset/icons/like.svg';
+  static const String favFillRed = 'asset/icons/favFill.svg';
   static const String favourite = 'asset/icons/favourite.svg';
   static const String back = 'asset/icons/backIcon.svg';
   static const String timer = 'asset/icons/timerMedic.svg';

@@ -25,166 +25,170 @@ class PhoneLoginScreen extends GetWidget<AuthController> {
               child: SvgPicture.asset(AppImages.medic_teal_text)),
           toolbarHeight: 70),
       body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const SizedBox(height: 30),
-          Text(ConstString.welcome,
-              style: Theme.of(context)
-                  .textTheme
-                  .displayLarge!
-                  .copyWith(fontSize: 20)),
-          const SizedBox(height: 8),
-          Text(ConstString.enterPhone,
-              style: Theme.of(context).textTheme.displaySmall!),
-          const SizedBox(height: 30),
-          Text(ConstString.userName,
-              style: Theme.of(context)
-                  .textTheme
-                  .displaySmall!
-                  .copyWith(color: AppColors.txtGrey2, fontSize: 14)),
-          Row(
-            children: [
-              Expanded(
-                  child: TextField(
-                      keyboardType: TextInputType.phone,
-                      controller: controller.firstNameController,
-                      decoration: InputDecoration(
-                          hintText: ConstString.enterFirstName,
-                          hintStyle: TextStyle(
-                              fontFamily: AppFont.fontMedium,
-                              color: AppColors.phoneGrey,
-                              fontSize: 14),
-                          border: InputBorder.none,
-                          disabledBorder: const UnderlineInputBorder(),
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: const UnderlineInputBorder(),
-                          errorBorder: const UnderlineInputBorder(),
-                          focusedErrorBorder: const UnderlineInputBorder()))),
-              Expanded(
-                  child: TextField(
-                      keyboardType: TextInputType.phone,
-                      controller: controller.lastNameController,
-                      decoration: InputDecoration(
-                          hintText: ConstString.enterLastName,
-                          hintStyle: TextStyle(
-                              fontFamily: AppFont.fontMedium,
-                              color: AppColors.phoneGrey,
-                              fontSize: 14),
-                          border: InputBorder.none,
-                          disabledBorder: const UnderlineInputBorder(),
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: const UnderlineInputBorder(),
-                          errorBorder: const UnderlineInputBorder(),
-                          focusedErrorBorder: const UnderlineInputBorder())))
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(ConstString.gender,
-              style: Theme.of(context)
-                  .textTheme
-                  .displaySmall!
-                  .copyWith(color: AppColors.txtGrey2, fontSize: 14)),
-          const SizedBox(height: 8),
-          Obx(() => CupertinoSlidingSegmentedControl<UserGender>(
-                backgroundColor: CupertinoColors.systemGrey2,
-                thumbColor: AppColors.primaryColor.withAlpha(100),
-                groupValue: controller.selectedGender.value,
-                onValueChanged: (UserGender? value) {
-                  if (value != null) {
-                    controller.selectedGender.value = value;
-                  }
-                },
-                children: <UserGender, Widget>{
-                  UserGender.male: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    child: Text(
-                      UserGender.male.name.capitalizeFirst.toString(),
-                      style: TextStyle(
-                        color:
-                            UserGender.male != controller.selectedGender.value
-                                ? AppColors.primaryColor
-                                : CupertinoColors.white,
-                        fontSize: 16,
+          child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const SizedBox(height: 30),
+            Text(ConstString.welcome,
+                style: Theme.of(context)
+                    .textTheme
+                    .displayLarge!
+                    .copyWith(fontSize: 20)),
+            const SizedBox(height: 8),
+            Text(ConstString.enterPhone,
+                style: Theme.of(context).textTheme.displaySmall!),
+            const SizedBox(height: 30),
+            Text(ConstString.userName,
+                style: Theme.of(context)
+                    .textTheme
+                    .displaySmall!
+                    .copyWith(color: AppColors.txtGrey2, fontSize: 14)),
+            Row(
+              children: [
+                Expanded(
+                    child: TextField(
+                        controller: controller.firstNameController,
+                        decoration: InputDecoration(
+                            hintText: ConstString.enterFirstName,
+                            hintStyle: TextStyle(
+                                fontFamily: AppFont.fontMedium,
+                                color: AppColors.phoneGrey,
+                                fontSize: 14),
+                            border: InputBorder.none,
+                            disabledBorder: const UnderlineInputBorder(),
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: const UnderlineInputBorder(),
+                            errorBorder: const UnderlineInputBorder(),
+                            focusedErrorBorder: const UnderlineInputBorder()))),
+                Expanded(
+                    child: TextField(
+                        controller: controller.lastNameController,
+                        decoration: InputDecoration(
+                            hintText: ConstString.enterLastName,
+                            hintStyle: TextStyle(
+                                fontFamily: AppFont.fontMedium,
+                                color: AppColors.phoneGrey,
+                                fontSize: 14),
+                            border: InputBorder.none,
+                            disabledBorder: const UnderlineInputBorder(),
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: const UnderlineInputBorder(),
+                            errorBorder: const UnderlineInputBorder(),
+                            focusedErrorBorder: const UnderlineInputBorder())))
+              ],
+            ),
+            const SizedBox(height: 15),
+            Text(ConstString.gender,
+                style: Theme.of(context)
+                    .textTheme
+                    .displaySmall!
+                    .copyWith(color: AppColors.txtGrey2, fontSize: 14)),
+            const SizedBox(height: 8),
+            Obx(() => CupertinoSlidingSegmentedControl<UserGender>(
+                  backgroundColor: AppColors.decsGrey,
+                  thumbColor: AppColors.primaryColor,
+                  groupValue: controller.selectedGender.value,
+                  onValueChanged: (UserGender? value) {
+                    if (value != null) {
+                      controller.selectedGender.value = value;
+                    }
+                  },
+                  children: <UserGender, Widget>{
+                    UserGender.male: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      child: Text(
+                        UserGender.male.name.capitalizeFirst.toString(),
+                        style: TextStyle(
+                          color:
+                              UserGender.male != controller.selectedGender.value
+                                  ? AppColors.primaryColor
+                                  : CupertinoColors.white,
+                          fontFamily: AppFont.fontRegular,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
-                  ),
-                  UserGender.female: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    child: Text(
-                      UserGender.female.name.capitalizeFirst.toString(),
-                      style: TextStyle(
-                        color:
-                            UserGender.female != controller.selectedGender.value
-                                ? AppColors.primaryColor
-                                : CupertinoColors.white,
-                        fontSize: 16,
+                    UserGender.female: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      child: Text(
+                        UserGender.female.name.capitalizeFirst.toString(),
+                        style: TextStyle(
+                          color: UserGender.female !=
+                                  controller.selectedGender.value
+                              ? AppColors.primaryColor
+                              : CupertinoColors.white,
+                          fontFamily: AppFont.fontRegular,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
-                  ),
-                  UserGender.other: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    child: Text(
-                      UserGender.other.name.capitalizeFirst.toString(),
-                      style: TextStyle(
-                        color:
-                            UserGender.other != controller.selectedGender.value
-                                ? AppColors.primaryColor
-                                : CupertinoColors.white,
-                        fontSize: 16,
+                    UserGender.other: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      child: Text(
+                        UserGender.other.name.capitalizeFirst.toString(),
+                        style: TextStyle(
+                          color: UserGender.other !=
+                                  controller.selectedGender.value
+                              ? AppColors.primaryColor
+                              : CupertinoColors.white,
+                          fontFamily: AppFont.fontRegular,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
-                  ),
-                },
-              )),
-          const SizedBox(height: 10),
-          Text(ConstString.mobileNumber,
-              style: Theme.of(context)
-                  .textTheme
-                  .displaySmall!
-                  .copyWith(color: AppColors.txtGrey2, fontSize: 14)),
-          Row(
-            children: [
-              Expanded(
-                  child: CountryCodePicker(
-                onChanged: (CountryCode? countryData) {
-                  controller.countryData = countryData;
-                },
-                initialSelection: 'SL',
-                showFlag: false,
-                showFlagDialog: true,
-                dialogTextStyle: TextStyle(fontFamily: AppFont.fontRegular),
-                searchStyle: TextStyle(fontFamily: AppFont.fontRegular),
-                // showDropDownButton: true,
-                textStyle: TextStyle(fontFamily: AppFont.fontMedium),
-                alignLeft: true,
-                enabled: true,
-              )),
-              Expanded(
-                  flex: 3,
-                  child: TextField(
-                      keyboardType: TextInputType.phone,
-                      controller: controller.phoneNumberController,
-                      decoration: InputDecoration(
-                          hintText: ConstString.enterMobile,
-                          hintStyle: TextStyle(
-                              fontFamily: AppFont.fontMedium,
-                              color: AppColors.phoneGrey,
-                              fontSize: 14),
-                          border: InputBorder.none,
-                          disabledBorder: const UnderlineInputBorder(),
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: const UnderlineInputBorder(),
-                          errorBorder: const UnderlineInputBorder(),
-                          focusedErrorBorder: const UnderlineInputBorder())))
-            ],
-          ),
-          const SizedBox(height: 100),
-          continueButton(context),
-        ]),
+                  },
+                )),
+            const SizedBox(height: 30),
+            Text(ConstString.mobileNumber,
+                style: Theme.of(context)
+                    .textTheme
+                    .displaySmall!
+                    .copyWith(color: AppColors.txtGrey2, fontSize: 14)),
+            Row(
+              children: [
+                Expanded(
+                    child: CountryCodePicker(
+                  onChanged: (CountryCode? countryData) {
+                    controller.countryData = countryData;
+                  },
+                  initialSelection: 'SL',
+                  showFlag: false,
+                  showFlagDialog: true,
+                  dialogTextStyle: TextStyle(fontFamily: AppFont.fontRegular),
+                  searchStyle: TextStyle(fontFamily: AppFont.fontRegular),
+                  // showDropDownButton: true,
+                  textStyle: TextStyle(fontFamily: AppFont.fontMedium),
+                  alignLeft: true,
+                  enabled: true,
+                )),
+                Expanded(
+                    flex: 3,
+                    child: TextField(
+                        keyboardType: TextInputType.phone,
+                        controller: controller.phoneNumberController,
+                        decoration: InputDecoration(
+                            hintText: ConstString.enterMobile,
+                            hintStyle: TextStyle(
+                                fontFamily: AppFont.fontMedium,
+                                color: AppColors.phoneGrey,
+                                fontSize: 14),
+                            border: InputBorder.none,
+                            disabledBorder: const UnderlineInputBorder(),
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: const UnderlineInputBorder(),
+                            errorBorder: const UnderlineInputBorder(),
+                            focusedErrorBorder: const UnderlineInputBorder())))
+              ],
+            ),
+            const SizedBox(height: 100),
+            continueButton(context),
+          ]),
+        ),
       )),
     );
   }

@@ -44,7 +44,7 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   expansion_tile_card: ^3.0.0
   getwidget: ^3.1.1
-  date_picker_timeline: ^1.2.5
+#  date_picker_timeline: ^1.2.5
   easy_date_timeline: ^0.1.1
   image_picker: ^1.0.4
   cloud_firestore: ^4.9.3

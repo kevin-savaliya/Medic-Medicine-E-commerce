@@ -20,6 +20,7 @@ class ConstString {
   static const String cartValue = "Cart value";
   static const String shipping = "Shipping/Delivery Fee";
   static const String total = "Total";
+  static const String items = "Items";
   static const String subtotal = "Subtotal";
   static const String discount = "Discount";
   static const String totalAmount = "Total Amount";
@@ -69,6 +70,8 @@ class ConstString {
   static const String orderPlacement = "Order Placement";
   static const String addMedicine = "Add Medicines";
   static const String medicine = "Medicines";
+  static const String fav = "Favourites";
+  static const String cart = "Cart";
   static const String medicineName = "Medicine Name";
   static const String amount = "Amount";
   static const String dosage = "Dosage";
