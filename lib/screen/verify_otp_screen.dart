@@ -12,6 +12,7 @@ import 'package:medic/widgets/custom_widget.dart';
 
 class VerifyOtpScreen extends GetWidget<AuthController> {
   final String phoneNumber;
+
   const VerifyOtpScreen({
     super.key,
     required this.phoneNumber,
@@ -33,9 +34,10 @@ class VerifyOtpScreen extends GetWidget<AuthController> {
       ),
       body: SafeArea(
           child: SingleChildScrollView(
-            child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const SizedBox(height: 30),
             Text(
               ConstString.welcome,
@@ -130,10 +132,8 @@ class VerifyOtpScreen extends GetWidget<AuthController> {
                           .copyWith(fontSize: 14, color: AppColors.txtGrey)),
                   TextSpan(
                       text: ConstString.resendOTP,
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall!
-                          .copyWith(color: AppColors.primaryColor, fontSize: 14))
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          color: AppColors.primaryColor, fontSize: 14))
                 ])),
               ),
             ),
@@ -150,14 +150,15 @@ class VerifyOtpScreen extends GetWidget<AuthController> {
                                 .textTheme
                                 .displaySmall!
                                 .copyWith(
-                                    color: AppColors.primaryColor, fontSize: 14)),
+                                    color: AppColors.primaryColor,
+                                    fontSize: 14)),
                       ),
                     ),
                   );
                 }),
-        ]),
-      ),
-          )),
+          ]),
+        ),
+      )),
     );
   }
 }

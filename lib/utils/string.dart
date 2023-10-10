@@ -97,6 +97,10 @@ class ConstString {
   static const String Antivirals = "Antivirals";
   static const String Antibiotics = "Antibiotics";
   static const String Antacids = "Antacids";
+  static const String cardio = "Cardio";
+  static const String mental = "Mental";
+  static const String dental = "Dental";
+  static const String ayurveda = "Ayurveda";
   static const String Abilify = "Abilify";
 
   static const String prescriptionRequirement =

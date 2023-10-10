@@ -13,6 +13,7 @@ import 'package:medic/screen/order_placement_screen.dart';
 import 'package:medic/screen/popular_medicine.dart';
 import 'package:medic/screen/profile_screen.dart';
 import 'package:medic/screen/reminder_screen.dart';
+import 'package:medic/screen/screen_screen.dart';
 import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
@@ -152,7 +153,9 @@ class HomeScreen extends GetWidget<HomeController> {
             children: [
               TextFormField(
                 readOnly: true,
-                onTap: () {},
+                onTap: () {
+                  Get.to(() => SearchScreen());
+                },
                 decoration: InputDecoration(
                   filled: true,
                   enabled: true,

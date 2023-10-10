@@ -10,6 +10,8 @@ class AppImages {
   static const String antacids = 'asset/images/antacids.svg';
   static const String antibiotic = 'asset/images/antibiotics.svg';
   static const String antivirus = 'asset/images/antivirals.svg';
+  static const String cardio = 'asset/images/cardioImg.svg';
+  static const String ayurveda = 'asset/images/ayurvedaImg.svg';
   static const String medicineBox1 = 'asset/images/medicinebox1.png';
   static const String medicineBox2 = 'asset/images/medicinebox2.png';
   static const String medicineBox3 = 'asset/images/medicinebox3.png';

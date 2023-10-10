@@ -79,16 +79,16 @@ class HomeController extends GetxController {
     AppImages.analgesics,
     AppImages.antivirus,
     AppImages.antibiotic,
-    AppImages.antacids,
-    AppImages.analgesics,
+    AppImages.cardio,
+    AppImages.ayurveda,
   ];
 
   List categoryList = [
     ConstString.Analgesics,
-    ConstString.Antivirals,
-    ConstString.Antibiotics,
-    ConstString.Antacids,
-    ConstString.Abilify,
+    ConstString.mental,
+    ConstString.dental,
+    ConstString.cardio,
+    ConstString.ayurveda,
   ];
 
   List popularColorList = [
@@ -110,5 +110,15 @@ class HomeController extends GetxController {
     "Atorvastatin",
     "Benadryl",
     "Nexium"
+  ];
+
+  List searchList = [
+    "Acetaminophen",
+    "Diphenhydramine",
+    "Loratadine",
+    "Omeprazole",
+    "Amoxicillin",
+    "Lisinopril",
+    "Prednisone"
   ];
 }
