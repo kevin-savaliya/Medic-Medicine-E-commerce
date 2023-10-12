@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -9,6 +11,8 @@ import 'package:medic/utils/string.dart';
 
 class OrderPlacement extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
+
+  OrderPlacement({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +64,7 @@ class OrderPlacement extends StatelessWidget {
       bottomSheet: Container(
         width: double.infinity,
         color: AppColors.white,
-        padding: EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
         child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
@@ -242,11 +246,11 @@ class OrderPlacement extends StatelessWidget {
                       border: Border.all(color: AppColors.lineGrey)),
                   child: Row(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       SvgPicture.asset(AppIcons.fillpin, height: 20),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Text(
@@ -411,20 +415,20 @@ class OrderPlacement extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
+            SizedBox(
                 height: 260,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: 3,
                     itemBuilder: (context, index) {
                       return Obx(() => GestureDetector(
                             onTap: () {
                               controller.selectedPaymentMethod.value =
                                   controller.paymentMethod[index];
-                              print(controller.selectedPaymentMethod);
+                              // print(controller.selectedPaymentMethod);
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5),
@@ -454,7 +458,7 @@ class OrderPlacement extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 10,
                                       ),
                                       Text(
@@ -468,7 +472,7 @@ class OrderPlacement extends StatelessWidget {
                                                 fontFamily: AppFont.fontMedium,
                                                 fontSize: 13),
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                       SvgPicture.asset(
                                         controller.selectedPaymentMethod ==
                                                 controller.paymentMethod[index]
@@ -513,7 +517,7 @@ class OrderPlacement extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 70,
             )
           ],

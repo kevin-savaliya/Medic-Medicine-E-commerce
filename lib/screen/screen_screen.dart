@@ -1,17 +1,26 @@
+// ignore_for_file: must_be_immutable
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/home_controller.dart';
+import 'package:medic/controller/medicine_controller.dart';
+import 'package:medic/model/category_data.dart';
 import 'package:medic/screen/medicine_category.dart';
 import 'package:medic/screen/notification_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:medic/widgets/user/my_name_text_widget.dart';
 
 class SearchScreen extends StatelessWidget {
   HomeController controller = Get.put(HomeController());
+
+  SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +87,7 @@ class SearchScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
-                readOnly: true,
+                style: Theme.of(context).textTheme.titleMedium,
                 onTap: () {
                   Get.to(() => SearchScreen());
                 },
@@ -244,37 +253,122 @@ class SearchScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: SizedBox(
-                height: 100,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.categoryImageList.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(controller.categoryImageList[index]),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "${controller.categoryList[index]}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    color: AppColors.txtGrey,
-                                    fontFamily: AppFont.fontMedium),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
+            GetBuilder(
+              init: MedicineController(),
+              builder: (controller) {
+                return SizedBox(
+                    height: 100,
+                    child: StreamBuilder<List<CategoryData>>(
+                      stream: controller.fetchCategory(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CategoryShimmer(
+                              itemCount: snapshot.data?.length,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Container(
+                            alignment: Alignment.center,
+                            height: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: AppColors.tilePrimaryColor),
+                            child: Text(
+                              "Error : ${snapshot.error}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 13,
+                                  fontFamily: AppFont.fontMedium),
+                            ),
+                          );
+                        } else if (snapshot.hasData &&
+                            snapshot.data!.isNotEmpty) {
+                          List<CategoryData>? categoryList = snapshot.data!;
+
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: categoryList.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      clipBehavior:
+                                      Clip.antiAliasWithSaveLayer,
+                                      child: CachedNetworkImage(
+                                        height: 60,
+                                        width: 60,
+                                        imageUrl: categoryList[index].image!,
+                                        errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                        progressIndicatorBuilder: (context,
+                                            url, downloadProgress) =>
+                                            SizedBox(
+                                              width: 30,
+                                              height: 30,
+                                              child: Center(
+                                                child: CupertinoActivityIndicator(
+                                                  color: AppColors.primaryColor,
+                                                  animating: true,
+                                                  radius: 10,
+                                                ),
+                                              ),
+                                            ),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 7,
+                                    ),
+                                    Text(
+                                      "${categoryList[index].name}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(
+                                          color: AppColors.txtGrey,
+                                          fontFamily: AppFont.fontMedium),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return Container(
+                            alignment: Alignment.center,
+                            height: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: AppColors.tilePrimaryColor),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(AppIcons.noData, height: 40),
+                                Text(
+                                  "No Category Found!",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                      color: AppColors.primaryColor,
+                                      fontSize: 14,
+                                      fontFamily: AppFont.fontMedium),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                    ));
+              },
             ),
             Divider(
               height: 10,
@@ -284,7 +378,7 @@ class SearchScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Container(
+            SizedBox(
               height: 250,
               child: ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -315,7 +409,7 @@ class SearchScreen extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             )
           ],

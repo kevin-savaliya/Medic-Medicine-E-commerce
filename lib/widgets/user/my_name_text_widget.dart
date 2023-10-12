@@ -27,6 +27,8 @@ class MyNameTextWidget extends GetWidget<HomeController> {
   }
 }
 
+//flutter pub add cloud_firestore
+
 class MyNumberTextWidget extends GetWidget<HomeController> {
   final TextStyle? textStyle;
 

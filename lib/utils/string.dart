@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class ConstString {
   static const String next = "Next";
   static const String btnContinue = "Continue";
@@ -44,6 +46,7 @@ class ConstString {
   static const String camera = "Camera";
   static const String gallery = "Gallery";
   static const String profile = "Profile";
+  static const String remove = "Remove";
   static const String logout = "Log out";
   static const String logoutDialogue = "Logout";
   static const String pastPres = "Past Prescription from The Medic";
@@ -117,7 +120,7 @@ class ConstString {
   static const String uploadphoto =
       "Upload the photo and we will deliver \nthe medicines";
   static const String successLogin = 'You are logged-in successfully';
-  static const String otpSent = 'OTP is sent to your emali';
+  static const String otpSent = 'OTP is sent to your mobile number';
   static const String enterOtp = "OTP is Required!";
   static const String enterOtpMessage = "Please enter OTP";
 

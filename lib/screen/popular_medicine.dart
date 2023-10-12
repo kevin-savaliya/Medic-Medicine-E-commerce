@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -10,6 +12,8 @@ import 'package:medic/utils/string.dart';
 class PopularMedicine extends StatelessWidget {
 
   MedicineController controller = Get.put(MedicineController());
+
+  PopularMedicine({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,7 @@ class PopularMedicine extends StatelessWidget {
                 AppIcons.search,
                 width: 20,
               )),
-          SizedBox(
+          const SizedBox(
             width: 12,
           ),
           GestureDetector(
@@ -49,7 +53,7 @@ class PopularMedicine extends StatelessWidget {
                 AppIcons.bag,
                 width: 22,
               )),
-          SizedBox(
+          const SizedBox(
             width: 15,
           ),
         ],
@@ -58,52 +62,50 @@ class PopularMedicine extends StatelessWidget {
     );
   }
 
-  Container popularMedicineWidget() {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: GridView.builder(
-          padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: controller.popularMedicine.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, childAspectRatio: 1.1,mainAxisSpacing: 15,crossAxisSpacing: 15),
-          itemBuilder: (context, index) {
-            return Container(
-              height: 130,
-              width: 130,
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: controller.popularColorList[
-                index % (controller.popularColorList.length)],
-              ),
-              child: Stack(
-                children: [
-                  SvgPicture.asset(AppImages.designVector),
-                  Positioned(
-                      top: 20,
-                      left: 15,
-                      child: Text(
-                        controller.popularMedicine[index],
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(color: AppColors.white),
-                      )),
-                  Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Image.asset(
-                        controller.medicineImageList[index %
-                            (controller.medicineImageList.length)],
-                        height: 70,
-                      ))
-                ],
-              ),
-            );
-          },
-        ),
+  Widget popularMedicineWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: GridView.builder(
+        padding: EdgeInsets.zero,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: controller.popularMedicine.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, childAspectRatio: 1.1,mainAxisSpacing: 15,crossAxisSpacing: 15),
+        itemBuilder: (context, index) {
+          return Container(
+            height: 130,
+            width: 130,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: controller.popularColorList[
+              index % (controller.popularColorList.length)],
+            ),
+            child: Stack(
+              children: [
+                SvgPicture.asset(AppImages.designVector),
+                Positioned(
+                    top: 20,
+                    left: 15,
+                    child: Text(
+                      controller.popularMedicine[index],
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(color: AppColors.white),
+                    )),
+                Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Image.asset(
+                      controller.medicineImageList[index %
+                          (controller.medicineImageList.length)],
+                      height: 70,
+                    ))
+              ],
+            ),
+          );
+        },
       ),
     );
   }

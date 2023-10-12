@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class AppImages {
   static const String medic_white_text = 'asset/images/medic_white_text.svg';
   static const String medic_teal_text = 'asset/images/medic_teal_text.svg';
@@ -59,6 +61,8 @@ class AppIcons {
   static const String favFillRed = 'asset/icons/favFill.svg';
   static const String favourite = 'asset/icons/favourite.svg';
   static const String back = 'asset/icons/backIcon.svg';
+  static const String noData = 'asset/icons/nodata.png';
+  static const String closeRed = 'asset/icons/closeRed.svg';
   static const String timer = 'asset/icons/timerMedic.svg';
   static const String fillAdd = 'asset/icons/filladd.svg';
   static const String logout = 'asset/icons/logout.svg';

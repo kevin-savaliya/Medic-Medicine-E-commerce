@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -59,7 +59,7 @@ class AddMedicineScreen extends StatelessWidget {
                     fontFamily: AppFont.fontMedium, color: AppColors.txtGrey),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             SizedBox(
@@ -104,7 +104,7 @@ class AddMedicineScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -124,7 +124,7 @@ class AddMedicineScreen extends StatelessWidget {
                                   color: AppColors.txtGrey),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       SizedBox(
@@ -181,7 +181,7 @@ class AddMedicineScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Expanded(
@@ -199,7 +199,7 @@ class AddMedicineScreen extends StatelessWidget {
                                   color: AppColors.txtGrey),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       SizedBox(
@@ -258,7 +258,7 @@ class AddMedicineScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Align(
@@ -269,7 +269,7 @@ class AddMedicineScreen extends StatelessWidget {
                     fontFamily: AppFont.fontMedium, color: AppColors.txtGrey),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -286,7 +286,7 @@ class AddMedicineScreen extends StatelessWidget {
                       height: 18,
                       color: AppColors.txtGrey.withOpacity(0.8),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     SizedBox(
@@ -307,12 +307,12 @@ class AddMedicineScreen extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 130),
                           child: SvgPicture.asset(AppIcons.arrowDown),
                         ),
-                        underline: SizedBox(),
+                        underline: const SizedBox(),
                         borderRadius: BorderRadius.circular(10),
 
                         onChanged: (value) {
                           controller.frequencyValue.value = value!;
-                          print(controller.frequencyValue);
+                          // print(controller.frequencyValue);
                         },
                         items: controller.frequencyList.isNotEmpty
                             ? controller.frequencyList.map((String items) {
@@ -333,7 +333,7 @@ class AddMedicineScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Align(
@@ -344,7 +344,7 @@ class AddMedicineScreen extends StatelessWidget {
                     fontFamily: AppFont.fontMedium, color: AppColors.txtGrey),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             SizedBox(
@@ -402,14 +402,14 @@ class AddMedicineScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 200,
             ),
             ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
-                    fixedSize: Size(200, 50),
+                    fixedSize: const Size(200, 50),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30))),

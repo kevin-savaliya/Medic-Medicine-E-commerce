@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, camel_case_types, unrelated_type_equality_checks, deprecated_member_use
+
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -74,7 +76,7 @@ class ReminderScreen extends StatelessWidget {
             ),
           ),
           body:
-              TabBarView(children: [weekWidget(), monthWidget(), yearWidget()]),
+              TabBarView(children: [weekWidget(), monthWidget(), const yearWidget()]),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 65),
             child: FloatingActionButton(
@@ -91,8 +93,11 @@ class ReminderScreen extends StatelessWidget {
   }
 }
 
+
 class weekWidget extends StatelessWidget {
   ReminderController controller = Get.put(ReminderController());
+
+  weekWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -151,87 +156,85 @@ class weekWidget extends StatelessWidget {
           ),
           Expanded(
             flex: 9,
-            child: Container(
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return Obx(() => GestureDetector(
-                        onTap: () {
-                          controller.index.value = index;
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: AppColors.lineGrey)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 15),
-                              child: Row(
-                                children: [
-                                  Image.asset("asset/medicinebox.jpg",
-                                      height: 50),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Iconic Remedies",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                fontFamily: AppFont.fontBold),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "1 Capsule | 20 mg",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(color: AppColors.txtGrey),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "7:00 AM",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                              color: AppColors.txtGrey,
-                                              fontFamily: AppFont.fontRegular,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  controller.index == index
-                                      ? SvgPicture.asset(
-                                          AppIcons.checkFill,
-                                          height: 22,
-                                          color: AppColors.primaryColor,
-                                        )
-                                      : SvgPicture.asset(
-                                          AppIcons.checkUnFill,
-                                          height: 22,
-                                        )
-                                ],
-                              ),
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return Obx(() => GestureDetector(
+                      onTap: () {
+                        controller.index.value = index;
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: AppColors.lineGrey)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 15),
+                            child: Row(
+                              children: [
+                                Image.asset("asset/medicinebox.jpg",
+                                    height: 50),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Iconic Remedies",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              fontFamily: AppFont.fontBold),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "1 Capsule | 20 mg",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(color: AppColors.txtGrey),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "7:00 AM",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(
+                                            color: AppColors.txtGrey,
+                                            fontFamily: AppFont.fontRegular,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                controller.index == index
+                                    ? SvgPicture.asset(
+                                        AppIcons.checkFill,
+                                        height: 22,
+                                        color: AppColors.primaryColor,
+                                      )
+                                    : SvgPicture.asset(
+                                        AppIcons.checkUnFill,
+                                        height: 22,
+                                      )
+                              ],
                             ),
                           ),
                         ),
-                      ));
-                },
-              ),
+                      ),
+                    ));
+              },
             ),
           ),
           const SizedBox(
@@ -285,7 +288,10 @@ class weekWidget extends StatelessWidget {
 }
 
 class monthWidget extends GetWidget<ReminderController> {
+  @override
   ReminderController controller = Get.put(ReminderController());
+
+  monthWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -344,87 +350,85 @@ class monthWidget extends GetWidget<ReminderController> {
           ),
           Expanded(
             flex: 9,
-            child: Container(
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return Obx(() => GestureDetector(
-                        onTap: () {
-                          controller.index.value = index;
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: AppColors.lineGrey)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 15),
-                              child: Row(
-                                children: [
-                                  Image.asset("asset/medicinebox.jpg",
-                                      height: 50),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Iconic Remedies",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                fontFamily: AppFont.fontBold),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "1 Capsule | 20 mg",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(color: AppColors.txtGrey),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "7:00 AM",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                              color: AppColors.txtGrey,
-                                              fontFamily: AppFont.fontRegular,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  controller.index == index
-                                      ? SvgPicture.asset(
-                                          AppIcons.checkFill,
-                                          height: 22,
-                                          color: AppColors.primaryColor,
-                                        )
-                                      : SvgPicture.asset(
-                                          AppIcons.checkUnFill,
-                                          height: 22,
-                                        )
-                                ],
-                              ),
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return Obx(() => GestureDetector(
+                      onTap: () {
+                        controller.index.value = index;
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: AppColors.lineGrey)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 15),
+                            child: Row(
+                              children: [
+                                Image.asset("asset/medicinebox.jpg",
+                                    height: 50),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Iconic Remedies",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              fontFamily: AppFont.fontBold),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "1 Capsule | 20 mg",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(color: AppColors.txtGrey),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "7:00 AM",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(
+                                            color: AppColors.txtGrey,
+                                            fontFamily: AppFont.fontRegular,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                controller.index == index
+                                    ? SvgPicture.asset(
+                                        AppIcons.checkFill,
+                                        height: 22,
+                                        color: AppColors.primaryColor,
+                                      )
+                                    : SvgPicture.asset(
+                                        AppIcons.checkUnFill,
+                                        height: 22,
+                                      )
+                              ],
                             ),
                           ),
                         ),
-                      ));
-                },
-              ),
+                      ),
+                    ));
+              },
             ),
           ),
           const SizedBox(
@@ -478,6 +482,8 @@ class monthWidget extends GetWidget<ReminderController> {
 }
 
 class yearWidget extends GetWidget<ReminderController> {
+  const yearWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -535,87 +541,85 @@ class yearWidget extends GetWidget<ReminderController> {
           ),
           Expanded(
             flex: 9,
-            child: Container(
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return Obx(() => GestureDetector(
-                        onTap: () {
-                          controller.index.value = index;
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: AppColors.lineGrey)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 15),
-                              child: Row(
-                                children: [
-                                  Image.asset("asset/medicinebox.jpg",
-                                      height: 50),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Iconic Remedies",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                fontFamily: AppFont.fontBold),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "1 Capsule | 20 mg",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(color: AppColors.txtGrey),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "7:00 AM",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                              color: AppColors.txtGrey,
-                                              fontFamily: AppFont.fontRegular,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  controller.index == index
-                                      ? SvgPicture.asset(
-                                          AppIcons.checkFill,
-                                          height: 22,
-                                          color: AppColors.primaryColor,
-                                        )
-                                      : SvgPicture.asset(
-                                          AppIcons.checkUnFill,
-                                          height: 22,
-                                        )
-                                ],
-                              ),
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return Obx(() => GestureDetector(
+                      onTap: () {
+                        controller.index.value = index;
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: AppColors.lineGrey)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 15),
+                            child: Row(
+                              children: [
+                                Image.asset("asset/medicinebox.jpg",
+                                    height: 50),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Iconic Remedies",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              fontFamily: AppFont.fontBold),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "1 Capsule | 20 mg",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(color: AppColors.txtGrey),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "7:00 AM",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(
+                                            color: AppColors.txtGrey,
+                                            fontFamily: AppFont.fontRegular,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                controller.index == index
+                                    ? SvgPicture.asset(
+                                        AppIcons.checkFill,
+                                        height: 22,
+                                        color: AppColors.primaryColor,
+                                      )
+                                    : SvgPicture.asset(
+                                        AppIcons.checkUnFill,
+                                        height: 22,
+                                      )
+                              ],
                             ),
                           ),
                         ),
-                      ));
-                },
-              ),
+                      ),
+                    ));
+              },
             ),
           ),
           const SizedBox(

@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medic/model/category_data.dart';
+import 'package:medic/model/medicine_data.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
@@ -11,6 +14,17 @@ class MedicineController extends GetxController {
 
   TimeOfDay selectedTime = TimeOfDay.now();
   TextEditingController timeController = TextEditingController();
+
+  final CollectionReference categoryref =
+      FirebaseFirestore.instance.collection('categories');
+  final CollectionReference medicineRef =
+      FirebaseFirestore.instance.collection('medicines');
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+  }
 
   List medicineCategoryList = [
     "Allopathy",
@@ -83,5 +97,35 @@ class MedicineController extends GetxController {
     AppIcons.africell,
   ];
 
-  List<String> frequencyList = ["Everyday","Weekly","Monthly","Yearly"];
+  List<String> frequencyList = ["Everyday", "Weekly", "Monthly", "Yearly"];
+
+  Stream<List<CategoryData>> fetchCategory() {
+    var data = categoryref.snapshots().map((event) {
+      return event.docs.map((e) {
+        return CategoryData.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+    return data;
+  }
+
+  Stream<List<MedicineData>> fetchPopularMedicines() {
+    var data = medicineRef
+        .where('ratings', isGreaterThanOrEqualTo: '3.5')
+        .snapshots()
+        .map((event) {
+      return event.docs.map((e) {
+        return MedicineData.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+    return data;
+  }
+
+  Stream<List<MedicineData>> fetchMedicines() {
+    var data = medicineRef.snapshots().map((event) {
+      return event.docs.map((e) {
+        return MedicineData.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+    return data;
+  }
 }

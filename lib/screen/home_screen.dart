@@ -1,8 +1,14 @@
+// ignore_for_file: deprecated_member_use
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/home_controller.dart';
+import 'package:medic/controller/medicine_controller.dart';
+import 'package:medic/model/category_data.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/favourite_screen.dart';
 import 'package:medic/screen/medicine_category.dart';
@@ -19,6 +25,7 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:medic/widgets/user/my_name_text_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
@@ -137,7 +144,7 @@ class HomeScreen extends GetWidget<HomeController> {
               labelStyle: Theme.of(context).textTheme.titleMedium),
           SpeedDialChild(
               onTap: () {
-                Get.to(() => const UploadPrescription());
+                Get.to(() => UploadPrescription());
               },
               child: SvgPicture.asset(AppIcons.uploadPres),
               backgroundColor: AppColors.white,
@@ -226,34 +233,122 @@ class HomeScreen extends GetWidget<HomeController> {
                       ))
                 ],
               ),
-              SizedBox(
-                height: 100,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.categoryImageList.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset(controller.categoryImageList[index]),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "${controller.categoryList[index]}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    color: AppColors.txtGrey,
-                                    fontFamily: AppFont.fontMedium),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                ),
+              GetBuilder(
+                init: MedicineController(),
+                builder: (controller) {
+                  return SizedBox(
+                      height: 100,
+                      child: StreamBuilder<List<CategoryData>>(
+                        stream: controller.fetchCategory(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CategoryShimmer(
+                                itemCount: snapshot.data?.length,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Container(
+                              alignment: Alignment.center,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: AppColors.tilePrimaryColor),
+                              child: Text(
+                                "Error : ${snapshot.error}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.primaryColor,
+                                        fontSize: 13,
+                                        fontFamily: AppFont.fontMedium),
+                              ),
+                            );
+                          } else if (snapshot.hasData &&
+                              snapshot.data!.isNotEmpty) {
+                            List<CategoryData>? categoryList = snapshot.data!;
+
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: categoryList.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                        child: CachedNetworkImage(
+                                          height: 60,
+                                          width: 60,
+                                          imageUrl: categoryList[index].image!,
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                          progressIndicatorBuilder: (context,
+                                                  url, downloadProgress) =>
+                                              SizedBox(
+                                            width: 30,
+                                            height: 30,
+                                            child: Center(
+                                              child: CupertinoActivityIndicator(
+                                                color: AppColors.primaryColor,
+                                                animating: true,
+                                                radius: 10,
+                                              ),
+                                            ),
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 7,
+                                      ),
+                                      Text(
+                                        "${categoryList[index].name}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                                color: AppColors.txtGrey,
+                                                fontFamily: AppFont.fontMedium),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          } else {
+                            return Container(
+                              alignment: Alignment.center,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: AppColors.tilePrimaryColor),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(AppIcons.noData, height: 40),
+                                  Text(
+                                    "No Category Found!",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.primaryColor,
+                                            fontSize: 14,
+                                            fontFamily: AppFont.fontMedium),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                      ));
+                },
               ),
               const SizedBox(
                 height: 5,

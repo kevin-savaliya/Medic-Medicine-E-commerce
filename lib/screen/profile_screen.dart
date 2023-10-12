@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medic/_dart/_init.dart';
 import 'package:medic/screen/myaddress_screen.dart';
@@ -30,191 +32,189 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Container profileWidget(BuildContext context) {
-    return Container(
-      child: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipOval(
-                  child: Container(
-                      height: 90,
-                      width: 90,
-                      color: AppColors.primaryColor,
-                      child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child:
-                              SvgPicture.asset(AppImages.medic_white_text)))),
-              const SizedBox(height: 10),
-              MyNameTextWidget(
-                  textStyle: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(fontFamily: AppFont.fontBold)),
-              const SizedBox(height: 5),
-              MyNumberTextWidget(
-                  textStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.txtGrey.withOpacity(0.8),
-                      fontFamily: AppFont.fontMedium)),
-              const SizedBox(height: 25),
-              ListTile(
-                onTap: () {
-                  Get.to(() => const MyAddressScreen());
-                },
-                horizontalTitleGap: 0,
-                leading: SvgPicture.asset(AppIcons.pin, height: 22),
-                trailing: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 15,
-                  color: AppColors.txtGrey,
-                ),
-                title: Text(
-                  ConstString.myAddress,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+  Widget profileWidget(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ClipOval(
                 child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: AppColors.lineGrey,
-                ),
+                    height: 90,
+                    width: 90,
+                    color: AppColors.primaryColor,
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                            SvgPicture.asset(AppImages.medic_white_text)))),
+            const SizedBox(height: 10),
+            MyNameTextWidget(
+                textStyle: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(fontFamily: AppFont.fontBold)),
+            const SizedBox(height: 5),
+            MyNumberTextWidget(
+                textStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: AppColors.txtGrey.withOpacity(0.8),
+                    fontFamily: AppFont.fontMedium)),
+            const SizedBox(height: 25),
+            ListTile(
+              onTap: () {
+                Get.to(() => const MyAddressScreen());
+              },
+              horizontalTitleGap: 0,
+              leading: SvgPicture.asset(AppIcons.pin, height: 22),
+              trailing: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 15,
+                color: AppColors.txtGrey,
               ),
-              ListTile(
-                onTap: () {
-                  Get.to(() => const OrderHistory());
-                },
-                horizontalTitleGap: 0,
-                leading: SvgPicture.asset(AppIcons.timer, height: 22),
-                trailing: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 15,
-                  color: AppColors.txtGrey,
-                ),
-                title: Text(
-                  ConstString.orderHistory,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
-                ),
+              title: Text(
+                ConstString.myAddress,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: AppColors.lineGrey,
-                ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: Container(
+                height: 1,
+                width: double.infinity,
+                color: AppColors.lineGrey,
               ),
-              ListTile(
-                onTap: () {
-                  Get.to(() => const ReminderScreen());
-                },
-                horizontalTitleGap: 0,
-                leading: SvgPicture.asset(
-                  AppIcons.reminder,
-                  height: 21,
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 15,
-                  color: AppColors.txtGrey,
-                ),
-                title: Text(
-                  ConstString.reminder,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
-                ),
+            ),
+            ListTile(
+              onTap: () {
+                Get.to(() => const OrderHistory());
+              },
+              horizontalTitleGap: 0,
+              leading: SvgPicture.asset(AppIcons.timer, height: 22),
+              trailing: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 15,
+                color: AppColors.txtGrey,
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: AppColors.lineGrey,
-                ),
+              title: Text(
+                ConstString.orderHistory,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
               ),
-              ListTile(
-                onTap: () {
-                  Get.to(() => const UploadPrescription());
-                },
-                horizontalTitleGap: 0,
-                leading: SvgPicture.asset(
-                  AppIcons.file,
-                  color: AppColors.txtGrey,
-                  height: 21,
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 15,
-                  color: AppColors.txtGrey,
-                ),
-                title: Text(
-                  ConstString.prescription,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
-                ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: Container(
+                height: 1,
+                width: double.infinity,
+                color: AppColors.lineGrey,
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: AppColors.lineGrey,
-                ),
+            ),
+            ListTile(
+              onTap: () {
+                Get.to(() => const ReminderScreen());
+              },
+              horizontalTitleGap: 0,
+              leading: SvgPicture.asset(
+                AppIcons.reminder,
+                height: 21,
               ),
-              ListTile(
-                onTap: () {
-                  Get.to(() => const NotificationScreen());
-                },
-                horizontalTitleGap: 0,
-                leading: SvgPicture.asset(
-                  AppIcons.notification,
-                  height: 21,
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 15,
-                  color: AppColors.txtGrey,
-                ),
-                title: Text(
-                  ConstString.notification,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
-                ),
+              trailing: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 15,
+                color: AppColors.txtGrey,
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: AppColors.lineGrey,
-                ),
+              title: Text(
+                ConstString.reminder,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
               ),
-              ListTile(
-                onTap: () async {
-                  await logoutDialogue(context, _authController);
-                },
-                horizontalTitleGap: 0,
-                leading: SvgPicture.asset(
-                  AppIcons.logout,
-                  height: 21,
-                ),
-                title: Text(
-                  ConstString.logout,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontFamily: AppFont.fontBold, color: AppColors.red),
-                ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: Container(
+                height: 1,
+                width: double.infinity,
+                color: AppColors.lineGrey,
               ),
-            ],
-          ),
+            ),
+            ListTile(
+              onTap: () {
+                Get.to(() => UploadPrescription());
+              },
+              horizontalTitleGap: 0,
+              leading: SvgPicture.asset(
+                AppIcons.file,
+                color: AppColors.txtGrey,
+                height: 21,
+              ),
+              trailing: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 15,
+                color: AppColors.txtGrey,
+              ),
+              title: Text(
+                ConstString.prescription,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: Container(
+                height: 1,
+                width: double.infinity,
+                color: AppColors.lineGrey,
+              ),
+            ),
+            ListTile(
+              onTap: () {
+                Get.to(() => const NotificationScreen());
+              },
+              horizontalTitleGap: 0,
+              leading: SvgPicture.asset(
+                AppIcons.notification,
+                height: 21,
+              ),
+              trailing: Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 15,
+                color: AppColors.txtGrey,
+              ),
+              title: Text(
+                ConstString.notification,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: Container(
+                height: 1,
+                width: double.infinity,
+                color: AppColors.lineGrey,
+              ),
+            ),
+            ListTile(
+              onTap: () async {
+                await logoutDialogue(context, _authController);
+              },
+              horizontalTitleGap: 0,
+              leading: SvgPicture.asset(
+                AppIcons.logout,
+                height: 21,
+              ),
+              title: Text(
+                ConstString.logout,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontFamily: AppFont.fontBold, color: AppColors.red),
+              ),
+            ),
+          ],
         ),
       ),
     );
