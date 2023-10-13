@@ -61,7 +61,7 @@ class FavouriteScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Get.to(() => const MedicineDetails());
+              Get.to(() => MedicineDetails());
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),

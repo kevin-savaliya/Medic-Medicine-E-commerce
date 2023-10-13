@@ -9,6 +9,7 @@ class MedicineData {
   String? image;
   String? placeholderImage;
   double? ratings;
+  String? genericName;
   String? description;
   String? benefits;
   String? uses;
@@ -24,6 +25,7 @@ class MedicineData {
     this.image,
     this.placeholderImage,
     this.ratings,
+    this.genericName,
     this.description,
     this.benefits,
     this.uses,
@@ -40,6 +42,7 @@ class MedicineData {
     String? image,
     String? placeholderImage,
     double? ratings,
+    String? genericName,
     String? description,
     String? benefits,
     String? uses,
@@ -55,6 +58,7 @@ class MedicineData {
       image: image ?? this.image,
       placeholderImage: placeholderImage ?? this.placeholderImage,
       ratings: ratings ?? this.ratings,
+      genericName: genericName ?? this.genericName,
       description: description ?? this.description,
       benefits: benefits ?? this.benefits,
       uses: uses ?? this.uses,
@@ -73,6 +77,7 @@ class MedicineData {
       'image': image,
       'placeholderImage': placeholderImage,
       'ratings': ratings,
+      'genericName': genericName,
       'description': description,
       'benefits': benefits,
       'uses': uses,
@@ -91,6 +96,7 @@ class MedicineData {
       image: map['image'],
       placeholderImage: map['placeholderImage'],
       ratings: map['ratings'],
+      genericName: map['genericName'],
       description: map['description'],
       benefits: map['benefits'],
       uses: map['uses'],

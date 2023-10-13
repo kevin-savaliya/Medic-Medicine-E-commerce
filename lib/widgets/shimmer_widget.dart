@@ -40,3 +40,34 @@ class CategoryShimmer extends StatelessWidget {
         ));
   }
 }
+
+class MedicineShimmer extends StatelessWidget {
+  final int? itemCount;
+  final double? height;
+
+  MedicineShimmer({required this.itemCount, this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: ListView.builder(
+          itemCount: itemCount,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Container(
+                height: 100,
+                width: 180,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[300]),
+              ),
+            );
+          },
+        ));
+  }
+}

@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/medicine_details.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
@@ -9,7 +12,9 @@ import 'package:medic/utils/string.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 class MedicineScreen extends StatelessWidget {
-  const MedicineScreen({super.key});
+  List<MedicineData>? medicineList;
+
+  MedicineScreen({this.medicineList});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,10 @@ class MedicineScreen extends StatelessWidget {
         ),
         titleSpacing: 0,
         title: Text(ConstString.medicine,
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(fontFamily: AppFont.fontBold)),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(fontFamily: AppFont.fontBold)),
         elevation: 1.5,
         shadowColor: AppColors.txtGrey.withOpacity(0.2),
         actions: [
@@ -63,20 +71,22 @@ class MedicineScreen extends StatelessWidget {
       padding: const EdgeInsets.all(5.0),
       child: GridView.builder(
         padding: EdgeInsets.zero,
-        itemCount: 6,
+        itemCount: medicineList!.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, childAspectRatio: 0.73, mainAxisSpacing: 5),
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Get.to(() => const MedicineDetails());
+              Get.to(() => MedicineDetails(
+                    medicineData: medicineList![index],
+                  ));
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
               height: 250,
               width: 200,
               decoration: BoxDecoration(
-                  color: AppColors.decsGrey,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.decsGrey)),
               child: Column(
@@ -89,12 +99,26 @@ class MedicineScreen extends StatelessWidget {
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(25.0),
-                                child: Image.asset(
-                                  AppImages.medicineBox4,
-                                  height: 50,
+                              CachedNetworkImage(
+                                height: 25,
+                                width: 25,
+                                imageUrl: medicineList?[index].image ?? "",
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) =>
+                                        SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Center(
+                                    child: CupertinoActivityIndicator(
+                                      color: AppColors.primaryColor,
+                                      animating: true,
+                                      radius: 10,
+                                    ),
+                                  ),
                                 ),
+                                // fit: BoxFit.cover,
                               ),
                               Positioned(
                                   top: 10,
@@ -119,7 +143,7 @@ class MedicineScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Iconic Remedies",
+                            medicineList![index].genericName!,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall!
@@ -132,7 +156,7 @@ class MedicineScreen extends StatelessWidget {
                             height: 3,
                           ),
                           Text(
-                            "Aspirin",
+                            medicineList![index].brandName!,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleSmall!
@@ -145,7 +169,7 @@ class MedicineScreen extends StatelessWidget {
                             height: 3,
                           ),
                           SmoothStarRating(
-                            rating: 3,
+                            rating: medicineList![index].ratings!,
                             allowHalfRating: true,
                             defaultIconData: Icons.star,
                             filledIconData: Icons.star,

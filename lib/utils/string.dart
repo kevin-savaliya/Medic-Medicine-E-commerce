@@ -95,6 +95,10 @@ class ConstString {
   static const String address = "Address";
   static const String area = "Area, Sector, Locality*";
   static const String landmark = "Landmark";
+  static const String noCategory = "No Category Found!";
+  static const String noMedicine = "No Medicine Found!";
+  static const String noReview = "No Review Found!";
+  static const String noPopular = "No Popular Medicine Found!";
 
   static const String Analgesics = "Analgesics";
   static const String Antivirals = "Antivirals";
