@@ -1,8 +1,11 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/medicine_details.dart';
 import 'package:medic/theme/colors.dart';
@@ -14,7 +17,9 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 class MedicineScreen extends StatelessWidget {
   List<MedicineData>? medicineList;
 
-  MedicineScreen({this.medicineList});
+  MedicineScreen({super.key, this.medicineList});
+
+  MedicineController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -99,31 +104,59 @@ class MedicineScreen extends StatelessWidget {
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              CachedNetworkImage(
-                                height: 25,
-                                width: 25,
-                                imageUrl: medicineList?[index].image ?? "",
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) =>
-                                        SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                  child: Center(
-                                    child: CupertinoActivityIndicator(
-                                      color: AppColors.primaryColor,
-                                      animating: true,
-                                      radius: 10,
+                              ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
+                                child: CachedNetworkImage(
+                                  height: 25,
+                                  width: 25,
+                                  imageUrl: medicineList?[index].image ?? "",
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: Center(
+                                      child: CupertinoActivityIndicator(
+                                        color: AppColors.primaryColor,
+                                        animating: true,
+                                        radius: 10,
+                                      ),
                                     ),
                                   ),
+                                  fit: BoxFit.cover,
                                 ),
-                                // fit: BoxFit.cover,
                               ),
-                              Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: SvgPicture.asset(AppIcons.like))
+                              Obx(() {
+                                String medicineId =
+                                    medicineList?[index].id ?? "";
+                                bool isFav = controller.isFavourite(medicineId);
+                                return Positioned(
+                                    top: 10,
+                                    right: 10,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (isFav) {
+                                          controller
+                                              .removeFavourite(medicineId);
+                                        } else {
+                                          controller.addFavourite(medicineId);
+                                        }
+                                      },
+                                      child: isFav
+                                          ? SvgPicture.asset(
+                                              AppIcons.favFillRed,
+                                              height: 22,
+                                            )
+                                          : SvgPicture.asset(
+                                              AppIcons.like,
+                                              height: 22,
+                                            ),
+                                    ));
+                              })
                             ],
                           ),
                         ),
@@ -169,7 +202,7 @@ class MedicineScreen extends StatelessWidget {
                             height: 3,
                           ),
                           SmoothStarRating(
-                            rating: medicineList![index].ratings!,
+                            rating: double.parse(medicineList![index].ratings!),
                             allowHalfRating: true,
                             defaultIconData: Icons.star,
                             filledIconData: Icons.star,

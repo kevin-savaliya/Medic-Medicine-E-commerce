@@ -55,7 +55,7 @@ class HomeScreen extends GetWidget<HomeController> {
           );
         } else if (controller.pageIndex.value == 3) {
           return Scaffold(
-            body: const FavouriteScreen(),
+            body: FavouriteScreen(),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 4) {
@@ -431,7 +431,8 @@ class HomeScreen extends GetWidget<HomeController> {
                     child: StreamBuilder(
                       stream: controller.fetchMedicines(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return MedicineShimmer(
                               itemCount: snapshot.data?.length);
                         } else if (snapshot.hasError) {
@@ -458,31 +459,39 @@ class HomeScreen extends GetWidget<HomeController> {
                           return Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     ConstString.recommended,
-                                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                                      color: AppColors.darkPrimaryColor,
-                                      fontFamily: AppFont.fontMedium,
-                                      fontSize: 15.5,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .copyWith(
+                                          color: AppColors.darkPrimaryColor,
+                                          fontFamily: AppFont.fontMedium,
+                                          fontSize: 15.5,
+                                        ),
                                   ),
                                   TextButton(
                                       onPressed: () {
-                                        Get.to(() => MedicineScreen(medicineList: medicineList));
+                                        Get.to(() => MedicineScreen(
+                                            medicineList: medicineList));
                                       },
                                       child: Text(
                                         ConstString.viewAll,
-                                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                                            color: AppColors.primaryColor,
-                                            fontFamily: AppFont.fontMedium,
-                                            fontSize: 14),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge!
+                                            .copyWith(
+                                                color: AppColors.primaryColor,
+                                                fontFamily: AppFont.fontMedium,
+                                                fontSize: 14),
                                       ))
                                 ],
                               ),
-                              Container(
-                                height : 260,
+                              SizedBox(
+                                height: 260,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: medicineList.length,
@@ -498,7 +507,8 @@ class HomeScreen extends GetWidget<HomeController> {
                                         width: 200,
                                         decoration: BoxDecoration(
                                             color: AppColors.white,
-                                            borderRadius: BorderRadius.circular(12),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                             border: Border.all(
                                                 color: AppColors.decsGrey)),
                                         child: Column(
@@ -511,38 +521,89 @@ class HomeScreen extends GetWidget<HomeController> {
                                                     child: Stack(
                                                       fit: StackFit.expand,
                                                       children: [
-                                                        CachedNetworkImage(
-                                                          height: 30,
-                                                          width: 30,
-                                                          imageUrl:
-                                                              medicineList[index]
-                                                                  .image ?? "",
-                                                          errorWidget: (context, url,
-                                                                  error) =>
-                                                              const Icon(Icons.error),
-                                                          progressIndicatorBuilder:
-                                                              (context, url,
-                                                                      downloadProgress) =>
-                                                                  SizedBox(
-                                                            width: 30,
+                                                        ClipRRect(
+                                                          borderRadius:
+                                                              const BorderRadius.only(
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          10),
+                                                                  topRight: Radius
+                                                                      .circular(
+                                                                          10)),
+                                                          child:
+                                                              CachedNetworkImage(
                                                             height: 30,
-                                                            child: Center(
-                                                              child:
-                                                                  CupertinoActivityIndicator(
-                                                                color: AppColors
-                                                                    .primaryColor,
-                                                                animating: true,
-                                                                radius: 10,
+                                                            width: 30,
+                                                            imageUrl: medicineList[
+                                                                        index]
+                                                                    .image ??
+                                                                "",
+                                                            errorWidget: (context,
+                                                                    url,
+                                                                    error) =>
+                                                                const Icon(Icons
+                                                                    .error),
+                                                            progressIndicatorBuilder:
+                                                                (context, url,
+                                                                        downloadProgress) =>
+                                                                    SizedBox(
+                                                              width: 30,
+                                                              height: 30,
+                                                              child: Center(
+                                                                child:
+                                                                    CupertinoActivityIndicator(
+                                                                  color: AppColors
+                                                                      .primaryColor,
+                                                                  animating:
+                                                                      true,
+                                                                  radius: 10,
+                                                                ),
                                                               ),
                                                             ),
+                                                            fit: BoxFit.cover,
                                                           ),
-                                                          // fit: BoxFit.cover,
                                                         ),
-                                                        Positioned(
-                                                            top: 10,
-                                                            right: 10,
-                                                            child: SvgPicture.asset(
-                                                                AppIcons.like))
+                                                        Obx(() {
+                                                          String medicineId =
+                                                              medicineList[
+                                                                      index]
+                                                                  .id!;
+                                                          bool isFav = controller
+                                                              .isFavourite(
+                                                                  medicineId);
+                                                          return Positioned(
+                                                              top: 10,
+                                                              right: 10,
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {
+                                                                  if (isFav) {
+                                                                    controller
+                                                                        .removeFavourite(
+                                                                            medicineId);
+                                                                  } else {
+                                                                    controller
+                                                                        .addFavourite(
+                                                                            medicineId);
+                                                                  }
+                                                                },
+                                                                child: isFav
+                                                                    ? SvgPicture
+                                                                        .asset(
+                                                                        AppIcons
+                                                                            .favFillRed,
+                                                                        height:
+                                                                            22,
+                                                                      )
+                                                                    : SvgPicture
+                                                                        .asset(
+                                                                        AppIcons
+                                                                            .like,
+                                                                        height:
+                                                                            22,
+                                                                      ),
+                                                              ));
+                                                        })
                                                       ],
                                                     ),
                                                   ),
@@ -550,19 +611,23 @@ class HomeScreen extends GetWidget<HomeController> {
                                             Expanded(
                                               flex: 6,
                                               child: Container(
-                                                padding: const EdgeInsets.all(10),
+                                                padding:
+                                                    const EdgeInsets.all(10),
                                                 width: double.infinity,
                                                 decoration: BoxDecoration(
                                                     color: AppColors.white,
                                                     borderRadius:
                                                         const BorderRadius.only(
                                                             bottomLeft:
-                                                                Radius.circular(12),
+                                                                Radius.circular(
+                                                                    12),
                                                             bottomRight:
-                                                                Radius.circular(12))),
+                                                                Radius.circular(
+                                                                    12))),
                                                 child: Column(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.spaceEvenly,
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
@@ -573,8 +638,8 @@ class HomeScreen extends GetWidget<HomeController> {
                                                           .textTheme
                                                           .titleSmall!
                                                           .copyWith(
-                                                              fontFamily:
-                                                                  AppFont.fontMedium,
+                                                              fontFamily: AppFont
+                                                                  .fontMedium,
                                                               color: AppColors
                                                                   .darkPrimaryColor,
                                                               fontSize: 13.5),
@@ -583,34 +648,42 @@ class HomeScreen extends GetWidget<HomeController> {
                                                       height: 3,
                                                     ),
                                                     Text(
-                                                      medicineList[index].brandName ?? "",
+                                                      medicineList[index]
+                                                              .brandName ??
+                                                          "",
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .titleSmall!
                                                           .copyWith(
-                                                              fontFamily:
-                                                                  AppFont.fontRegular,
-                                                              color:
-                                                                  AppColors.txtGrey,
+                                                              fontFamily: AppFont
+                                                                  .fontRegular,
+                                                              color: AppColors
+                                                                  .txtGrey,
                                                               fontSize: 12),
                                                     ),
                                                     const SizedBox(
                                                       height: 3,
                                                     ),
                                                     SmoothStarRating(
-                                                      rating: medicineList[index]
-                                                          .ratings!,
+                                                      rating: double.parse(
+                                                          medicineList[index]
+                                                              .ratings!),
                                                       allowHalfRating: true,
-                                                      defaultIconData: Icons.star,
-                                                      filledIconData: Icons.star,
+                                                      defaultIconData:
+                                                          Icons.star,
+                                                      filledIconData:
+                                                          Icons.star,
                                                       halfFilledIconData:
                                                           Icons.star_half,
                                                       starCount: 5,
                                                       spacing: 2,
-                                                      onRatingChanged: (rating) {},
+                                                      onRatingChanged:
+                                                          (rating) {},
                                                       size: 15,
-                                                      color: AppColors.secondaryColor,
-                                                      borderColor: AppColors.indGrey,
+                                                      color: AppColors
+                                                          .secondaryColor,
+                                                      borderColor:
+                                                          AppColors.indGrey,
                                                     ),
                                                     const SizedBox(
                                                       height: 10,
@@ -627,29 +700,34 @@ class HomeScreen extends GetWidget<HomeController> {
                                                           children: [
                                                             Text(
                                                               "SLE 120",
-                                                              style: Theme.of(context)
+                                                              style: Theme.of(
+                                                                      context)
                                                                   .textTheme
                                                                   .displayMedium!
                                                                   .copyWith(
                                                                       color: AppColors
                                                                           .darkPrimaryColor,
-                                                                      fontFamily: AppFont
-                                                                          .fontMedium),
+                                                                      fontFamily:
+                                                                          AppFont
+                                                                              .fontMedium),
                                                             ),
                                                             const SizedBox(
                                                               height: 5,
                                                             ),
                                                             Text(
                                                               "30% Off",
-                                                              style: Theme.of(context)
+                                                              style: Theme.of(
+                                                                      context)
                                                                   .textTheme
                                                                   .titleSmall!
                                                                   .copyWith(
-                                                                      fontSize: 10,
+                                                                      fontSize:
+                                                                          10,
                                                                       color: AppColors
                                                                           .primaryColor,
-                                                                      fontFamily: AppFont
-                                                                          .fontMedium),
+                                                                      fontFamily:
+                                                                          AppFont
+                                                                              .fontMedium),
                                                             ),
                                                           ],
                                                         ),
@@ -668,13 +746,13 @@ class HomeScreen extends GetWidget<HomeController> {
                                                                           .tilePrimaryColor,
                                                                   fixedSize:
                                                                       const Size(
-                                                                          110, 20),
+                                                                          110,
+                                                                          20),
                                                                   elevation: 0,
                                                                   shape: RoundedRectangleBorder(
                                                                       borderRadius:
-                                                                          BorderRadius
-                                                                              .circular(
-                                                                                  30))),
+                                                                          BorderRadius.circular(
+                                                                              30))),
                                                               child: Text(
                                                                 "Add to cart",
                                                                 style: Theme.of(
@@ -685,8 +763,7 @@ class HomeScreen extends GetWidget<HomeController> {
                                                                         color: AppColors
                                                                             .primaryColor,
                                                                         fontFamily:
-                                                                            AppFont
-                                                                                .fontMedium),
+                                                                            AppFont.fontMedium),
                                                               )),
                                                         )
                                                       ],

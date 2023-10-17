@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medic/model/category_data.dart';
@@ -13,17 +16,28 @@ class MedicineController extends GetxController {
   RxString frequencyValue = "".obs;
 
   TimeOfDay selectedTime = TimeOfDay.now();
+
+  RxList<Map<String, dynamic>> favouriteMedicines =
+      <Map<String, dynamic>>[].obs;
+
+  RxList<String> favMedicinesIds = <String>[].obs;
+
   TextEditingController timeController = TextEditingController();
 
   final CollectionReference categoryref =
       FirebaseFirestore.instance.collection('categories');
   final CollectionReference medicineRef =
       FirebaseFirestore.instance.collection('medicines');
+  final CollectionReference favRef =
+      FirebaseFirestore.instance.collection('favourites');
+
+  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    fetchFavourite();
   }
 
   List medicineCategoryList = [
@@ -122,6 +136,75 @@ class MedicineController extends GetxController {
 
   Stream<List<MedicineData>> fetchMedicines() {
     var data = medicineRef.snapshots().map((event) {
+      return event.docs.map((e) {
+        return MedicineData.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+    return data;
+  }
+
+  fetchFavourite() async {
+    DocumentSnapshot doc = await favRef.doc(currentUserId).get();
+
+    var fetchedMedicine =
+        (doc.data() as Map<String, dynamic>? ?? {})['medicines'] ?? [];
+
+    favouriteMedicines.value = List<Map<String, dynamic>>.from(fetchedMedicine);
+
+    favMedicinesIds.value = favouriteMedicines
+        .map((medicine) => medicine['medicineId'] as String)
+        .toList();
+  }
+
+  bool isFavourite(String medicineId) {
+    return favouriteMedicines
+        .any((medicine) => medicine['medicineId'] == medicineId);
+  }
+
+  addFavourite(String medicineId) async {
+    DocumentReference favDocRef = favRef.doc(currentUserId);
+
+    DocumentSnapshot snapshot = await favDocRef.get();
+
+    Map<String, dynamic> favMedicine = {
+      'medicineId': medicineId,
+      'timestamp': DateTime.now()
+    };
+
+    if (!snapshot.exists) {
+      favouriteMedicines.add(favMedicine);
+      favMedicinesIds.add(medicineId);
+      await favRef.doc(currentUserId).set({'medicines': favouriteMedicines});
+    } else {
+      favouriteMedicines.add(favMedicine);
+      favMedicinesIds.add(medicineId);
+      await favRef.doc(currentUserId).update({
+        'medicines': FieldValue.arrayUnion([favMedicine])
+      });
+    }
+  }
+
+  removeFavourite(String medicineId) {
+    Map<String, dynamic> medicineToRemove = favouriteMedicines.firstWhere(
+      (medicine) => medicine['medicineId'] == medicineId,
+      orElse: () => {},
+    );
+
+    favouriteMedicines.remove(medicineToRemove);
+    favMedicinesIds.remove(medicineId);
+    favRef.doc(currentUserId).update({
+      'medicines': FieldValue.arrayRemove([medicineToRemove])
+    });
+  }
+
+  Stream<List<MedicineData>> fetchFavouriteMedicine() {
+    if (favouriteMedicines.isEmpty) {
+      return Stream.empty();
+    }
+    var data = medicineRef
+        .where('id', whereIn: favMedicinesIds)
+        .snapshots()
+        .map((event) {
       return event.docs.map((e) {
         return MedicineData.fromMap(e.data() as Map<String, dynamic>);
       }).toList();

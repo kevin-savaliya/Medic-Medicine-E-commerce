@@ -22,8 +22,8 @@ class CategoryShimmer extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
               child: Column(
                 children: [
-                  CircleAvatar(radius: 30),
-                  SizedBox(
+                  const CircleAvatar(radius: 30),
+                  const SizedBox(
                     height: 5,
                   ),
                   Text(
@@ -68,6 +68,38 @@ class MedicineShimmer extends StatelessWidget {
               ),
             );
           },
+        ));
+  }
+}
+
+class GridMedicine extends StatelessWidget {
+  final int? itemCount;
+  final double? height;
+
+  GridMedicine({required this.itemCount, this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: GridView.builder(
+            itemCount: itemCount,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 20,
+                childAspectRatio: 0.8),
+            itemBuilder: (context, index) {
+              return Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.grey),
+              );
+            },
+          ),
         ));
   }
 }

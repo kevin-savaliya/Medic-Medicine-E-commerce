@@ -8,7 +8,7 @@ class MedicineData {
   String? drugDrugInteractions;
   String? image;
   String? placeholderImage;
-  double? ratings;
+  String? ratings;
   String? genericName;
   String? description;
   String? benefits;
@@ -41,7 +41,7 @@ class MedicineData {
     String? drugDrugInteractions,
     String? image,
     String? placeholderImage,
-    double? ratings,
+    String? ratings,
     String? genericName,
     String? description,
     String? benefits,
