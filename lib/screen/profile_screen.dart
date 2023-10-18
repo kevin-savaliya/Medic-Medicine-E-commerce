@@ -113,7 +113,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                Get.to(() => const ReminderScreen());
+                Get.to(() => ReminderScreen());
               },
               horizontalTitleGap: 0,
               leading: SvgPicture.asset(

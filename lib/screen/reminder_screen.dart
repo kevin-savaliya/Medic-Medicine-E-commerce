@@ -12,7 +12,8 @@ import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
 
 class ReminderScreen extends StatelessWidget {
-  const ReminderScreen({super.key});
+
+  ReminderController controller = Get.put(ReminderController());
 
   @override
   Widget build(BuildContext context) {

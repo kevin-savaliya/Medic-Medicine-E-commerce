@@ -3,14 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:medic/controller/medicine_controller.dart';
+import 'package:medic/controller/reminder_controller.dart';
+import 'package:medic/model/reminder_data_model.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/app_dialogue.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class AddMedicineScreen extends StatelessWidget {
-  final MedicineController controller = Get.put(MedicineController());
+  final ReminderController controller = Get.put(ReminderController());
 
   AddMedicineScreen({super.key});
 
@@ -45,7 +48,7 @@ class AddMedicineScreen extends StatelessWidget {
   }
 
   Widget addMedicineWidget(
-      BuildContext context, MedicineController controller) {
+      BuildContext context, ReminderController controller) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -65,7 +68,7 @@ class AddMedicineScreen extends StatelessWidget {
             SizedBox(
               height: 50,
               child: TextFormField(
-                // controller: controller.addressController,
+                controller: controller.medicineController,
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium!
@@ -130,7 +133,7 @@ class AddMedicineScreen extends StatelessWidget {
                       SizedBox(
                         height: 50,
                         child: TextFormField(
-                          // controller: controller.addressController,
+                          controller: controller.amountController,
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!
@@ -205,7 +208,7 @@ class AddMedicineScreen extends StatelessWidget {
                       SizedBox(
                         height: 50,
                         child: TextFormField(
-                          // controller: controller.addressController,
+                          controller: controller.doseController,
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!
@@ -309,16 +312,20 @@ class AddMedicineScreen extends StatelessWidget {
                         ),
                         underline: const SizedBox(),
                         borderRadius: BorderRadius.circular(10),
-
                         onChanged: (value) {
                           controller.frequencyValue.value = value!;
-                          // print(controller.frequencyValue);
                         },
                         items: controller.frequencyList.isNotEmpty
                             ? controller.frequencyList.map((String items) {
                                 return DropdownMenuItem(
                                   value: items,
-                                  child: Text(items),
+                                  child: Text(
+                                    items,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(fontSize: 13),
+                                  ),
                                 );
                               }).toList()
                             : null,
@@ -333,8 +340,41 @@ class AddMedicineScreen extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
+            Obx(
+              () => controller.frequencyValue == "Date-Duration"
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: SfDateRangePicker(
+                        selectionMode: DateRangePickerSelectionMode.range,
+                        startRangeSelectionColor: AppColors.primaryColor,
+                        endRangeSelectionColor: AppColors.primaryColor,
+                        selectionShape: DateRangePickerSelectionShape.circle,
+                        headerStyle: DateRangePickerHeaderStyle(
+                            // backgroundColor:
+                            //     AppColors.primaryColor.withOpacity(0.5),
+                            textStyle: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    color: AppColors.black,
+                                    fontFamily: AppFont.fontMedium)),
+                        backgroundColor: AppColors.tilePrimaryColor,
+                        allowViewNavigation: true,
+                        selectionColor: AppColors.primaryColor,
+                        selectionTextStyle: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(fontSize: 13, color: AppColors.white),
+                        rangeSelectionColor: AppColors.tilePrimaryColor,
+                      ),
+                    )
+                  : SizedBox(),
+            ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             Align(
               alignment: Alignment.centerLeft,
@@ -363,7 +403,6 @@ class AddMedicineScreen extends StatelessWidget {
                     controller.timeController.text = pickedTime.format(context);
                   }
                 },
-                // controller: controller.addressController,
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium!
@@ -406,7 +445,20 @@ class AddMedicineScreen extends StatelessWidget {
               height: 200,
             ),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (controller.validateData()) {
+                    showProgressDialogue(context);
+                    String id = controller.reminderRef.doc().id;
+                    ReminderDataModel reminderModel = ReminderDataModel(
+                        id: id,
+                        medicineName: controller.medicineController.text.trim(),
+                        pillCount: int.parse(controller.amountController.text),
+                        dosageInMg: int.parse(controller.doseController.text),
+                        frequency: controller.frequencyValue.value,
+                        time: controller.timeController.text.trim());
+                    controller.addReminderdata(reminderModel);
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
                     fixedSize: const Size(200, 50),

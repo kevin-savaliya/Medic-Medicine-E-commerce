@@ -11,6 +11,7 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/shimmer_widget.dart';
 
 class MedicineCategory extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
@@ -73,9 +74,7 @@ class MedicineCategory extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: CupertinoActivityIndicator(
-              color: AppColors.primaryColor,
-            ),
+            child: GridCategory(itemCount: snapshot.data?.length),
           );
         } else if (snapshot.hasError) {
           return const Text("Error");

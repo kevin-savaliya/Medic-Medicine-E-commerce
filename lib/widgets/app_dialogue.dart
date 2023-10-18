@@ -67,6 +67,7 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
                 Expanded(
                   child: ElevatedButton(
                       onPressed: () async {
+                        Get.back();
                         showProgressDialogue(context);
                         await authController.signOut();
                       },
@@ -105,11 +106,11 @@ Future showProgressDialogue(BuildContext context) {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            height: 60,
-            width: 60,
+            height: 120,
+            width: 250,
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.black.withOpacity(0.1),
@@ -119,8 +120,8 @@ Future showProgressDialogue(BuildContext context) {
               ],
             ),
             child: SizedBox(
-              height: 35,
-              width: 35,
+              height: 100,
+              width: 150,
               child: CupertinoActivityIndicator(
                 radius: 15,
                 animating: true,

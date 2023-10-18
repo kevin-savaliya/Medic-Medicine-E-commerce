@@ -63,6 +63,7 @@ dependencies:
   cached_network_image: ^3.3.0
   loading_indicator: ^3.1.1
   shimmer: ^3.0.0
+  syncfusion_flutter_datepicker: ^23.1.41
 
 dev_dependencies:
   flutter_test:

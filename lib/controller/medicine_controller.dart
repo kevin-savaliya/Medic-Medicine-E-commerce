@@ -13,16 +13,12 @@ import 'package:medic/utils/string.dart';
 class MedicineController extends GetxController {
   RxString selectedPaymentMethod = "".obs;
 
-  RxString frequencyValue = "".obs;
-
-  TimeOfDay selectedTime = TimeOfDay.now();
-
   RxList<Map<String, dynamic>> favouriteMedicines =
       <Map<String, dynamic>>[].obs;
 
   RxList<String> favMedicinesIds = <String>[].obs;
 
-  TextEditingController timeController = TextEditingController();
+
 
   final CollectionReference categoryref =
       FirebaseFirestore.instance.collection('categories');
@@ -111,7 +107,7 @@ class MedicineController extends GetxController {
     AppIcons.africell,
   ];
 
-  List<String> frequencyList = ["Everyday", "Weekly", "Monthly", "Yearly"];
+
 
   Stream<List<CategoryData>> fetchCategory() {
     var data = categoryref.snapshots().map((event) {
@@ -124,7 +120,7 @@ class MedicineController extends GetxController {
 
   Stream<List<MedicineData>> fetchPopularMedicines() {
     var data = medicineRef
-        .where('ratings', isGreaterThanOrEqualTo: '3.5')
+        // .where('ratings', isGreaterThanOrEqualTo: '3.5')
         .snapshots()
         .map((event) {
       return event.docs.map((e) {

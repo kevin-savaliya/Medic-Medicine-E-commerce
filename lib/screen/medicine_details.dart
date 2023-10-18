@@ -867,8 +867,7 @@ class MedicineDetails extends StatelessWidget {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  Get.to(() => MedicineScreen(
-                                      medicineList: medicineList));
+                                  Get.to(() => MedicineScreen());
                                 },
                                 child: Text(
                                   ConstString.viewAll,
