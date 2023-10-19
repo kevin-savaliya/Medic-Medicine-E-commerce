@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/address_controller.dart';
+import 'package:medic/model/user_address.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/app_dialogue.dart';
 
 class AddAddressDetail extends StatelessWidget {
   final AddressController addressController = Get.put(AddressController());
@@ -187,7 +189,8 @@ class AddAddressDetail extends StatelessWidget {
               child: SizedBox(
                 height: 60,
                 child: TextFormField(
-                  controller: controller.addressController,
+                  textCapitalization: TextCapitalization.words,
+                  controller: controller.addController,
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium!
@@ -243,6 +246,7 @@ class AddAddressDetail extends StatelessWidget {
               child: SizedBox(
                 height: 60,
                 child: TextFormField(
+                  textCapitalization: TextCapitalization.words,
                   controller: controller.areaController,
                   style: Theme.of(context)
                       .textTheme
@@ -299,6 +303,7 @@ class AddAddressDetail extends StatelessWidget {
               child: SizedBox(
                 height: 60,
                 child: TextFormField(
+                  textCapitalization: TextCapitalization.words,
                   controller: controller.landmarkController,
                   style: Theme.of(context)
                       .textTheme
@@ -342,7 +347,18 @@ class AddAddressDetail extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Get.back();
+                  showProgressDialogue(context);
+                  if (controller.validateData()) {
+                    String id = controller.addRef.doc().id;
+                    UserAddress address = UserAddress(
+                        id: id,
+                        title: controller.selectAdd.value,
+                        address: controller.addController.text.trim(),
+                        area: controller.areaController.text.trim(),
+                        landmark: controller.landmarkController.text.trim(),
+                        isActive: true);
+                    controller.addAddress(address);
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,

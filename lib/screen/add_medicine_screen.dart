@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, deprecated_member_use
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use, unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -68,6 +68,7 @@ class AddMedicineScreen extends StatelessWidget {
             SizedBox(
               height: 50,
               child: TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: controller.medicineController,
                 style: Theme.of(context)
                     .textTheme
@@ -293,54 +294,56 @@ class AddMedicineScreen extends StatelessWidget {
                       width: 10,
                     ),
                     SizedBox(
-                        child: Obx(
-                      () => DropdownButton(
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall!
-                            .copyWith(fontSize: 13),
-                        hint: Text(
-                          "Select Frequency",
+                      child: Obx(
+                        () => DropdownButton(
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall!
-                              .copyWith(fontSize: 14, color: AppColors.txtGrey),
+                              .copyWith(fontSize: 13),
+                          hint: Text(
+                            "Select Frequency",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    fontSize: 14, color: AppColors.txtGrey),
+                          ),
+                          icon: Padding(
+                            padding: const EdgeInsets.only(left: 130),
+                            child: SvgPicture.asset(AppIcons.arrowDown),
+                          ),
+                          underline: const SizedBox(),
+                          borderRadius: BorderRadius.circular(10),
+                          onChanged: (value) {
+                            controller.frequencyValue.value = value!;
+                          },
+                          items: controller.frequencyList.isNotEmpty
+                              ? controller.frequencyList.map((String items) {
+                                  return DropdownMenuItem(
+                                    value: items,
+                                    child: Text(
+                                      items,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(fontSize: 13),
+                                    ),
+                                  );
+                                }).toList()
+                              : null,
+                          // Handle an empty list scenario
+                          value: controller.frequencyList
+                                  .contains(controller.frequencyValue.value)
+                              ? controller.frequencyValue.value
+                              : null, // Handle a value not in list scenario
                         ),
-                        icon: Padding(
-                          padding: const EdgeInsets.only(left: 130),
-                          child: SvgPicture.asset(AppIcons.arrowDown),
-                        ),
-                        underline: const SizedBox(),
-                        borderRadius: BorderRadius.circular(10),
-                        onChanged: (value) {
-                          controller.frequencyValue.value = value!;
-                        },
-                        items: controller.frequencyList.isNotEmpty
-                            ? controller.frequencyList.map((String items) {
-                                return DropdownMenuItem(
-                                  value: items,
-                                  child: Text(
-                                    items,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(fontSize: 13),
-                                  ),
-                                );
-                              }).toList()
-                            : null,
-                        // Handle an empty list scenario
-                        value: controller.frequencyList
-                                .contains(controller.frequencyValue.value)
-                            ? controller.frequencyValue.value
-                            : null, // Handle a value not in list scenario
                       ),
-                    ))
+                    )
                   ],
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Obx(
@@ -348,20 +351,38 @@ class AddMedicineScreen extends StatelessWidget {
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: SfDateRangePicker(
+                        onSelectionChanged:
+                            (DateRangePickerSelectionChangedArgs args) {
+                          if (args.value is PickerDateRange) {
+                            final range = args.value as PickerDateRange;
+
+                            String? start = range.startDate
+                                ?.toIso8601String()
+                                .split('T')
+                                .first;
+                            String? end = range.endDate
+                                ?.toIso8601String()
+                                .split('T')
+                                .first;
+
+                            controller.frequencyValue = "$start to $end".obs;
+                          }
+                        },
                         selectionMode: DateRangePickerSelectionMode.range,
+                        rangeTextStyle: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(fontSize: 13),
                         startRangeSelectionColor: AppColors.primaryColor,
                         endRangeSelectionColor: AppColors.primaryColor,
                         selectionShape: DateRangePickerSelectionShape.circle,
                         headerStyle: DateRangePickerHeaderStyle(
-                            // backgroundColor:
-                            //     AppColors.primaryColor.withOpacity(0.5),
                             textStyle: Theme.of(context)
                                 .textTheme
                                 .titleMedium!
                                 .copyWith(
                                     color: AppColors.black,
                                     fontFamily: AppFont.fontMedium)),
-                        backgroundColor: AppColors.tilePrimaryColor,
                         allowViewNavigation: true,
                         selectionColor: AppColors.primaryColor,
                         selectionTextStyle: Theme.of(context)
@@ -371,7 +392,7 @@ class AddMedicineScreen extends StatelessWidget {
                         rangeSelectionColor: AppColors.tilePrimaryColor,
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
             ),
             const SizedBox(
               height: 10,
@@ -397,7 +418,6 @@ class AddMedicineScreen extends StatelessWidget {
                     context: context,
                     initialTime: controller.selectedTime,
                   );
-
                   if (pickedTime != null) {
                     controller.selectedTime = pickedTime;
                     controller.timeController.text = pickedTime.format(context);

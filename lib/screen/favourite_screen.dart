@@ -66,7 +66,22 @@ class FavouriteScreen extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return GridMedicine(itemCount: snapshot.data?.length);
         } else if (snapshot.hasError) {
-          return Text("Error : ${snapshot.error}");
+          return Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: AppColors.tilePrimaryColor),
+            child: Text(
+              "Error : ${snapshot.error}",
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall!
+                  .copyWith(
+                  color: AppColors.primaryColor,
+                  fontSize: 15,
+                  fontFamily: AppFont.fontMedium),
+            ),
+          );
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           List<MedicineData>? medicineList = snapshot.data!;
           return Padding(

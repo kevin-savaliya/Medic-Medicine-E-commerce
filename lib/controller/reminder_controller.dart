@@ -6,7 +6,9 @@ import 'package:medic/model/reminder_data_model.dart';
 import 'package:medic/utils/utils.dart';
 
 class ReminderController extends GetxController {
-  RxInt index = 0.obs;
+  RxString weekIndex = "".obs;
+  RxString monthIndex = "".obs;
+  RxString yearIndex = "".obs;
 
   RxString frequencyValue = "".obs;
 
@@ -19,7 +21,7 @@ class ReminderController extends GetxController {
   TextEditingController doseController = TextEditingController();
   TextEditingController timeController = TextEditingController();
 
-  List<String> frequencyList = ["Everyday","Date-Duration"];
+  List<String> frequencyList = ["Everyday", "Date-Duration"];
 
   final CollectionReference reminderRef =
       FirebaseFirestore.instance.collection("reminders");
@@ -59,7 +61,30 @@ class ReminderController extends GetxController {
     }
 
     Get.back();
+    Get.back();
+    clearController();
     showInSnackBar("Reminder Added Successfully",
         isSuccess: true, title: "The Medic");
+  }
+
+  clearController(){
+    medicineController.clear();
+    amountController.clear();
+    doseController.clear();
+    timeController.clear();
+    frequencyValue = "".obs;
+  }
+
+  Stream<List<ReminderDataModel>> fetchReminder() {
+    return reminderRef.doc(currentUser).snapshots().map((doc) {
+      if (doc.exists) {
+        List reminderList = doc["reminders"] as List;
+        List<ReminderDataModel> reminders = reminderList.map((reminder) {
+          return ReminderDataModel.fromMap(reminder);
+        }).toList();
+        return reminders;
+      }
+      return [];
+    });
   }
 }
