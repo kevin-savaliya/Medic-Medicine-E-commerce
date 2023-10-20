@@ -41,8 +41,13 @@ class IntroScreen extends StatelessWidget {
                               return Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     height: 420,
+                                    width: double.infinity,
+                                    child: Image.asset(controller.introList[index].image!,fit: BoxFit.cover,),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
                                   ),
                                   Text(
                                     controller.introList[index].title!,

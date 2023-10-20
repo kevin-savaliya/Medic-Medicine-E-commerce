@@ -7,6 +7,7 @@ class ConstString {
   static const String save = "Save";
   static const String resendOTP = "Resend OTP";
   static const String saveDetails = "Save details";
+  static const String editDetails = "Edit details";
   static const String completed = "Completed";
   static const String reorder = "Reorder";
   static const String cancle = "Cancel";
@@ -96,6 +97,8 @@ class ConstString {
   static const String area = "Area, Sector, Locality*";
   static const String landmark = "Landmark";
   static const String noCategory = "No Category Found!";
+  static const String noReminder = "No Reminder Found!";
+  static const String noAddress = "No Address Found!";
   static const String noMedicine = "No Medicine Found!";
   static const String noReview = "No Review Found!";
   static const String noPopular = "No Popular Medicine Found!";

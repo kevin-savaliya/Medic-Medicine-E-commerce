@@ -19,11 +19,29 @@ class VerifySuccess extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(AppIcons.verify),
-              const SizedBox(height: 35,),
-              Text(ConstString.verified,style: Theme.of(context).textTheme.displayLarge!.copyWith(fontSize: 22),),
-              const SizedBox(height: 5,),
-              Text(ConstString.accountVerified,style: Theme.of(context).textTheme.displaySmall!.copyWith(fontSize: 14),),
-              const SizedBox(height: 45,),
+              const SizedBox(
+                height: 35,
+              ),
+              Text(
+                ConstString.verified,
+                style: Theme.of(context)
+                    .textTheme
+                    .displayLarge!
+                    .copyWith(fontSize: 22),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                ConstString.accountVerified,
+                style: Theme.of(context)
+                    .textTheme
+                    .displaySmall!
+                    .copyWith(fontSize: 14),
+              ),
+              const SizedBox(
+                height: 45,
+              ),
               ElevatedButton(
                   onPressed: () {
                     Get.offAll(() => const HomeScreen());
@@ -37,8 +55,8 @@ class VerifySuccess extends StatelessWidget {
                   child: Text(
                     ConstString.btnContinue,
                     style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                      color: Colors.white,
-                    ),
+                          color: Colors.white,
+                        ),
                   )),
             ],
           ),

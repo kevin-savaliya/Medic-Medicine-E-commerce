@@ -20,6 +20,8 @@ class AddressController extends GetxController {
   TextEditingController areaController = TextEditingController();
   TextEditingController landmarkController = TextEditingController();
 
+  Rx<UserAddress?> currentEditing = Rx<UserAddress?>(null);
+
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final String currentUser = FirebaseAuth.instance.currentUser!.uid;
 
@@ -54,6 +56,7 @@ class AddressController extends GetxController {
     selectAdd = "".obs;
     areaController.clear();
     landmarkController.clear();
+    saveAsController.clear();
   }
 
   Stream<List<UserAddress>> fetchAddress() {
@@ -101,5 +104,60 @@ class AddressController extends GetxController {
     clearController();
     showInSnackBar("Address Added Successfully",
         isSuccess: true, title: "The Medic");
+  }
+
+  editAddress(UserAddress userAddress) async {
+    final addDocRef = addRef.doc(currentUser);
+    final doc = await addDocRef.get();
+
+    if (!doc.exists) return;
+
+    Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+    List<dynamic> addressList =
+        data != null ? (data['addresses'] as List<dynamic>?) ?? [] : [];
+
+    int editIndex = addressList.indexWhere(
+        (address) => (address as Map<String, dynamic>)['id'] == userAddress.id);
+
+    if (editIndex != -1) {
+      addressList[editIndex] = userAddress.toMap();
+
+      await addDocRef.update({'addresses': addressList});
+    }
+
+    Get.back();
+    Get.back();
+    clearController();
+    showInSnackBar("Address Edited Successfully",
+        isSuccess: true, title: "The Medic");
+  }
+
+  deleteAddress(String addressId) async {
+    final addDocRef = addRef.doc(currentUser);
+    final doc = await addDocRef.get();
+
+    if (!doc.exists) return;
+
+    Map<String, dynamic>? userData = doc.data() as Map<String, dynamic>?;
+    List<dynamic> addressList =
+        userData != null ? (userData['addresses'] as List<dynamic>?) ?? [] : [];
+
+    Map<String, dynamic>? deletedAddress;
+    addressList = addressList.where((address) {
+      bool shouldKeep = (address as Map<String, dynamic>)['id'] != addressId;
+      if (!shouldKeep) deletedAddress = address;
+      return shouldKeep;
+    }).toList();
+
+    if (deletedAddress != null &&
+        deletedAddress!['isActive'] == true &&
+        addressList.isNotEmpty) {
+      Map<String, dynamic> newLastActive =
+          addressList.last as Map<String, dynamic>;
+      newLastActive['isActive'] = true;
+      addressList[addressList.length - 1] = newLastActive;
+    }
+
+    await addDocRef.update({'addresses': addressList});
   }
 }

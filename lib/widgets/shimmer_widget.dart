@@ -7,7 +7,7 @@ class CategoryShimmer extends StatelessWidget {
   final int? itemCount;
   final double? height;
 
-  const CategoryShimmer({required this.itemCount, this.height});
+  const CategoryShimmer({super.key, required this.itemCount, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class MedicineShimmer extends StatelessWidget {
   final int? itemCount;
   final double? height;
 
-  const MedicineShimmer({required this.itemCount, this.height});
+  const MedicineShimmer({super.key, required this.itemCount, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class PopularMedicineShimmer extends StatelessWidget {
   final int? itemCount;
   final double? height;
 
-  const PopularMedicineShimmer({required this.itemCount, this.height});
+  const PopularMedicineShimmer({super.key, required this.itemCount, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +107,7 @@ class GridMedicine extends StatelessWidget {
   final int? itemCount;
   final double? height;
 
-  const GridMedicine({required this.itemCount, this.height});
+  const GridMedicine({super.key, required this.itemCount, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +139,7 @@ class GridCategory extends StatelessWidget {
   final int? itemCount;
   final double? height;
 
-  GridCategory({required this.itemCount, this.height});
+  const GridCategory({super.key, required this.itemCount, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +163,35 @@ class GridCategory extends StatelessWidget {
               );
             },
           ),
+        ));
+  }
+}
+
+class AddressShimmer extends StatelessWidget {
+  final int? itemCount;
+  final double? height;
+
+  const AddressShimmer({super.key, required this.itemCount, this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: ListView.builder(
+          itemCount: itemCount,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Container(
+                height: 70,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Colors.grey[300]!,
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+            );
+          },
         ));
   }
 }

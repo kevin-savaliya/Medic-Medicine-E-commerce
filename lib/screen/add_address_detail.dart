@@ -14,10 +14,26 @@ import 'package:medic/widgets/app_dialogue.dart';
 class AddAddressDetail extends StatelessWidget {
   final AddressController addressController = Get.put(AddressController());
 
-  AddAddressDetail({super.key});
+  final UserAddress? address;
+
+  AddAddressDetail({super.key, this.address});
 
   @override
   Widget build(BuildContext context) {
+    if (address != null) {
+      if (address!.title != "Home" &&
+          address!.title != "Work" &&
+          address!.title != "Hotel") {
+        addressController.selectAdd.value = "Other";
+        addressController.saveAsController.text = address?.title ?? "";
+      } else {
+        addressController.selectAdd.value = address?.title ?? "";
+      }
+
+      addressController.addController.text = address?.address ?? "";
+      addressController.areaController.text = address?.area ?? "";
+      addressController.landmarkController.text = address?.landmark ?? "";
+    }
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -135,11 +151,12 @@ class AddAddressDetail extends StatelessWidget {
                 ? SizedBox(
                     height: 60,
                     child: TextFormField(
+                      textCapitalization: TextCapitalization.words,
                       controller: controller.saveAsController,
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium!
-                          .copyWith(color: AppColors.txtGrey),
+                          .copyWith(color: AppColors.txtGrey, fontSize: 14),
                       cursorColor: AppColors.txtGrey,
                       decoration: InputDecoration(
                           hintText: "Save as",
@@ -194,7 +211,7 @@ class AddAddressDetail extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium!
-                      .copyWith(color: AppColors.txtGrey),
+                      .copyWith(color: AppColors.txtGrey, fontSize: 14),
                   cursorColor: AppColors.txtGrey,
                   decoration: InputDecoration(
                       hintText: "Enter Flat / house no / floor / building",
@@ -251,7 +268,7 @@ class AddAddressDetail extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium!
-                      .copyWith(color: AppColors.txtGrey),
+                      .copyWith(color: AppColors.txtGrey, fontSize: 14),
                   cursorColor: AppColors.txtGrey,
                   decoration: InputDecoration(
                       hintText: "Enter area, sector, locality",
@@ -308,7 +325,7 @@ class AddAddressDetail extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium!
-                      .copyWith(color: AppColors.txtGrey),
+                      .copyWith(color: AppColors.txtGrey, fontSize: 14),
                   cursorColor: AppColors.txtGrey,
                   decoration: InputDecoration(
                       hintText: "Nearby Landmark (Optional)",
@@ -350,14 +367,30 @@ class AddAddressDetail extends StatelessWidget {
                   showProgressDialogue(context);
                   if (controller.validateData()) {
                     String id = controller.addRef.doc().id;
-                    UserAddress address = UserAddress(
-                        id: id,
-                        title: controller.selectAdd.value,
-                        address: controller.addController.text.trim(),
-                        area: controller.areaController.text.trim(),
-                        landmark: controller.landmarkController.text.trim(),
-                        isActive: true);
-                    controller.addAddress(address);
+
+                    if (address == null) {
+                      UserAddress addAddress = UserAddress(
+                          id: id,
+                          title: controller.selectAdd == "Other"
+                              ? controller.saveAsController.text
+                              : controller.selectAdd.value,
+                          address: controller.addController.text.trim(),
+                          area: controller.areaController.text.trim(),
+                          landmark: controller.landmarkController.text.trim(),
+                          isActive: true);
+                      controller.addAddress(addAddress);
+                    } else {
+                      UserAddress editAddress = UserAddress(
+                          id: address!.id,
+                          title: controller.selectAdd == "Other"
+                              ? controller.saveAsController.text
+                              : controller.selectAdd.value,
+                          address: controller.addController.text.trim(),
+                          area: controller.areaController.text.trim(),
+                          landmark: controller.landmarkController.text.trim(),
+                          isActive: true);
+                      controller.editAddress(editAddress);
+                    }
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -367,7 +400,9 @@ class AddAddressDetail extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30))),
                 child: Text(
-                  ConstString.saveDetails,
+                  address == null
+                      ? ConstString.saveDetails
+                      : ConstString.editDetails,
                   style: Theme.of(context).textTheme.displayMedium!.copyWith(
                         color: Colors.white,
                       ),

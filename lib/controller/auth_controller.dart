@@ -13,6 +13,7 @@ import 'package:medic/model/user_model.dart';
 import 'package:medic/screen/home_screen.dart';
 import 'package:medic/screen/phone_login_screen.dart';
 import 'package:medic/screen/verify_otp_screen.dart';
+import 'package:medic/screen/verify_success.dart';
 import 'package:medic/services/notification/notification_service.dart';
 import 'package:medic/utils/app_storage.dart';
 import 'package:medic/utils/controller_ids.dart';
@@ -283,7 +284,7 @@ class AuthController extends GetxController {
             displayName: getUserName());
         await appStorage.setUserData(gotUser);
         await NotificationService.instance.getTokenAndUpdateCurrentUser();
-        await Get.offAll(() => const HomeScreen());
+        await Get.offAll(() => const VerifySuccess());
         isLoading = false;
         update([ControllerIds.verifyButtonKey]);
       } else {
@@ -294,7 +295,7 @@ class AuthController extends GetxController {
 
         await appStorage.setUserData(gotUser);
         await NotificationService.instance.getTokenAndUpdateCurrentUser();
-        await Get.offAll(() => const HomeScreen());
+        await Get.offAll(() => const VerifySuccess());
       }
       isLoading = false;
       update([ControllerIds.verifyButtonKey]);

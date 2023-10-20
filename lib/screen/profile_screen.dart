@@ -61,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 25),
             ListTile(
               onTap: () {
-                Get.to(() => const MyAddressScreen());
+                Get.to(() => MyAddressScreen());
               },
               horizontalTitleGap: 0,
               leading: SvgPicture.asset(AppIcons.pin, height: 22),

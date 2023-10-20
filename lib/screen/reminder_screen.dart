@@ -16,6 +16,8 @@ import 'package:medic/utils/string.dart';
 class ReminderScreen extends StatelessWidget {
   ReminderController controller = Get.put(ReminderController());
 
+  ReminderScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -90,9 +92,7 @@ class ReminderScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                                onPressed: () {
-                                  // Kevin Savaliya Bharatbhai
-                                },
+                                onPressed: () {},
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.red,
                                     fixedSize: const Size(200, 45),
@@ -175,7 +175,7 @@ class weekWidget extends StatelessWidget {
           return Center(
               child: CupertinoActivityIndicator(
             color: AppColors.primaryColor,
-                radius: 15,
+            radius: 15,
           ));
         } else if (snapshot.hasError) {
           return Container(
@@ -352,11 +352,11 @@ class weekWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(AppIcons.noData, height: 60),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
-                  ConstString.noCategory,
+                  ConstString.noReminder,
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: AppColors.primaryColor,
                       fontSize: 16,
@@ -412,6 +412,7 @@ class monthWidget extends GetWidget<ReminderController> {
                 Expanded(
                   flex: 2,
                   child: EasyDateTimeLine(
+                    activeColor: Colors.transparent,
                     initialDate: DateTime.now(),
                     // activeColor: AppColors.primaryColor,
                     timeLineProps: const EasyTimeLineProps(),
@@ -564,11 +565,11 @@ class monthWidget extends GetWidget<ReminderController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(AppIcons.noData, height: 60),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
-                  ConstString.noCategory,
+                  ConstString.noReminder,
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: AppColors.primaryColor,
                       fontSize: 16,
@@ -588,186 +589,206 @@ class yearWidget extends GetWidget<ReminderController> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(stream: controller.fetchReminder(), builder: (context, snapshot) {
-      if(snapshot.connectionState == ConnectionState.waiting){
-        return Center(child: CupertinoActivityIndicator(color: AppColors.primaryColor,radius: 15,));
-      }else if(snapshot.hasError){
-        return Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: AppColors.tilePrimaryColor),
-          child: Text(
-            "Error : ${snapshot.error}",
-            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                color: AppColors.primaryColor,
-                fontSize: 17,
-                fontFamily: AppFont.fontMedium),
-          ),
-        );
-      }else if(snapshot.hasData && snapshot.data!.isNotEmpty){
-        List<ReminderDataModel> reminders = snapshot.data!;
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: Column(
-            children: [
-              Expanded(
-                flex: 2,
-                child: EasyDateTimeLine(
-                  initialDate: DateTime.now(),
-                  timeLineProps: const EasyTimeLineProps(),
-                  dayProps: const EasyDayProps(
-                      dayStructure: DayStructure.dayStrDayNum,
-                      height: 85,
-                      width: 30),
-                  headerProps: const EasyHeaderProps(
-                      showMonthPicker: false, showSelectedDate: false),
-                  itemBuilder: (context, dayNumber, dayName, monthName, fullDate,
-                      isSelected) {
-                    return Container(
-                      width: 45,
-                      decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.primaryColor
-                              : AppColors.decsGrey,
-                          borderRadius: BorderRadius.circular(50)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            dayName,
-                            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                                color: isSelected
-                                    ? AppColors.white
-                                    : AppColors.txtGrey),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "${fullDate.day}",
-                            style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                                fontSize: 14,
-                                fontFamily: AppFont.fontMedium,
-                                color: isSelected
-                                    ? AppColors.white
-                                    : AppColors.txtGrey),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 9,
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: reminders.length,
-                  itemBuilder: (context, index) {
-                    return Obx(() => GestureDetector(
-                      onTap: () {
-                        controller.yearIndex.value = index.toString();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: AppColors.lineGrey)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 15),
-                            child: Row(
-                              children: [
-                                Image.asset("asset/medicinebox.jpg",
-                                    height: 50),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${reminders[index].medicineName}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(
-                                          fontFamily: AppFont.fontBold),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      "${reminders[index].pillCount} Capsule | ${reminders[index].dosageInMg} mg",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(color: AppColors.txtGrey),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      "${reminders[index].time}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(
-                                        color: AppColors.txtGrey,
-                                        fontFamily: AppFont.fontRegular,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const Spacer(),
-                                controller.yearIndex == "$index"
-                                    ? SvgPicture.asset(
-                                  AppIcons.checkFill,
-                                  height: 22,
-                                  color: AppColors.primaryColor,
-                                )
-                                    : SvgPicture.asset(
-                                  AppIcons.checkUnFill,
-                                  height: 22,
-                                )
-                              ],
+    return StreamBuilder(
+      stream: controller.fetchReminder(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+              child: CupertinoActivityIndicator(
+            color: AppColors.primaryColor,
+            radius: 15,
+          ));
+        } else if (snapshot.hasError) {
+          return Container(
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: AppColors.tilePrimaryColor),
+            child: Text(
+              "Error : ${snapshot.error}",
+              // selectionColor: Colors.transparent,
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: AppColors.primaryColor,
+                  fontSize: 17,
+                  fontFamily: AppFont.fontMedium),
+            ),
+          );
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          List<ReminderDataModel> reminders = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: EasyDateTimeLine(
+                    initialDate: DateTime.now(),
+                    timeLineProps: const EasyTimeLineProps(),
+                    dayProps: const EasyDayProps(
+                        dayStructure: DayStructure.dayStrDayNum,
+                        height: 85,
+                        width: 30),
+                    headerProps: const EasyHeaderProps(
+                        showMonthPicker: false, showSelectedDate: false),
+                    itemBuilder: (context, dayNumber, dayName, monthName,
+                        fullDate, isSelected) {
+                      return Container(
+                        width: 45,
+                        decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppColors.primaryColor
+                                : AppColors.decsGrey,
+                            borderRadius: BorderRadius.circular(50)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              dayName,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                      color: isSelected
+                                          ? AppColors.white
+                                          : AppColors.txtGrey),
                             ),
-                          ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "${fullDate.day}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                      fontSize: 14,
+                                      fontFamily: AppFont.fontMedium,
+                                      color: isSelected
+                                          ? AppColors.white
+                                          : AppColors.txtGrey),
+                            ),
+                          ],
                         ),
-                      ),
-                    ));
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      }else {
-        return Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: AppColors.tilePrimaryColor),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(AppIcons.noData, height: 60),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                ConstString.noCategory,
-                style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: AppColors.primaryColor,
-                    fontSize: 16,
-                    fontFamily: AppFont.fontMedium),
-              ),
-            ],
-          ),
-        );
-      }
-    },);
+                Expanded(
+                  flex: 9,
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: reminders.length,
+                    itemBuilder: (context, index) {
+                      return Obx(() => GestureDetector(
+                            onTap: () {
+                              controller.yearIndex.value = index.toString();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border:
+                                        Border.all(color: AppColors.lineGrey)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 15),
+                                  child: Row(
+                                    children: [
+                                      Image.asset("asset/medicinebox.jpg",
+                                          height: 50),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${reminders[index].medicineName}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(
+                                                    fontFamily:
+                                                        AppFont.fontBold),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            "${reminders[index].pillCount} Capsule | ${reminders[index].dosageInMg} mg",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall!
+                                                .copyWith(
+                                                    color: AppColors.txtGrey),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            "${reminders[index].time}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall!
+                                                .copyWith(
+                                                  color: AppColors.txtGrey,
+                                                  fontFamily:
+                                                      AppFont.fontRegular,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      controller.yearIndex == "$index"
+                                          ? SvgPicture.asset(
+                                              AppIcons.checkFill,
+                                              height: 22,
+                                              color: AppColors.primaryColor,
+                                            )
+                                          : SvgPicture.asset(
+                                              AppIcons.checkUnFill,
+                                              height: 22,
+                                            )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ));
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: AppColors.tilePrimaryColor),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(AppIcons.noData, height: 60),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  ConstString.noReminder,
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: AppColors.primaryColor,
+                      fontSize: 16,
+                      fontFamily: AppFont.fontMedium),
+                ),
+              ],
+            ),
+          );
+        }
+      },
+    );
   }
 }
