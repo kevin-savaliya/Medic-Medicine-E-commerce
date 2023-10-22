@@ -12,13 +12,13 @@ class IntroController extends GetxController {
   final AppStorage appStorage = AppStorage();
 
   List<IntroModel> introList = [
-    IntroModel("asset/intro1.jpg", 'Welcome To The Medic',
+    IntroModel("asset/intro1.png", 'Welcome To The Medic',
         'Your Trusted Online Medicine Partner'),
-    IntroModel("asset/intro1.jpg", 'Search & Discover \nMedicines Easily.',
+    IntroModel("asset/intro2.png", 'Search & Discover \nMedicines Easily.',
         'Our vast catalog helps you find the right \nmedication every time.'),
-    IntroModel("asset/intro1.jpg", 'Upload Prescriptions \nHassle-free',
+    IntroModel("asset/intro3.png", 'Upload Prescriptions \nHassle-free',
         'Securely upload your prescriptions for swift \nverification'),
-    IntroModel("asset/intro4.jpg", 'Timely Medicine \nReminders.',
+    IntroModel("asset/intro4.png", 'Timely Medicine \nReminders.',
         'Never miss a dose with our timely \nreminders.')
   ];
 
