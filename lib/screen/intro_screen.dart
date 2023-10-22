@@ -21,7 +21,7 @@ class IntroScreen extends StatelessWidget {
             backgroundColor: controller.selectedPageIndex.value == 3
                 ? AppColors.primaryColor
                 : Colors.white,
-            body: SafeArea(
+            body: Container(
               child: Stack(
                 children: [
                   SizedBox(
@@ -42,6 +42,7 @@ class IntroScreen extends StatelessWidget {
                                 // mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Expanded(
+                                    flex: 3,
                                     child: Container(
                                       height: 420,
                                       width: double.infinity,
@@ -52,42 +53,53 @@ class IntroScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text(
-                                    controller.introList[index].title!,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayLarge!
-                                        .copyWith(
-                                          color: controller.selectedPageIndex
-                                                      .value ==
-                                                  3
-                                              ? AppColors.white
-                                              : AppColors.darkPrimaryColor,
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(
+                                          height: 20,
                                         ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(
-                                    height: 4,
-                                  ),
-                                  Text(
-                                    controller.introList[index].description!,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .copyWith(
-                                            color: controller.selectedPageIndex
-                                                        .value ==
-                                                    3
-                                                ? AppColors.decsGrey
-                                                    .withOpacity(0.7)
-                                                : AppColors.txtGrey),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(
-                                    height: 8,
+                                        Text(
+                                          controller.introList[index].title!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displayLarge!
+                                              .copyWith(
+                                                color: controller
+                                                            .selectedPageIndex
+                                                            .value ==
+                                                        3
+                                                    ? AppColors.white
+                                                    : AppColors
+                                                        .darkPrimaryColor,
+                                              ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                          controller
+                                              .introList[index].description!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .displaySmall!
+                                              .copyWith(
+                                                  color: controller
+                                                              .selectedPageIndex
+                                                              .value ==
+                                                          3
+                                                      ? AppColors.decsGrey
+                                                          .withOpacity(0.7)
+                                                      : AppColors.txtGrey),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               );
@@ -185,6 +197,7 @@ class IntroScreen extends StatelessWidget {
                   ),
                   Positioned(
                       height: 50,
+                      top: Get.mediaQuery.padding.top,
                       child: Obx(() => Visibility(
                           visible: controller.selectedPageIndex.value != 0,
                           child: IconButton(
@@ -214,6 +227,7 @@ class IntroScreen extends StatelessWidget {
                           )))),
                   Positioned(
                       right: 0,
+                      top: Get.mediaQuery.padding.top,
                       child: Obx(() => Visibility(
                             visible: controller.selectedPageIndex.value != 3,
                             child: TextButton(
