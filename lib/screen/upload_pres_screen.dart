@@ -10,6 +10,7 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/app_dialogue.dart';
 
 class UploadPrescription extends StatelessWidget {
   UploadPresController presController = Get.put(UploadPresController());
@@ -50,8 +51,11 @@ class UploadPrescription extends StatelessWidget {
         child: Obx(
           () => ElevatedButton(
               onPressed: () {
+
                 if (presController.isValidate()) {
-                  presController.storePrescription(presController.titleController.text.trim(), presController.selectedImages);
+                  showProgressDialogue(context);
+                  presController.storePrescription(
+                      presController.titleController.text.trim());
                 }
               },
               style: ElevatedButton.styleFrom(

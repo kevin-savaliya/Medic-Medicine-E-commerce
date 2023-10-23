@@ -109,13 +109,14 @@ class UploadPresController extends GetxController {
     return true;
   }
 
-
   Future<void> storePrescription(String title) async {
     final RxList<String> imageUrls = <String>[].obs;
 
-    for (var image in selectedImages) {
-      // String imgUrl = await uploadImage(image);
-      // imageUrls.add(imgUrl);
+    List<File> files = selectedImages.map((path) => File(path.value)).toList();
+
+    for (var image in files) {
+      String imgUrl = await uploadImage(image);
+      imageUrls.add(imgUrl);
     }
 
     Map<String, dynamic> prescriptionData = {
@@ -123,15 +124,24 @@ class UploadPresController extends GetxController {
       'images': imageUrls
     };
 
-    await presRef.doc(currentUserId).update({
-      'prescriptions': FieldValue.arrayUnion([prescriptionData])
-    });
+    DocumentSnapshot snapshot = await presRef.doc(currentUserId).get();
+
+    if (snapshot.exists) {
+      await presRef.doc(currentUserId).update({
+        'prescriptions': FieldValue.arrayUnion([prescriptionData])
+      });
+    } else {
+      await presRef.doc(currentUserId).set({
+        'prescriptions': [prescriptionData]
+      });
+    }
+    Get.back();
+    showInSnackBar("Prescriptioon Added Successfully",isSuccess: true,title: "The Medic");
   }
 
   Future<String> uploadImage(File image) async {
-    final storageReference = FirebaseStorage.instance
-        .ref()
-        .child('prescription_images/${DateTime.now().toIso8601String()}.png');
+    final storageReference = FirebaseStorage.instance.ref().child(
+        'prescription_images/$currentUserId/${DateTime.now().toIso8601String()}.png');
     final uploadTask = storageReference.putFile(image);
     await uploadTask.whenComplete(() => {});
     final downloadUrl = await storageReference.getDownloadURL();
