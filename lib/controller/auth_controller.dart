@@ -112,8 +112,9 @@ class AuthController extends GetxController {
     return start;
   }
 
-  Future<void> verifyPhoneNumber({bool second = false}) async {
-    bool isValid = validateData();
+  Future<void> verifyPhoneNumber(
+      {bool second = false, bool isLogin = false}) async {
+    bool isValid = validateData(isLogin: isLogin);
     if (isValid) {
       isOtpSent = true.obs;
       update([continueButtonId]);
@@ -181,7 +182,16 @@ class AuthController extends GetxController {
     await FirebaseAuth.instance.signOut();
   }
 
-  bool validateData() {
+  bool validateData({bool isLogin = false}) {
+    if (isLogin) {
+      if (phoneNumberController.text.trim().isEmpty) {
+        showInSnackBar("Please enter phone number.",
+            title: 'Required!', isSuccess: false);
+        return false;
+      } else {
+        return true;
+      }
+    }
     if (firstNameController.text.trim().isEmpty) {
       showInSnackBar("Please enter first name.",
           title: 'Required!', isSuccess: false);
@@ -234,11 +244,11 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> actionVerifyPhone() async {
+  Future<void> actionVerifyPhone({required bool isLogin}) async {
     update([AuthController.continueButtonId]);
     FocusManager.instance.primaryFocus?.unfocus();
 
-    await verifyPhoneNumber();
+    await verifyPhoneNumber(isLogin: isLogin);
 
     update([AuthController.continueButtonId]);
   }
@@ -401,5 +411,14 @@ class AuthController extends GetxController {
     names.add(firstNameController.text.trim());
     names.add(lastNameController.text.trim());
     return names.join(" ");
+  }
+
+  Future deleteAccount() async {
+    try {
+      await signOut();
+      await FirebaseAuth.instance.currentUser!.delete();
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

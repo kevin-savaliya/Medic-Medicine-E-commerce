@@ -91,9 +91,9 @@ class PopularMedicine extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    Get.to(MedicineDetails(
-                      medicineData: medicineList[index],
-                    ));
+                    Get.to(() => MedicineDetails(
+                          medicineData: medicineList[index],
+                        ));
                   },
                   child: Container(
                     height: 130,

@@ -20,11 +20,11 @@ import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 class MedicineDetails extends StatelessWidget {
-  MedicineData? medicineData;
+  final MedicineData? medicineData;
 
   MedicineDetails({super.key, this.medicineData});
 
-  MedicineController controller = Get.put(MedicineController());
+  final MedicineController controller = Get.put(MedicineController());
 
   @override
   Widget build(BuildContext context) {
@@ -914,8 +914,9 @@ class MedicineDetails extends StatelessWidget {
                                                   ClipRRect(
                                                     borderRadius:
                                                         const BorderRadius.only(
-                                                            topLeft: Radius
-                                                                .circular(10),
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    10),
                                                             topRight:
                                                                 Radius.circular(
                                                                     10)),

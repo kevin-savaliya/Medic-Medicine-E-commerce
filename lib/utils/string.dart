@@ -12,6 +12,7 @@ class ConstString {
   static const String reorder = "Reorder";
   static const String cancle = "Cancel";
   static const String delete = "Delete";
+  static const String deleteAccount = "Delete Account";
   static const String gender = "Gender";
   static const String takeMedicine = "Take Medicine";
   static const String home = "Home";
@@ -63,6 +64,7 @@ class ConstString {
   static const String enterLastName = "Enter Last name";
   static const String welcome = "Welcome To The Medic";
   static const String enterPhone = "Enter Your Phone Number To Continue";
+  static const String enterDetail = "Enter Your Details To Continue";
   static const String enterOTP = "Enter OTP Received Your Phone Number";
   static const String verifyPhone = "Verify Your Phone Number";
   static const String accountVerified =
@@ -185,4 +187,6 @@ class ConstString {
   static const String newTopickComingSoon = "New Topick coming soon.";
   static const String noLeaderboardData = "No scores are available";
   static const String noComment = "No Comments";
+
+  static const String noConnection = "No internet connection";
 }
