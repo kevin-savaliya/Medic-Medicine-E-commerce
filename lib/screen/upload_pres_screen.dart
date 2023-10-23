@@ -5,14 +5,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:medic/controller/upload_pres_controller.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
-import 'package:medic/widgets/pick_image.dart';
 
 class UploadPrescription extends StatelessWidget {
-  PickImageController pickImageController = Get.put(PickImageController());
+  UploadPresController presController = Get.put(UploadPresController());
 
   UploadPrescription({super.key});
 
@@ -43,213 +43,297 @@ class UploadPrescription extends StatelessWidget {
         shadowColor: AppColors.txtGrey.withOpacity(0.2),
       ),
       body: uploadPresWidget(context),
+      bottomSheet: Container(
+        color: AppColors.white,
+        padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
+        width: double.infinity,
+        child: Obx(
+          () => ElevatedButton(
+              onPressed: () {
+                if (presController.isValidate()) {
+                  presController.storePrescription(presController.titleController.text.trim(), presController.selectedImages);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: presController.selectedImages.isEmpty
+                      ? AppColors.indGrey
+                      : AppColors.primaryColor,
+                  fixedSize: const Size(200, 50),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30))),
+              child: Text(
+                ConstString.btnContinue,
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                      color: presController.selectedImages.isEmpty
+                          ? AppColors.skipGrey
+                          : AppColors.white,
+                    ),
+              )),
+        ),
+      ),
     );
   }
 
   Widget uploadPresWidget(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      child: Column(
-        children: [
-          Container(
-            height: 170,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: AppColors.decsGrey),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        ConstString.quickOrder,
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge!
-                            .copyWith(
-                                fontFamily: AppFont.fontBold,
-                                fontSize: 16,
-                                height: 1.4),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        ConstString.uploadphoto,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall!
-                            .copyWith(height: 1.4, fontSize: 11),
-                      ),
-                      const Spacer(),
-                      ElevatedButton(
-                          onPressed: () {
-                            pickImage(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryColor,
-                              fixedSize: const Size(150, 18),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30))),
-                          child: Text(
-                            ConstString.uploadPres,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    color: AppColors.white,
-                                    fontFamily: AppFont.fontMedium),
-                          ))
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SvgPicture.asset(
-                        AppImages.presIcon,
-                        height: 80,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        ConstString.howwork,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall!
-                            .copyWith(color: AppColors.primaryColor),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Obx(
-            () => pickImageController.selectedImage != ""
-                ? Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          ConstString.presUploadedByYou,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        child: Column(
+          children: [
+            Container(
+              height: 170,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: AppColors.decsGrey),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          ConstString.quickOrder,
                           style: Theme.of(context)
                               .textTheme
-                              .displayMedium!
+                              .displayLarge!
                               .copyWith(
-                                color: AppColors.darkPrimaryColor,
-                                fontFamily: AppFont.fontSemiBold,
-                                fontSize: 15.5,
-                              ),
+                                  fontFamily: AppFont.fontBold,
+                                  fontSize: 16,
+                                  height: 1.4),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Stack(
-                          children: [
-                            SizedBox(
-                              height: 150,
-                              width: 130,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.file(
-                                  File(pickImageController.selectedImage.value),
-                                  fit: BoxFit.cover,
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          ConstString.uploadphoto,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(height: 1.4, fontSize: 11),
+                        ),
+                        const Spacer(),
+                        ElevatedButton(
+                            onPressed: () {
+                              pickImage(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryColor,
+                                fixedSize: const Size(150, 18),
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30))),
+                            child: Text(
+                              ConstString.uploadPres,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                      color: AppColors.white,
+                                      fontFamily: AppFont.fontMedium),
+                            ))
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SvgPicture.asset(
+                          AppImages.presIcon,
+                          height: 80,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          ConstString.howwork,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(color: AppColors.primaryColor),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Obx(
+              () => presController.selectedImages.isNotEmpty
+                  ? Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            ConstString.presUploadedByYou,
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(
+                                  color: AppColors.darkPrimaryColor,
+                                  fontFamily: AppFont.fontSemiBold,
+                                  fontSize: 15.5,
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                                bottom: 0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    pickImageController.selectedImage.value =
-                                        "";
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    width: 130,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.darkPrimaryColor
-                                            .withOpacity(0.7),
-                                        borderRadius: const BorderRadius.only(
-                                            bottomRight: Radius.circular(10),
-                                            bottomLeft: Radius.circular(10))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 5, horizontal: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            ConstString.remove,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall!
-                                                .copyWith(
-                                                    color: AppColors.white),
-                                          ),
-                                          SvgPicture.asset(
-                                            AppIcons.closeRed,
-                                            height: 16,
-                                          )
-                                        ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            ConstString.pres,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    color: AppColors.txtGrey,
+                                    fontFamily: AppFont.fontMedium,
+                                    fontSize: 13),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 60,
+                          child: TextFormField(
+                            textCapitalization: TextCapitalization.words,
+                            controller: presController.titleController,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    color: AppColors.txtGrey, fontSize: 14),
+                            cursorColor: AppColors.txtGrey,
+                            decoration: InputDecoration(
+                                hintText: "Enter Prescription",
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                        fontFamily: AppFont.fontMedium,
+                                        color: AppColors.phoneGrey,
+                                        fontSize: 13.5),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(40),
+                                    borderSide:
+                                        BorderSide(color: AppColors.decsGrey)),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: AppColors.decsGrey, width: 1),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: AppColors.decsGrey, width: 1),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: AppColors.decsGrey, width: 1),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 20)),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 280,
+                          width: double.infinity,
+                          child: GridView.builder(
+                            itemCount: presController.selectedImages.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2, mainAxisSpacing: 15),
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  SizedBox(
+                                    height: 150,
+                                    width: 150,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.file(
+                                        File(presController
+                                            .selectedImages[index].value),
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                : const SizedBox(),
-          ),
-          const Spacer(),
-          Obx(
-            () => ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: pickImageController.selectedImage == ""
-                        ? AppColors.indGrey
-                        : AppColors.primaryColor,
-                    fixedSize: const Size(200, 50),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30))),
-                child: Text(
-                  ConstString.btnContinue,
-                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                        color: pickImageController.selectedImage == ""
-                            ? AppColors.skipGrey
-                            : AppColors.white,
-                      ),
-                )),
-          ),
-          const SizedBox(
-            height: 40,
-          )
-        ],
+                                  Positioned(
+                                      bottom: 0,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          presController.selectedImages
+                                              .removeAt(index);
+                                        },
+                                        child: Container(
+                                          height: 30,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                              color: AppColors.darkPrimaryColor
+                                                  .withOpacity(0.7),
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                      bottomRight:
+                                                          Radius.circular(10),
+                                                      bottomLeft:
+                                                          Radius.circular(10))),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5, horizontal: 10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  ConstString.remove,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleSmall!
+                                                      .copyWith(
+                                                          color:
+                                                              AppColors.white),
+                                                ),
+                                                SvgPicture.asset(
+                                                  AppIcons.closeRed,
+                                                  height: 16,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ))
+                                ],
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    )
+                  : const SizedBox(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -309,9 +393,7 @@ class UploadPrescription extends StatelessWidget {
                           child: GestureDetector(
                             onTap: () async {
                               Get.back();
-                              await pickImageController.pickImageFromCamera();
-                              // print(
-                              //     "Image : ${pickImageController.selectedImage}");
+                              await presController.pickImageFromCamera();
                             },
                             child: Container(
                               height: 40,
@@ -348,9 +430,7 @@ class UploadPrescription extends StatelessWidget {
                         Expanded(
                           child: GestureDetector(
                             onTap: () async {
-                              await pickImageController.pickImageFromGallery();
-                              // print(
-                              //     "Image : ${pickImageController.selectedImage}");
+                              await presController.pickImageFromGallery();
                             },
                             child: Container(
                               height: 40,

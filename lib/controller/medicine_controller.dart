@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medic/model/category_data.dart';
 import 'package:medic/model/medicine_data.dart';
@@ -17,8 +14,6 @@ class MedicineController extends GetxController {
       <Map<String, dynamic>>[].obs;
 
   RxList<String> favMedicinesIds = <String>[].obs;
-
-
 
   final CollectionReference categoryref =
       FirebaseFirestore.instance.collection('categories');
@@ -106,8 +101,6 @@ class MedicineController extends GetxController {
     AppIcons.orangeMoney,
     AppIcons.africell,
   ];
-
-
 
   Stream<List<CategoryData>> fetchCategory() {
     var data = categoryref.snapshots().map((event) {

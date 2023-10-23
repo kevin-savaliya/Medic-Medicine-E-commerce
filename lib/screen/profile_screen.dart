@@ -17,11 +17,13 @@ class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
   final AuthController _authController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        titleSpacing: 0,
         backgroundColor: AppColors.white,
         title: Text(ConstString.profile,
             style: Theme.of(context).textTheme.titleLarge),
@@ -45,8 +47,7 @@ class ProfileScreen extends StatelessWidget {
                     color: AppColors.primaryColor,
                     child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child:
-                            SvgPicture.asset(AppImages.medic_white_text)))),
+                        child: SvgPicture.asset(AppImages.medic_white_text)))),
             const SizedBox(height: 10),
             MyNameTextWidget(
                 textStyle: Theme.of(context)
@@ -77,8 +78,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: Container(
                 height: 1,
                 width: double.infinity,
@@ -103,8 +103,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: Container(
                 height: 1,
                 width: double.infinity,
@@ -132,8 +131,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: Container(
                 height: 1,
                 width: double.infinity,
@@ -162,8 +160,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: Container(
                 height: 1,
                 width: double.infinity,
@@ -191,8 +188,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: Container(
                 height: 1,
                 width: double.infinity,

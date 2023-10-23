@@ -96,6 +96,7 @@ class ConstString {
   static const String savedAddress = "Saved Address";
   static const String saveAddAs = "Save Address as*";
   static const String address = "Address";
+  static const String pres = "Prescription : ";
   static const String area = "Area, Sector, Locality*";
   static const String landmark = "Landmark";
   static const String noCategory = "No Category Found!";

@@ -143,8 +143,8 @@ class ReminderScreen extends StatelessWidget {
                     height: 0,
                   ),
           ),
-          body: TabBarView(
-              children: [weekWidget(), monthWidget(), const yearWidget()]),
+          body:
+              TabBarView(children: [weekWidget(), monthWidget(), yearWidget()]),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 65),
             child: FloatingActionButton(
@@ -635,6 +635,7 @@ class yearWidget extends GetWidget<ReminderController> {
                         fullDate, isSelected) {
                       return Container(
                         width: 45,
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
                         decoration: BoxDecoration(
                             color: isSelected
                                 ? AppColors.primaryColor

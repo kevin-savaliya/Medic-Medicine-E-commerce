@@ -48,6 +48,8 @@ class AuthController extends GetxController {
 
   static const continueButtonId = 'continueButtonId';
 
+  var isLoggedIn = false.obs;
+
   CountryCode? countryData;
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -125,6 +127,7 @@ class AuthController extends GetxController {
             isOtpSent = false.obs;
             update([continueButtonId]);
             _auth.signInWithCredential(credential).then((value) {
+
               showInSnackBar(ConstString.successLogin, isSuccess: true);
               return;
             });
@@ -273,8 +276,8 @@ class AuthController extends GetxController {
         if (user.phoneNumber == null) {
           result = await user.linkWithCredential(phoneAuthCredential);
           log('data to check 1 ${getPhoneNumber()}');
-          var gotUser = await _createUserInUserCollection(result,
-              displayName: getUserName());
+          // var gotUser = await _createUserInUserCollection(result,
+          //     displayName: getUserName());
         } else {
           result = await _auth.signInWithCredential(phoneAuthCredential);
           log(ConstString.successLogin);

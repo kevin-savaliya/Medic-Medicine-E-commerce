@@ -63,7 +63,6 @@ dependencies:
   loading_indicator: ^3.1.1
   shimmer: ^3.0.0
   syncfusion_flutter_datepicker: ^23.1.41
-  calendar_timeline: ^1.1.2
 
 dev_dependencies:
   flutter_test:

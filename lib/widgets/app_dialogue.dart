@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,10 +40,7 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
                 "Are you sure you want to logout?",
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                    fontSize: 14,
-                    color: AppColors.txtGrey,
-                    // fontFamily: AppFont.fontMedium,
-                    letterSpacing: 0),
+                    fontSize: 14, color: AppColors.txtGrey, letterSpacing: 0),
               ),
             ),
             const SizedBox(height: 25),
@@ -52,54 +52,16 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
                         Get.back();
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.decsGrey,
+                          backgroundColor: AppColors.indGrey.withOpacity(0.5),
                           fixedSize: const Size(200, 45),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
                       child: Text(
                         ConstString.cancle,
-                        style:
-                            Theme.of(context).textTheme.displayMedium!.copyWith(
-                                  color: AppColors.txtGrey,
-                                ),
-                      )),
-                ),
-                const SizedBox(
-                  width: 15,
-                ),
-                Expanded(
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        return await deleteDialogue(context, () async {
-                          Get.back();
-                          bool hasInternet =
-                              await Utils.hasInternetConnection();
-                          if (!hasInternet) {
-                            showInSnackBar(ConstString.noConnection);
-                            return;
-                          }
-                          // show loading dialog while deleting user
-                          progressDialogue(context, title: "Deleting Account");
-                          await authController.deleteAccount();
-                          await deleteUserFirestoreData();
-                          Get.back();
-                          Get.offAll(() => const PhoneLoginScreen());
-                          return;
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          fixedSize: const Size(200, 50),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30))),
-                      child: Text(
-                        ConstString.deleteAccount,
-                        style:
-                            Theme.of(context).textTheme.displayMedium!.copyWith(
-                                  color: Colors.white,
-                                ),
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: AppColors.txtGrey,
+                            ),
                       )),
                 ),
                 const SizedBox(
@@ -111,23 +73,60 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
                         Get.back();
                         showProgressDialogue(context);
                         await authController.signOut();
+                        Get.back();
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor,
-                          fixedSize: const Size(200, 50),
+                          fixedSize: const Size(200, 45),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
                       child: Text(
                         ConstString.logoutDialogue,
-                        style:
-                            Theme.of(context).textTheme.displayMedium!.copyWith(
-                                  color: Colors.white,
-                                ),
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                              color: Colors.white,
+                            ),
                       )),
                 ),
               ],
-            )
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  onPressed: () async {
+                    Get.back();
+                    deleteDialogue(context, () async {
+                      Get.back();
+                      progressDialogue(title: "Delete Account");
+                      bool hasInternet = await Utils.hasInternetConnection();
+                      if (!hasInternet) {
+                        showInSnackBar(ConstString.noConnection);
+                        return;
+                      }
+
+                      await deleteUserFirestoreData();
+                      Get.back();
+                      Get.offAll(() => const PhoneLoginScreen());
+                      return;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.red,
+                      fixedSize: const Size(double.infinity, 45),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30))),
+                  child: Text(
+                    ConstString.deleteAccount,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: Colors.white,
+                        ),
+                  )),
+            ),
           ],
         ),
       );
@@ -135,32 +134,34 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
   );
 }
 
-Future progressDialogue(context, {required String title}) {
-  return showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (context) {
-      return AlertDialog(
-        content: Container(
-          height: 100,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              TextWidget(
-                title,
-                style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                    color: AppColors.black,
-                    fontSize: 14,
-                    fontFamily: AppFont.fontMedium,
-                    letterSpacing: 0.5),
-              )
-            ],
-          ),
+Future progressDialogue({required String title}) {
+  return Get.dialog(
+    AlertDialog(
+      content: SizedBox(
+        height: 100,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CupertinoActivityIndicator(
+              color: AppColors.primaryColor,
+              radius: 12,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextWidget(
+              title,
+              style: Theme.of(Get.context!).textTheme.labelLarge!.copyWith(
+                  color: AppColors.black,
+                  fontSize: 16,
+                  fontFamily: AppFont.fontMedium,
+                  letterSpacing: 0.5),
+            )
+          ],
         ),
-      );
-    },
+      ),
+    ),
+    barrierDismissible: false,
   );
 }
 
@@ -169,7 +170,7 @@ Future deleteDialogue(BuildContext context, Function() callback) {
     context: context,
     builder: (context) {
       return AlertDialog(
-        insetPadding: EdgeInsets.symmetric(horizontal: 25),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 25),
         backgroundColor: AppColors.white,
         shape: const OutlineInputBorder(
             borderSide: BorderSide.none,
@@ -177,12 +178,12 @@ Future deleteDialogue(BuildContext context, Function() callback) {
         alignment: Alignment.center,
         title: Column(
           children: [
-            Icon(
+            const Icon(
               CupertinoIcons.delete,
               size: 40,
               color: Colors.red,
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             Text(
               ConstString.deleteAccount,
               style: Theme.of(context).textTheme.labelLarge!.copyWith(
@@ -192,7 +193,7 @@ Future deleteDialogue(BuildContext context, Function() callback) {
                     fontSize: 20,
                   ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: TextWidget(
@@ -200,14 +201,14 @@ Future deleteDialogue(BuildContext context, Function() callback) {
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                     fontSize: 14,
-                    color: AppColors.phoneGrey.withOpacity(0.9),
+                    color: AppColors.txtGrey,
                     fontWeight: FontWeight.w400,
                     fontFamily: AppFont.fontRegular,
                     height: 1.5,
                     letterSpacing: 0),
               ),
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             Row(
               children: [
                 Expanded(
@@ -216,8 +217,8 @@ Future deleteDialogue(BuildContext context, Function() callback) {
                       callback();
                     },
                     style: ElevatedButton.styleFrom(
-                        fixedSize: Size(20, 55),
-                        backgroundColor: AppColors.black,
+                        fixedSize: const Size(20, 50),
+                        backgroundColor: AppColors.red,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                         elevation: 0),
@@ -227,14 +228,14 @@ Future deleteDialogue(BuildContext context, Function() callback) {
                           .textTheme
                           .displayMedium!
                           .copyWith(
-                              color: AppColors.alertBoxTextColot,
+                              color: AppColors.white,
                               fontWeight: FontWeight.w500,
                               fontFamily: AppFont.fontMedium,
                               fontSize: 15),
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 15,
                 ),
                 Expanded(
@@ -243,7 +244,7 @@ Future deleteDialogue(BuildContext context, Function() callback) {
                       Get.back();
                     },
                     style: ElevatedButton.styleFrom(
-                        fixedSize: Size(20, 55),
+                        fixedSize: const Size(20, 50),
                         backgroundColor: AppColors.splashdetail,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
@@ -270,16 +271,39 @@ Future deleteDialogue(BuildContext context, Function() callback) {
   );
 }
 
+FirebaseFirestore instance() => FirebaseFirestore.instance;
+
 Future<void> deleteUserFirestoreData() async {
   String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-  // TODO: remove all data related to user from firestore
+  /// Delete user
+  await deleteUser(currentUserId);
 
-  // Delete user favorites
+  /// Delete user favorites
+  await deleteUserFavouriteMedicines(currentUserId);
 
-  // await deleteUserFavouriteMedicines(currentUserId);
+  /// Delete user addresses
+  await deleteUserAddresses(currentUserId);
 
-  // await deleteUser(currentUserId);
+  /// Delete user reminders
+  await deleteUserReminders(currentUserId);
+}
+
+Future<void> deleteUserFavouriteMedicines(String currentUserId) async {
+  await instance().collection("favourites").doc(currentUserId).delete();
+}
+
+Future<void> deleteUserAddresses(String currentUserId) async {
+  await instance().collection("addresses").doc(currentUserId).delete();
+}
+
+Future<void> deleteUserReminders(String currentUserId) async {
+  await instance().collection("reminders").doc(currentUserId).delete();
+}
+
+Future<void> deleteUser(String currentUserId) async {
+  await instance().collection("users").doc(currentUserId).delete();
+  await FirebaseAuth.instance.currentUser!.delete();
 }
 
 // show progress dialog

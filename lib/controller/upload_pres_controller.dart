@@ -1,17 +1,29 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medic/theme/colors.dart';
+import 'package:medic/utils/utils.dart';
 
-class PickImageController extends GetxController {
+class UploadPresController extends GetxController {
   final ImagePicker picker = ImagePicker();
 
-  final selectedImage = "".obs;
+  final selectedImages = <RxString>[].obs;
+
+  TextEditingController titleController = TextEditingController();
 
   CroppedFile? croppedPostFile;
   CroppedFile? croppedProfileFile;
+
+  CollectionReference presRef =
+      FirebaseFirestore.instance.collection("prescriptions");
+
+  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   pickImageFromCamera() async {
     final XFile? image =
@@ -42,8 +54,7 @@ class PickImageController extends GetxController {
         ],
       );
 
-      selectedImage.value = croppedProfileFile!.path;
-
+      selectedImages.add(croppedProfileFile!.path.obs);
       print("Image Picked From Camera");
     }
     Get.back();
@@ -78,10 +89,52 @@ class PickImageController extends GetxController {
         ],
       );
 
-      selectedImage.value = croppedProfileFile!.path;
+      selectedImages.add(croppedProfileFile!.path.obs);
 
       print("Image Picked From Gallery");
     }
     Get.back();
+  }
+
+  bool isValidate() {
+    if (titleController.text.trim().isEmpty) {
+      showInSnackBar("Please enter prescription.",
+          title: 'Required!', isSuccess: false);
+      return false;
+    } else if (selectedImages.isEmpty) {
+      showInSnackBar("Please select prescription images.",
+          title: 'Required!', isSuccess: false);
+      return false;
+    }
+    return true;
+  }
+
+
+  Future<void> storePrescription(String title) async {
+    final RxList<String> imageUrls = <String>[].obs;
+
+    for (var image in selectedImages) {
+      // String imgUrl = await uploadImage(image);
+      // imageUrls.add(imgUrl);
+    }
+
+    Map<String, dynamic> prescriptionData = {
+      'title': title,
+      'images': imageUrls
+    };
+
+    await presRef.doc(currentUserId).update({
+      'prescriptions': FieldValue.arrayUnion([prescriptionData])
+    });
+  }
+
+  Future<String> uploadImage(File image) async {
+    final storageReference = FirebaseStorage.instance
+        .ref()
+        .child('prescription_images/${DateTime.now().toIso8601String()}.png');
+    final uploadTask = storageReference.putFile(image);
+    await uploadTask.whenComplete(() => {});
+    final downloadUrl = await storageReference.getDownloadURL();
+    return downloadUrl;
   }
 }
