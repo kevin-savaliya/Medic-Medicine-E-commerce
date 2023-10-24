@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medic/model/prescription_model.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/utils.dart';
 
@@ -119,32 +120,61 @@ class UploadPresController extends GetxController {
       imageUrls.add(imgUrl);
     }
 
-    Map<String, dynamic> prescriptionData = {
-      'title': title,
-      'images': imageUrls
-    };
+    String id = presRef.doc().id;
+
+    PrescriptionData data = PrescriptionData(
+        id, title, imageUrls, DateTime.now(), currentUserId, false);
 
     DocumentSnapshot snapshot = await presRef.doc(currentUserId).get();
 
     if (snapshot.exists) {
       await presRef.doc(currentUserId).update({
-        'prescriptions': FieldValue.arrayUnion([prescriptionData])
+        'prescriptions': FieldValue.arrayUnion([data.toMap()])
       });
     } else {
       await presRef.doc(currentUserId).set({
-        'prescriptions': [prescriptionData]
+        'prescriptions': [data.toMap()]
       });
     }
     Get.back();
-    showInSnackBar("Prescriptioon Added Successfully",isSuccess: true,title: "The Medic");
+    Get.back();
+    showInSnackBar("Prescription Added Successfully",
+        isSuccess: true, title: "The Medic");
   }
 
   Future<String> uploadImage(File image) async {
     final storageReference = FirebaseStorage.instance.ref().child(
-        'prescription_images/$currentUserId/${DateTime.now().toIso8601String()}.png');
+        'prescriptions/$currentUserId/${DateTime.now().toIso8601String()}.jpg');
     final uploadTask = storageReference.putFile(image);
     await uploadTask.whenComplete(() => {});
     final downloadUrl = await storageReference.getDownloadURL();
     return downloadUrl;
+  }
+
+  Stream<List<PrescriptionData>> fetchPrescriptions() {
+    return presRef.doc(currentUserId).snapshots().map((snapshot) {
+      List<PrescriptionData> prescriptions = [];
+      if (snapshot.exists) {
+        Map<String, dynamic>? userData =
+            snapshot.data() as Map<String, dynamic>?;
+        if (userData != null && userData.containsKey('prescriptions')) {
+          List<Map<String, dynamic>> prescriptionMaps =
+              List<Map<String, dynamic>>.from(userData['prescriptions']);
+          prescriptions = prescriptionMaps
+              .map((map) => PrescriptionData.fromMap(map))
+              .toList();
+        }
+      }
+      return prescriptions;
+    });
+  }
+
+  uploadPrescriptions() {
+    var data =  presRef.snapshots().map((snapshot) {
+      return snapshot.docs.map((e) {
+        return PrescriptionData.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+    return data;
   }
 }

@@ -91,6 +91,7 @@ class ConstString {
   static const String orderDetails = "Order Details";
   static const String reminder = "Reminder";
   static const String prescription = "Prescription";
+  static const String prescriptions = "Prescriptions";
   static const String notification = "Notifications";
   static const String addAddress = "Add Address";
   static const String savedAddress = "Saved Address";
@@ -103,6 +104,7 @@ class ConstString {
   static const String noReminder = "No Reminder Found!";
   static const String noAddress = "No Address Found!";
   static const String noMedicine = "No Medicine Found!";
+  static const String noPres = "No Prescription Found!";
   static const String noReview = "No Review Found!";
   static const String noPopular = "No Popular Medicine Found!";
 

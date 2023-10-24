@@ -46,12 +46,11 @@ class UploadPrescription extends StatelessWidget {
       body: uploadPresWidget(context),
       bottomSheet: Container(
         color: AppColors.white,
-        padding: EdgeInsets.symmetric(horizontal: 70, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 10),
         width: double.infinity,
         child: Obx(
           () => ElevatedButton(
               onPressed: () {
-
                 if (presController.isValidate()) {
                   showProgressDialogue(context);
                   presController.storePrescription(
@@ -210,7 +209,7 @@ class UploadPrescription extends StatelessWidget {
                                     fontSize: 13),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         SizedBox(
@@ -236,20 +235,20 @@ class UploadPrescription extends StatelessWidget {
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(40),
                                     borderSide:
-                                        BorderSide(color: AppColors.decsGrey)),
+                                        BorderSide(color: AppColors.lineGrey)),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: AppColors.decsGrey, width: 1),
+                                      color: AppColors.lineGrey, width: 1),
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 disabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: AppColors.decsGrey, width: 1),
+                                      color: AppColors.lineGrey, width: 1),
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: AppColors.decsGrey, width: 1),
+                                      color: AppColors.lineGrey, width: 1),
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 contentPadding: const EdgeInsets.symmetric(

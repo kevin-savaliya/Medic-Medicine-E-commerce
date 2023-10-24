@@ -5,6 +5,7 @@ import 'package:medic/_dart/_init.dart';
 import 'package:medic/screen/myaddress_screen.dart';
 import 'package:medic/screen/notification_screen.dart';
 import 'package:medic/screen/order_history.dart';
+import 'package:medic/screen/prescription_list.dart';
 import 'package:medic/screen/reminder_screen.dart';
 import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/utils/app_font.dart';
@@ -23,10 +24,12 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        titleSpacing: 0,
         backgroundColor: AppColors.white,
         title: Text(ConstString.profile,
-            style: Theme.of(context).textTheme.titleLarge),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(fontFamily: AppFont.fontBold)),
         elevation: 1.5,
         shadowColor: AppColors.txtGrey.withOpacity(0.2),
       ),
@@ -140,7 +143,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                Get.to(() => UploadPrescription());
+                Get.to(() => PrescriptionList());
               },
               horizontalTitleGap: 0,
               leading: SvgPicture.asset(
