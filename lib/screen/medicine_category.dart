@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/category_data.dart';
 import 'package:medic/theme/colors.dart';
@@ -118,12 +118,11 @@ class MedicineCategory extends StatelessWidget {
                               width: 30,
                               height: 30,
                               child: Center(
-                                child: CupertinoActivityIndicator(
-                                  color: AppColors.primaryColor,
-                                  animating: true,
-                                  radius: 10,
-                                ),
-                              ),
+                                  child: LoadingIndicator(
+                                colors: [AppColors.primaryColor],
+                                indicatorType: Indicator.ballScale,
+                                strokeWidth: 1,
+                              )),
                             ),
                             fit: BoxFit.cover,
                           ),

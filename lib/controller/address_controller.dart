@@ -23,7 +23,7 @@ class AddressController extends GetxController {
   Rx<UserAddress?> currentEditing = Rx<UserAddress?>(null);
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final String currentUser = FirebaseAuth.instance.currentUser!.uid;
+  final String? currentUser = FirebaseAuth.instance.currentUser?.uid;
 
   final CollectionReference addRef =
       FirebaseFirestore.instance.collection("addresses");

@@ -12,7 +12,7 @@ class UserRepository {
   final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection('users');
 
-  String currentUser = FirebaseAuth.instance.currentUser!.uid;
+  String? currentUser = FirebaseAuth.instance.currentUser?.uid;
 
   DocumentSnapshot? allUserLastDocument;
 

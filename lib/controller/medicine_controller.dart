@@ -22,7 +22,7 @@ class MedicineController extends GetxController {
   final CollectionReference favRef =
       FirebaseFirestore.instance.collection('favourites');
 
-  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
   @override
   void onInit() {

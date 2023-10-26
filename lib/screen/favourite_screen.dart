@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/medicine_details.dart';
@@ -73,10 +73,7 @@ class FavouriteScreen extends StatelessWidget {
                 color: AppColors.tilePrimaryColor),
             child: Text(
               "Error : ${snapshot.error}",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall!
-                  .copyWith(
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
                   color: AppColors.primaryColor,
                   fontSize: 15,
                   fontFamily: AppFont.fontMedium),
@@ -136,12 +133,11 @@ class FavouriteScreen extends StatelessWidget {
                                           width: 30,
                                           height: 30,
                                           child: Center(
-                                            child: CupertinoActivityIndicator(
-                                              color: AppColors.primaryColor,
-                                              animating: true,
-                                              radius: 10,
-                                            ),
-                                          ),
+                                              child: LoadingIndicator(
+                                            colors: [AppColors.primaryColor],
+                                            indicatorType: Indicator.ballScale,
+                                            strokeWidth: 1,
+                                          )),
                                         ),
                                         fit: BoxFit.cover,
                                       ),

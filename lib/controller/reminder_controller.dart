@@ -14,7 +14,7 @@ class ReminderController extends GetxController {
 
   TimeOfDay selectedTime = TimeOfDay.now();
 
-  final String currentUser = FirebaseAuth.instance.currentUser!.uid;
+  final String? currentUser = FirebaseAuth.instance.currentUser?.uid;
 
   TextEditingController medicineController = TextEditingController();
   TextEditingController amountController = TextEditingController();
@@ -67,7 +67,7 @@ class ReminderController extends GetxController {
         isSuccess: true, title: "The Medic");
   }
 
-  clearController(){
+  clearController() {
     medicineController.clear();
     amountController.clear();
     doseController.clear();

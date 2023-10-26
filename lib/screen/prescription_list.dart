@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/upload_pres_controller.dart';
 import 'package:medic/model/prescription_model.dart';
 import 'package:medic/theme/colors.dart';
@@ -46,11 +47,11 @@ class PrescriptionList extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CupertinoActivityIndicator(
-                radius: 15,
-                color: AppColors.primaryColor,
-              ),
-            );
+                child: LoadingIndicator(
+              colors: [AppColors.primaryColor],
+              indicatorType: Indicator.ballScale,
+              strokeWidth: 1,
+            ));
           } else if (snapshot.hasError) {
             return Container(
               alignment: Alignment.center,
@@ -123,9 +124,10 @@ class PrescriptionList extends StatelessWidget {
                                       .copyWith(
                                           fontSize: 13,
                                           fontFamily: AppFont.fontSemiBold,
-                                          color: prescriptions[index].isApproved!
-                                              ? AppColors.green
-                                              : AppColors.red),
+                                          color:
+                                              prescriptions[index].isApproved!
+                                                  ? AppColors.green
+                                                  : AppColors.red),
                                 )
                               ],
                             ),
@@ -146,14 +148,14 @@ class PrescriptionList extends StatelessWidget {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
                                         child: CachedNetworkImage(
-                                          imageUrl:
-                                              prescriptions[index].images?[ind] ??
-                                                  '',
+                                          imageUrl: prescriptions[index]
+                                                  .images?[ind] ??
+                                              '',
                                           errorWidget: (context, url, error) =>
                                               const Icon(Icons.error),
-                                          progressIndicatorBuilder:
-                                              (context, url, downloadProgress) =>
-                                                  SizedBox(
+                                          progressIndicatorBuilder: (context,
+                                                  url, downloadProgress) =>
+                                              SizedBox(
                                             width: 120,
                                             child: Center(
                                               child: CupertinoActivityIndicator(

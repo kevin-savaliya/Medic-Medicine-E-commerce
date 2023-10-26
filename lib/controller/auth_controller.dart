@@ -79,8 +79,8 @@ class AuthController extends GetxController {
   }
 
   Future<void> checkAfterSocialSignin() async {
-    User user = FirebaseAuth.instance.currentUser!;
-    final String? userPhone = user.phoneNumber;
+    User? user = FirebaseAuth.instance.currentUser;
+    final String? userPhone = user?.phoneNumber;
 
     if (userPhone != null && userPhone.isNotEmpty) {
       UserModel? currentUser = Get.find<UserController>().loggedInUser.value;
@@ -127,7 +127,6 @@ class AuthController extends GetxController {
             isOtpSent = false.obs;
             update([continueButtonId]);
             _auth.signInWithCredential(credential).then((value) {
-
               showInSnackBar(ConstString.successLogin, isSuccess: true);
               return;
             });

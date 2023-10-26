@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/medicine_screen.dart';
@@ -122,12 +123,11 @@ class MedicineDetails extends StatelessWidget {
                         width: 30,
                         height: 30,
                         child: Center(
-                          child: CupertinoActivityIndicator(
-                            color: AppColors.primaryColor,
-                            animating: true,
-                            radius: 10,
-                          ),
-                        ),
+                            child: LoadingIndicator(
+                          colors: [AppColors.primaryColor],
+                          indicatorType: Indicator.ballScale,
+                          strokeWidth: 1,
+                        )),
                       ),
                       fit: BoxFit.cover,
                     ),

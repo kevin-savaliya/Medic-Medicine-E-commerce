@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/auth_controller.dart';
+import 'package:medic/screen/home_screen.dart';
 import 'package:medic/screen/phone_signup_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
@@ -22,6 +23,28 @@ class PhoneLoginScreen extends GetWidget<AuthController> {
           title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
               child: SvgPicture.asset(AppImages.medic_teal_text)),
+          actions: [
+            GestureDetector(
+              onTap: controller.isLoading
+                  ? null
+                  : () async {
+                      await Get.offAll(() => const HomeScreen());
+                    },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Center(
+                  child: Text(
+                    ConstString.skip,
+                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                          color: AppColors.primaryColor,
+                        ),
+                  ),
+                ),
+              ),
+            )
+          ],
           toolbarHeight: 70),
       body: SafeArea(
           child: SingleChildScrollView(

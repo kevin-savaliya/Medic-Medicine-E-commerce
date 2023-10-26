@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/auth_controller.dart';
 import 'package:medic/screen/phone_login_screen.dart';
 import 'package:medic/theme/colors.dart';
@@ -142,9 +143,14 @@ Future progressDialogue({required String title}) {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CupertinoActivityIndicator(
-              color: AppColors.primaryColor,
-              radius: 12,
+            SizedBox(
+              height: 30,
+              width: 30,
+              child: LoadingIndicator(
+                colors: [AppColors.primaryColor],
+                indicatorType: Indicator.ballScale,
+                strokeWidth: 1,
+              ),
             ),
             const SizedBox(
               height: 20,
@@ -332,14 +338,17 @@ Future showProgressDialogue(BuildContext context) {
               ],
             ),
             child: SizedBox(
-              height: 100,
-              width: 150,
-              child: CupertinoActivityIndicator(
-                radius: 15,
-                animating: true,
-                color: AppColors.primaryColor,
-              ),
-            ),
+                height: 100,
+                width: 150,
+                child: SizedBox(
+                  height: 25,
+                  width: 25,
+                  child: LoadingIndicator(
+                    colors: [AppColors.primaryColor],
+                    indicatorType: Indicator.ballScale,
+                    strokeWidth: 1,
+                  ),
+                )),
           ),
         ],
       );

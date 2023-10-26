@@ -12,6 +12,7 @@ class ConstString {
   static const String reorder = "Reorder";
   static const String cancle = "Cancel";
   static const String delete = "Delete";
+  static const String skip = "Skip";
   static const String deleteAccount = "Delete Account";
   static const String gender = "Gender";
   static const String takeMedicine = "Take Medicine";

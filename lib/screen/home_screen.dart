@@ -1,11 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/home_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/category_data.dart';
@@ -38,6 +38,9 @@ class HomeScreen extends GetWidget<HomeController> {
     return GetBuilder(
       init: HomeController(),
       builder: (controller) {
+        if (!controller.initialized) {
+          return Container();
+        }
         if (controller.pageIndex.value == 0) {
           return Scaffold(
             body: homeWidget(context, controller),
@@ -85,11 +88,13 @@ class HomeScreen extends GetWidget<HomeController> {
           children: [
             Row(
               children: [
-                SvgPicture.asset(AppIcons.fillpin),
+                SvgPicture.asset(AppIcons
+                    .fillpin), // TODO: change icon when user is not logged In
                 const SizedBox(
                   width: 3,
                 ),
                 Text(
+                  // TODO: add condition for location
                   "Santa, Illinois 85486",
                   style: Theme.of(context)
                       .textTheme
@@ -98,21 +103,24 @@ class HomeScreen extends GetWidget<HomeController> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 5,
-            ),
-            MyNameTextWidget(
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(fontFamily: AppFont.fontMedium),
-            ),
+            if (controller.firebaseUser != null) ...[
+              const SizedBox(
+                height: 5,
+              ),
+              MyNameTextWidget(
+                textStyle: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(fontFamily: AppFont.fontMedium),
+              )
+            ] else
+              Container(),
           ],
         ),
         actions: [
           IconButton(
-              onPressed: () {
-                Get.to(() => const NotificationScreen());
+              onPressed: () async {
+                await Get.to(() => const NotificationScreen());
               },
               icon: Padding(
                 padding: const EdgeInsets.all(5.0),
@@ -161,8 +169,8 @@ class HomeScreen extends GetWidget<HomeController> {
             children: [
               TextFormField(
                 readOnly: true,
-                onTap: () {
-                  Get.to(() => SearchScreen());
+                onTap: () async {
+                  await Get.to(() => SearchScreen());
                 },
                 decoration: InputDecoration(
                   filled: true,
@@ -234,7 +242,7 @@ class HomeScreen extends GetWidget<HomeController> {
                       ))
                 ],
               ),
-              GetBuilder(
+              GetBuilder<MedicineController>(
                 init: MedicineController(),
                 builder: (controller) {
                   return SizedBox(
@@ -295,12 +303,12 @@ class HomeScreen extends GetWidget<HomeController> {
                                             width: 30,
                                             height: 30,
                                             child: Center(
-                                              child: CupertinoActivityIndicator(
-                                                color: AppColors.primaryColor,
-                                                animating: true,
-                                                radius: 10,
-                                              ),
-                                            ),
+                                                child: LoadingIndicator(
+                                              colors: [AppColors.primaryColor],
+                                              indicatorType:
+                                                  Indicator.ballScale,
+                                              strokeWidth: 1,
+                                            )),
                                           ),
                                           fit: BoxFit.cover,
                                         ),
@@ -378,7 +386,7 @@ class HomeScreen extends GetWidget<HomeController> {
                       ))
                 ],
               ),
-              GetBuilder(
+              GetBuilder<MedicineController>(
                 init: MedicineController(),
                 builder: (controller) {
                   return SizedBox(
@@ -510,7 +518,7 @@ class HomeScreen extends GetWidget<HomeController> {
                       ))
                 ],
               ),
-              GetBuilder(
+              GetBuilder<MedicineController>(
                 init: MedicineController(),
                 builder: (controller) {
                   return SizedBox(
@@ -600,14 +608,17 @@ class HomeScreen extends GetWidget<HomeController> {
                                                           width: 30,
                                                           height: 30,
                                                           child: Center(
-                                                            child:
-                                                                CupertinoActivityIndicator(
-                                                              color: AppColors
-                                                                  .primaryColor,
-                                                              animating: true,
-                                                              radius: 10,
-                                                            ),
-                                                          ),
+                                                              child:
+                                                                  LoadingIndicator(
+                                                            colors: [
+                                                              AppColors
+                                                                  .primaryColor
+                                                            ],
+                                                            indicatorType:
+                                                                Indicator
+                                                                    .ballScale,
+                                                            strokeWidth: 1,
+                                                          )),
                                                         ),
                                                         fit: BoxFit.cover,
                                                       ),

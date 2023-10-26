@@ -24,7 +24,7 @@ class UploadPresController extends GetxController {
   CollectionReference presRef =
       FirebaseFirestore.instance.collection("prescriptions");
 
-  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
   pickImageFromCamera() async {
     final XFile? image =
@@ -170,7 +170,7 @@ class UploadPresController extends GetxController {
   }
 
   uploadPrescriptions() {
-    var data =  presRef.snapshots().map((snapshot) {
+    var data = presRef.snapshots().map((snapshot) {
       return snapshot.docs.map((e) {
         return PrescriptionData.fromMap(e.data() as Map<String, dynamic>);
       }).toList();
