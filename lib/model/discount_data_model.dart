@@ -6,6 +6,7 @@ class DiscountDataModel {
   double? percentage;
   double? amount;
   String? discountName;
+  String? code;
 
   DiscountDataModel({
     this.id,
@@ -13,6 +14,7 @@ class DiscountDataModel {
     this.percentage,
     this.amount,
     this.discountName,
+    this.code,
   });
 
   DiscountDataModel copyWith({
@@ -21,6 +23,7 @@ class DiscountDataModel {
     double? percentage,
     double? amount,
     String? discountName,
+    String? code,
   }) {
     return DiscountDataModel(
       id: id ?? this.id,
@@ -28,6 +31,7 @@ class DiscountDataModel {
       percentage: percentage ?? this.percentage,
       amount: amount ?? this.amount,
       discountName: discountName ?? this.discountName,
+      code: code ?? this.code,
     );
   }
 
@@ -38,6 +42,7 @@ class DiscountDataModel {
       'percentage': percentage,
       'amount': amount,
       'discountName': discountName,
+      'code': code,
     };
   }
 
@@ -48,6 +53,7 @@ class DiscountDataModel {
       percentage: map['percentage']?.toDouble(),
       amount: map['amount']?.toDouble(),
       discountName: map['discountName'],
+      code: map['code'],
     );
   }
 
