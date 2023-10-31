@@ -15,14 +15,14 @@ class OrderData {
   String addressId;
   String reviewId;
   String? prescriptionId;
-  String medicineId;
+  List<Map<String, dynamic>> medicineId;
   String? discountId;
   String categoryId;
   UserModel? userModel;
   UserAddress? userAddress;
   ReviewData? reviewData;
   PrescriptionData? prescriptionData;
-  MedicineData? medicineData;
+  List<MedicineData>? medicineData;
   DiscountDataModel? discountData;
   CategoryData? categoryData;
 
@@ -50,7 +50,7 @@ class OrderData {
     String? addressId,
     String? reviewId,
     String? prescriptionId,
-    String? medicineId,
+    List<Map<String, dynamic>>? medicineId,
     String? discountId,
     String? categoryId,
     UserModel? userModel,
@@ -74,7 +74,9 @@ class OrderData {
       userAddress: userAddress ?? this.userAddress,
       reviewData: reviewData ?? this.reviewData,
       prescriptionData: prescriptionData ?? this.prescriptionData,
-      medicineData: medicineData ?? this.medicineData,
+      medicineData: medicineData != null
+          ? List<MedicineData>.from(medicineData as Iterable)
+          : this.medicineData,
       discountData: discountData ?? this.discountData,
       categoryData: categoryData ?? this.categoryData,
     );

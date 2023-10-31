@@ -8,8 +8,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
+import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/medicine_screen.dart';
 import 'package:medic/screen/order_placement_screen.dart';
 import 'package:medic/screen/upload_pres_screen.dart';
@@ -26,6 +28,7 @@ class MedicineDetails extends StatelessWidget {
   MedicineDetails({super.key, this.medicineData});
 
   final MedicineController controller = Get.put(MedicineController());
+  final CartController cartController = Get.put(CartController());
 
   @override
   Widget build(BuildContext context) {
@@ -295,7 +298,10 @@ class MedicineDetails extends StatelessWidget {
                     ),
                     const Spacer(),
                     ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await cartController.addToCart(medicineData!);
+                          Get.to(() => CartScreen());
+                        },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primaryColor,
                             fixedSize: const Size(110, 20),

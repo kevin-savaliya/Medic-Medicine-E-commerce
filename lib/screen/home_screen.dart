@@ -6,6 +6,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/controller/home_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/category_data.dart';
@@ -35,6 +36,7 @@ class HomeScreen extends GetWidget<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    CartController cartController = Get.put(CartController());
     return GetBuilder(
       init: HomeController(),
       builder: (controller) {
@@ -43,7 +45,7 @@ class HomeScreen extends GetWidget<HomeController> {
         }
         if (controller.pageIndex.value == 0) {
           return Scaffold(
-            body: homeWidget(context, controller),
+            body: homeWidget(context, controller, cartController),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 1) {
@@ -53,7 +55,7 @@ class HomeScreen extends GetWidget<HomeController> {
           );
         } else if (controller.pageIndex.value == 2) {
           return Scaffold(
-            body: const CartScreen(),
+            body: CartScreen(),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 3) {
@@ -72,7 +74,8 @@ class HomeScreen extends GetWidget<HomeController> {
     );
   }
 
-  Widget homeWidget(BuildContext context, HomeController controller) {
+  Widget homeWidget(BuildContext context, HomeController controller,
+      CartController cartController) {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -786,9 +789,13 @@ class HomeScreen extends GetWidget<HomeController> {
                                                     ),
                                                     Expanded(
                                                       child: ElevatedButton(
-                                                          onPressed: () {
+                                                          onPressed: () async {
+                                                            await cartController
+                                                                .addToCart(
+                                                                    medicineList[
+                                                                        index]);
                                                             Get.to(() =>
-                                                                OrderPlacement());
+                                                                CartScreen());
                                                           },
                                                           style: ElevatedButton.styleFrom(
                                                               backgroundColor:

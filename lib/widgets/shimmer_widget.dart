@@ -76,7 +76,8 @@ class PopularMedicineShimmer extends StatelessWidget {
   final int? itemCount;
   final double? height;
 
-  const PopularMedicineShimmer({super.key, required this.itemCount, this.height});
+  const PopularMedicineShimmer(
+      {super.key, required this.itemCount, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +193,39 @@ class AddressShimmer extends StatelessWidget {
               ),
             );
           },
+        ));
+  }
+}
+
+class CartShimmer extends StatelessWidget {
+  final int? itemCount;
+  final double? height;
+
+  const CartShimmer({required this.itemCount, this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+            itemCount: itemCount,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                child: Container(
+                  height: 150,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300]!,
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+              );
+            },
+          ),
         ));
   }
 }

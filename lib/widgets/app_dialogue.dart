@@ -338,15 +338,15 @@ Future showProgressDialogue(BuildContext context) {
               ],
             ),
             child: SizedBox(
-                height: 100,
-                width: 150,
+                height: 50,
+                width: 50,
                 child: SizedBox(
-                  height: 25,
-                  width: 25,
+                  height: 10,
+                  width: 10,
                   child: LoadingIndicator(
                     colors: [AppColors.primaryColor],
-                    indicatorType: Indicator.ballScale,
-                    strokeWidth: 1,
+                    indicatorType: Indicator.ballScaleMultiple,
+                    strokeWidth: 0,
                   ),
                 )),
           ),

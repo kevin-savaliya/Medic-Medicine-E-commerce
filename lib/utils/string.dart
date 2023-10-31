@@ -68,6 +68,7 @@ class ConstString {
   static const String enterDetail = "Enter Your Details To Continue";
   static const String enterOTP = "Enter OTP Received Your Phone Number";
   static const String verifyPhone = "Verify Your Phone Number";
+  static const String cartEmpty = "Your Medicine cart is empty!";
   static const String accountVerified =
       "Your account has been verified successfully ";
 

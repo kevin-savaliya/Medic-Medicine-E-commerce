@@ -1,16 +1,27 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
+import 'package:medic/model/medicine_data.dart';
+import 'package:medic/model/user_address.dart';
+import 'package:medic/screen/myaddress_screen.dart';
+import 'package:medic/screen/order_details_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/app_dialogue.dart';
+import 'package:medic/widgets/shimmer_widget.dart';
 
 class OrderPlacement extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
+  CartController cartController = Get.put(CartController());
 
   OrderPlacement({super.key});
 
@@ -66,7 +77,11 @@ class OrderPlacement extends StatelessWidget {
         color: AppColors.white,
         padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
         child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () async {
+              showProgressDialogue(context);
+              await cartController.placeOrder();
+              Get.to(() => const OrderDetailScreen());
+            },
             style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
                 fixedSize: const Size(80, 45),
@@ -84,445 +99,584 @@ class OrderPlacement extends StatelessWidget {
   }
 
   Widget orderPlaceWidget(BuildContext context, MedicineController controller) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: Row(
+    return StreamBuilder(
+      stream: cartController.fetchMedicineFromCart(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CartShimmer(itemCount: snapshot.data?.length));
+        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          List<MedicineData> medicineList = snapshot.data!;
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Column(
                 children: [
-                  Image.asset("asset/medicinebox.jpg", height: 50),
-                  const SizedBox(
-                    width: 10,
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: medicineList.length,
+                    separatorBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Divider(
+                          height: 15,
+                          color: AppColors.lineGrey,
+                          thickness: 1,
+                        ),
+                      );
+                    },
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            SizedBox(
+                              height: 70,
+                              child: CachedNetworkImage(
+                                imageUrl: medicineList[index].image ?? "",
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) =>
+                                        SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Center(
+                                      child: LoadingIndicator(
+                                    colors: [AppColors.primaryColor],
+                                    indicatorType: Indicator.ballScale,
+                                    strokeWidth: 1,
+                                  )),
+                                ),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: 170,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${medicineList[index].genericName}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(
+                                                    fontFamily:
+                                                        AppFont.fontBold),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            "${medicineList[index].uses}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall!
+                                                .copyWith(
+                                                    color: AppColors.txtGrey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 30),
+                                    GestureDetector(
+                                      onTap: () {
+                                        cartController.removeFromCart(
+                                            medicineList[index].id!);
+                                      },
+                                      child: SvgPicture.asset(
+                                        AppIcons.delete,
+                                        height: 18,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  // crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "SLE 120",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              fontFamily: AppFont.fontMedium,
+                                              fontSize: 14),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      "(30% Off)",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(
+                                              fontSize: 10,
+                                              color: AppColors.primaryColor,
+                                              fontFamily: AppFont.fontMedium),
+                                    ),
+                                    const SizedBox(
+                                      width: 30,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors.decsGrey,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        height: 28,
+                                        width: 28,
+                                        child: Icon(
+                                          Icons.remove,
+                                          color: AppColors.phoneGrey,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "0",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors.decsGrey,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        height: 28,
+                                        width: 28,
+                                        child: Icon(
+                                          Icons.add,
+                                          color: AppColors.primaryColor,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                  Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  Divider(
+                    height: 10,
+                    color: AppColors.decsGrey,
+                    thickness: 1,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          ConstString.deliveryAddress,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  color: AppColors.darkPrimaryColor,
+                                  fontFamily: AppFont.fontBold),
+                        ),
+                        GestureDetector(
+                            onTap: () {
+                              Get.to(() => MyAddressScreen());
+                            },
+                            child: SvgPicture.asset(
+                              AppIcons.edit,
+                              height: 20,
+                            ))
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  StreamBuilder(
+                    stream: cartController.fetchActiveAddress(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CupertinoActivityIndicator();
+                      } else if (snapshot.hasData) {
+                        UserAddress add = snapshot.data!;
+                        String address =
+                            "${add.address}, ${add.area}, ${add.landmark}";
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 5),
+                          child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border:
+                                      Border.all(color: AppColors.lineGrey)),
+                              child: Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  SvgPicture.asset(AppIcons.fillpin,
+                                      height: 20),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    address,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.txtGrey,
+                                            fontSize: 14),
+                                  )
+                                ],
+                              )),
+                        );
+                      } else {
+                        return const Text("");
+                      }
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        ConstString.billDetail,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                color: AppColors.darkPrimaryColor,
+                                fontFamily: AppFont.fontBold),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    child: Container(
+                      height: 160,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColors.lineGrey)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
-                                "Iconic Remedies",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(fontFamily: AppFont.fontBold),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    ConstString.subtotal,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.txtGrey,
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 13),
+                                  ),
+                                  Text(
+                                    "1 Item",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.darkPrimaryColor,
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 13),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(
-                                height: 5,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    ConstString.shipping,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.txtGrey,
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 13),
+                                  ),
+                                  Text(
+                                    "SLE 220",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.darkPrimaryColor,
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 13),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                "15 Capsule(s) in Bottle",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(color: AppColors.txtGrey),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    ConstString.discount,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.txtGrey,
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 13),
+                                  ),
+                                  Text(
+                                    "SLE 100",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.darkPrimaryColor,
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 13),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          const SizedBox(width: 80),
-                          SvgPicture.asset(
-                            AppIcons.delete,
-                            height: 18,
-                          )
-                        ],
+                              Container(
+                                height: 1,
+                                width: double.infinity,
+                                color: AppColors.lineGrey,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    ConstString.totalAmount,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.darkPrimaryColor,
+                                            fontFamily: AppFont.fontMedium,
+                                            fontSize: 13),
+                                  ),
+                                  Text(
+                                    "SLE 120",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.primaryColor,
+                                            fontFamily: AppFont.fontBold,
+                                            fontSize: 13),
+                                  ),
+                                ],
+                              ),
+                            ]),
                       ),
-                      const SizedBox(
-                        height: 20,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        ConstString.paymentMethod,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                color: AppColors.darkPrimaryColor,
+                                fontFamily: AppFont.fontBold),
                       ),
-                      Row(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "SLE 120",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                    fontFamily: AppFont.fontMedium,
-                                    fontSize: 14),
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            "(30% Off)",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    fontSize: 10,
-                                    color: AppColors.primaryColor,
-                                    fontFamily: AppFont.fontMedium),
-                          ),
-                          const SizedBox(
-                            width: 30,
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: AppColors.decsGrey,
-                                  borderRadius: BorderRadius.circular(5)),
-                              height: 28,
-                              width: 28,
-                              child: Icon(
-                                Icons.remove,
-                                color: AppColors.phoneGrey,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "0",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: AppColors.decsGrey,
-                                  borderRadius: BorderRadius.circular(5)),
-                              height: 28,
-                              width: 28,
-                              child: Icon(
-                                Icons.add,
-                                color: AppColors.primaryColor,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
+                    ),
+                  ),
+                  SizedBox(
+                      height: 260,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            return Obx(() => GestureDetector(
+                                  onTap: () {
+                                    controller.selectedPaymentMethod.value =
+                                        controller.paymentMethod[index];
+                                    // print(controller.selectedPaymentMethod);
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: Container(
+                                      height: 70,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: AppColors.lineGrey),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 40,
+                                              width: 40,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  border: Border.all(
+                                                      color:
+                                                          AppColors.lineGrey)),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: SvgPicture.asset(
+                                                  controller
+                                                      .paymentMethodIcon[index],
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              controller.paymentMethod[index],
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                      color: AppColors
+                                                          .darkPrimaryColor,
+                                                      fontFamily:
+                                                          AppFont.fontMedium,
+                                                      fontSize: 13),
+                                            ),
+                                            const Spacer(),
+                                            SvgPicture.asset(
+                                              controller.selectedPaymentMethod ==
+                                                      controller
+                                                          .paymentMethod[index]
+                                                  ? AppIcons.radioFill
+                                                  : AppIcons.radio,
+                                              height: 22,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ));
+                          },
+                        ),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        ConstString.presUploadedByYou,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                color: AppColors.darkPrimaryColor,
+                                fontFamily: AppFont.fontBold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            color: AppColors.lineGrey,
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 70,
                   )
                 ],
               ),
             ),
-            Divider(
-              height: 10,
-              color: AppColors.decsGrey,
-              thickness: 1,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          );
+        } else {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    ConstString.deliveryAddress,
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: AppColors.darkPrimaryColor,
-                        fontFamily: AppFont.fontBold),
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  SvgPicture.asset(AppIcons.edit)
+                  Text(
+                    ConstString.cartEmpty,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 13, color: AppColors.skipGrey),
+                  )
                 ],
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.lineGrey)),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SvgPicture.asset(AppIcons.fillpin, height: 20),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "67B Gregorio Grove ,Jaskolskiville",
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall!
-                            .copyWith(color: AppColors.txtGrey),
-                      )
-                    ],
-                  )),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  ConstString.billDetail,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: AppColors.darkPrimaryColor,
-                      fontFamily: AppFont.fontBold),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Container(
-                height: 160,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.lineGrey)),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              ConstString.subtotal,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.txtGrey,
-                                      fontFamily: AppFont.fontMedium,
-                                      fontSize: 13),
-                            ),
-                            Text(
-                              "1 Item",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.darkPrimaryColor,
-                                      fontFamily: AppFont.fontMedium,
-                                      fontSize: 13),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              ConstString.shipping,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.txtGrey,
-                                      fontFamily: AppFont.fontMedium,
-                                      fontSize: 13),
-                            ),
-                            Text(
-                              "SLE 220",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.darkPrimaryColor,
-                                      fontFamily: AppFont.fontMedium,
-                                      fontSize: 13),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              ConstString.discount,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.txtGrey,
-                                      fontFamily: AppFont.fontMedium,
-                                      fontSize: 13),
-                            ),
-                            Text(
-                              "SLE 100",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.darkPrimaryColor,
-                                      fontFamily: AppFont.fontMedium,
-                                      fontSize: 13),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 1,
-                          width: double.infinity,
-                          color: AppColors.lineGrey,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              ConstString.totalAmount,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.darkPrimaryColor,
-                                      fontFamily: AppFont.fontMedium,
-                                      fontSize: 13),
-                            ),
-                            Text(
-                              "SLE 120",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontFamily: AppFont.fontBold,
-                                      fontSize: 13),
-                            ),
-                          ],
-                        ),
-                      ]),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  ConstString.paymentMethod,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: AppColors.darkPrimaryColor,
-                      fontFamily: AppFont.fontBold),
-                ),
-              ),
-            ),
-            SizedBox(
-                height: 260,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Obx(() => GestureDetector(
-                            onTap: () {
-                              controller.selectedPaymentMethod.value =
-                                  controller.paymentMethod[index];
-                              // print(controller.selectedPaymentMethod);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: Container(
-                                height: 70,
-                                decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: AppColors.lineGrey),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 40,
-                                        width: 40,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: Border.all(
-                                                color: AppColors.lineGrey)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: SvgPicture.asset(
-                                            controller.paymentMethodIcon[index],
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        controller.paymentMethod[index],
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                                color:
-                                                    AppColors.darkPrimaryColor,
-                                                fontFamily: AppFont.fontMedium,
-                                                fontSize: 13),
-                                      ),
-                                      const Spacer(),
-                                      SvgPicture.asset(
-                                        controller.selectedPaymentMethod ==
-                                                controller.paymentMethod[index]
-                                            ? AppIcons.radioFill
-                                            : AppIcons.radio,
-                                        height: 22,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ));
-                    },
-                  ),
-                )),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  ConstString.presUploadedByYou,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: AppColors.darkPrimaryColor,
-                      fontFamily: AppFont.fontBold),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                      color: AppColors.lineGrey,
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 70,
-            )
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 }

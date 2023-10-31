@@ -1,4 +1,5 @@
 import 'package:medic/_dart/_init.dart';
+import 'package:medic/controller/cart_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,5 +54,6 @@ class GlobalBindings extends Bindings {
   void dependencies() {
     Get.lazyPut(() => AuthController(), fenix: true);
     Get.lazyPut(() => UserController(), fenix: true);
+    Get.lazyPut(() => CartController(), fenix: true);
   }
 }

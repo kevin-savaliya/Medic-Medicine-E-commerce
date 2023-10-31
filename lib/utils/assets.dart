@@ -17,6 +17,7 @@ class AppImages {
   static const String medicineBox1 = 'asset/images/medicinebox1.png';
   static const String medicineBox2 = 'asset/images/medicinebox2.png';
   static const String medicineBox3 = 'asset/images/medicinebox3.png';
+  static const String emptyBin = 'asset/images/emptyBin.svg';
 
   static const String medicineBox4 = 'asset/medicineboxPng.png';
   static const String medicineBox = 'asset/medicinebox.jpg';

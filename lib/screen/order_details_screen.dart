@@ -122,8 +122,7 @@ class OrderDetailScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppColors.lineGrey)),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -326,8 +325,7 @@ class OrderDetailScreen extends StatelessWidget {
                 border: Border.all(color: AppColors.lineGrey),
                 borderRadius: BorderRadius.circular(10)),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,8 +419,7 @@ class OrderDetailScreen extends StatelessWidget {
                 border: Border.all(color: AppColors.lineGrey),
                 borderRadius: BorderRadius.circular(10)),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
