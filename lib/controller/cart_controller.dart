@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -26,6 +24,8 @@ class CartController extends GetxController {
 
   final String currentUser = FirebaseAuth.instance.currentUser!.uid;
 
+  Rx<OrderData> orderData = OrderData(medicineId: {}).obs;
+
   // Future<void> addToCart(MedicineData medicine, [int qty = 1]) async {
   //   // Extend the medicine's map with the quantity
   //   Map<String, dynamic> medicineWithQty = medicine.toMap();
@@ -34,19 +34,57 @@ class CartController extends GetxController {
   //   await cartRef.doc(medicine.id).set(medicineWithQty);
   // }
 
-  Future<void> addToCart(MedicineData medicine,[int qty = 2]) async {
-    Map<String,dynamic> medicineQty = medicine.toMap();
-    medicineQty['qty'] = qty;
+  Future<void> addToCart(MedicineData medicine) async {
+    // orderData.value = orderData.value.copyWith(medicineId: [
+    //   ...orderData.value.medicineId,
+    //   {orderData.value.medicineId.length.toString(): medicine.id}
+    // ]);
+
+    // add medicine to orderData
+    if (!orderData.value.medicineId.values.toList().contains(medicine.id)) {
+      orderData.value.medicineId
+          .addAll({orderData.value.medicineId.length.toString(): medicine.id});
+    }
+
+    orderData.value.medicineData ??= [];
+    List<MedicineData> list = orderData.value.medicineData!
+        .where((element) => element.id == medicine.id)
+        .toList();
+    if (list.isEmpty) {
+      orderData.value.medicineData?.add(medicine);
+    } else {
+      list[0].quantity = list[0].quantity! + 1;
+    }
+    orderData.value.medicineData?.add(medicine);
+  }
+
+  Future<void> _addToCart(MedicineData medicine, [int qty = 2]) async {
+    Map<String, dynamic> medicineQty = medicine.toMap();
+    medicineQty['quantity'] = qty;
     await cartRef.doc(medicine.id).set(medicineQty);
   }
 
   Future<void> removeFromCart(String medicineId) async {
+    if (orderData.value.medicineId.values.toList().isNotEmpty) {
+      orderData.value.medicineId.values
+          .toList()
+          .removeWhere((element) => element == medicineId);
+    }
+    if (orderData.value.medicineData != null &&
+        orderData.value.medicineData!.isNotEmpty) {
+      orderData.value.medicineData
+          ?.removeWhere((element) => element.id == medicineId);
+    }
+  }
+
+  Future<void> _removeFromCart(String medicineId) async {
     await cartRef.doc(medicineId).delete();
   }
 
   Stream<List<MedicineData>> fetchMedicineFromCart() {
     return cartRef.snapshots().map((event) {
       return event.docs.map((e) {
+        print('e.data() ${e.data()}');
         return MedicineData.fromMap(e.data());
       }).toList();
     });
@@ -78,29 +116,27 @@ class CartController extends GetxController {
       showInSnackBar("No items in cart to place order");
     }
 
-    final List<Map<String, dynamic>> medicineIds = [];
-    for (final doc in cartSnapshot.docs) {
-      medicineIds.add({'id': doc.id});
+    final Map<String, dynamic> medicineIds = {};
+    for (int i = 0; i < cartSnapshot.docs.length; i++) {
+      medicineIds[i.toString()] = cartSnapshot.docs[i].id;
     }
+    /*for (final doc in cartSnapshot.docs) {
+      medicineIds.add({'id': doc.id});
+    }*/
 
     String id = orderRef.doc().id;
 
-    final orderData = OrderData(
-        id: id,
-        creatorId: currentUser,
-        addressId: "addressId",
-        reviewId: "reviewId",
-        medicineId: medicineIds,
-        categoryId: "categoryId");
+    final _orderData = orderData.value
+        .copyWith(id: id, creatorId: currentUser, medicineId: medicineIds);
 
-    await orderRef.doc(id).set(orderData.toMap());
+    await orderRef.doc(id).set(_orderData.toMap());
 
     Get.back();
-    showInSnackBar("Order Placed Successfully",
-        isSuccess: true, title: "The Medic");
-
     for (final doc in cartSnapshot.docs) {
       await cartRef.doc(doc.id).delete();
     }
+
+    showInSnackBar("Order Placed Successfully",
+        isSuccess: true, title: "The Medic");
   }
 }

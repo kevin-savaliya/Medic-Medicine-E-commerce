@@ -12,7 +12,7 @@ import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
 
 class PrescriptionList extends StatelessWidget {
-  UploadPresController controller = Get.put(UploadPresController());
+  final UploadPresController controller = Get.put(UploadPresController());
 
   PrescriptionList({super.key});
 

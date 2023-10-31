@@ -17,7 +17,6 @@ import 'package:medic/screen/medicine_category.dart';
 import 'package:medic/screen/medicine_details.dart';
 import 'package:medic/screen/medicine_screen.dart';
 import 'package:medic/screen/notification_screen.dart';
-import 'package:medic/screen/order_placement_screen.dart';
 import 'package:medic/screen/popular_medicine.dart';
 import 'package:medic/screen/profile_screen.dart';
 import 'package:medic/screen/reminder_screen.dart';
@@ -790,11 +789,12 @@ class HomeScreen extends GetWidget<HomeController> {
                                                     Expanded(
                                                       child: ElevatedButton(
                                                           onPressed: () async {
-                                                            await cartController
-                                                                .addToCart(
-                                                                    medicineList[
-                                                                        index]);
-                                                            Get.to(() =>
+                                                            await _addToCart(
+                                                                cartController,
+                                                                medicineList
+                                                                    .elementAt(
+                                                                        index));
+                                                            await Get.to(() =>
                                                                 CartScreen());
                                                           },
                                                           style: ElevatedButton.styleFrom(
@@ -872,6 +872,11 @@ class HomeScreen extends GetWidget<HomeController> {
         ),
       ),
     );
+  }
+
+  Future<void> _addToCart(
+      CartController cartController, MedicineData medicineData) async {
+    await cartController.addToCart(medicineData);
   }
 
   Widget bottomNavigationBar(BuildContext context) {

@@ -11,13 +11,13 @@ import 'package:medic/model/user_model.dart';
 
 class OrderData {
   String? id;
-  String creatorId;
-  String addressId;
-  String reviewId;
+  String? creatorId;
+  String? addressId;
+  String? reviewId;
   String? prescriptionId;
-  List<Map<String, dynamic>> medicineId;
+  Map<String, dynamic> medicineId;
   String? discountId;
-  String categoryId;
+  String? categoryId;
   UserModel? userModel;
   UserAddress? userAddress;
   ReviewData? reviewData;
@@ -28,13 +28,13 @@ class OrderData {
 
   OrderData({
     this.id,
-    required this.creatorId,
-    required this.addressId,
-    required this.reviewId,
+    this.creatorId,
+    this.addressId,
+    this.reviewId,
     this.prescriptionId,
     required this.medicineId,
     this.discountId,
-    required this.categoryId,
+    this.categoryId,
     this.userModel,
     this.userAddress,
     this.reviewData,
@@ -50,7 +50,7 @@ class OrderData {
     String? addressId,
     String? reviewId,
     String? prescriptionId,
-    List<Map<String, dynamic>>? medicineId,
+    Map<String, dynamic>? medicineId,
     String? discountId,
     String? categoryId,
     UserModel? userModel,

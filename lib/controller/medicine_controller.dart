@@ -188,7 +188,7 @@ class MedicineController extends GetxController {
 
   Stream<List<MedicineData>> fetchFavouriteMedicine() {
     if (favouriteMedicines.isEmpty) {
-      return Stream.empty();
+      return const Stream.empty();
     }
     var data = medicineRef
         .where('id', whereIn: favMedicinesIds)

@@ -7,7 +7,6 @@ import 'package:medic/screen/notification_screen.dart';
 import 'package:medic/screen/order_history.dart';
 import 'package:medic/screen/prescription_list.dart';
 import 'package:medic/screen/reminder_screen.dart';
-import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
