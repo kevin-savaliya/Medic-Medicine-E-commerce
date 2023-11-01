@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:medic/controller/user_controller.dart';
 import 'package:medic/model/category_data.dart';
 import 'package:medic/model/medicine_data.dart';
+import 'package:medic/model/user_model.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
@@ -23,6 +25,8 @@ class MedicineController extends GetxController {
       FirebaseFirestore.instance.collection('favourites');
 
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+  UserModel? loggedInUser = Get.find<UserController>().loggedInUser.value;
 
   @override
   void onInit() {
@@ -146,11 +150,14 @@ class MedicineController extends GetxController {
   }
 
   bool isFavourite(String medicineId) {
+    // if (loggedInUser == null) {
+    //   return false;
+    // }
     return favouriteMedicines
         .any((medicine) => medicine['medicineId'] == medicineId);
   }
 
-  addFavourite(String medicineId) async {
+  Future<void> addFavourite(String medicineId) async {
     DocumentReference favDocRef = favRef.doc(currentUserId);
 
     DocumentSnapshot snapshot = await favDocRef.get();
@@ -173,7 +180,7 @@ class MedicineController extends GetxController {
     }
   }
 
-  removeFavourite(String medicineId) {
+  Future<void> removeFavourite(String medicineId) async {
     Map<String, dynamic> medicineToRemove = favouriteMedicines.firstWhere(
       (medicine) => medicine['medicineId'] == medicineId,
       orElse: () => {},
@@ -181,7 +188,7 @@ class MedicineController extends GetxController {
 
     favouriteMedicines.remove(medicineToRemove);
     favMedicinesIds.remove(medicineId);
-    favRef.doc(currentUserId).update({
+    await favRef.doc(currentUserId).update({
       'medicines': FieldValue.arrayRemove([medicineToRemove])
     });
   }

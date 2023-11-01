@@ -91,28 +91,61 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 10,
+            const SizedBox(height: 5),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+Future deleteAccountDialogue(
+    BuildContext context, AuthController authController) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+        backgroundColor: AppColors.white,
+        shape: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(12)),
+        alignment: Alignment.center,
+        title: Column(
+          children: [
+            Text(
+              ConstString.deleteAccountDialogue,
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: AppColors.darkPrimaryColor,
+                    fontFamily: AppFont.fontBold,
+                  ),
             ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                "Please be aware that this action is irreversible, and all tasks and progress in Buckets will be permanently lost.",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                    fontSize: 14, color: AppColors.txtGrey, letterSpacing: 0),
+              ),
+            ),
+            const SizedBox(height: 25),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                   onPressed: () async {
                     Get.back();
-                    deleteDialogue(context, () async {
-                      Get.back();
-                      progressDialogue(title: "Delete Account");
-                      bool hasInternet = await Utils.hasInternetConnection();
-                      if (!hasInternet) {
-                        showInSnackBar(ConstString.noConnection);
-                        return;
-                      }
-
-                      await deleteUserFirestoreData();
-                      Get.back();
-                      Get.offAll(() => const PhoneLoginScreen());
+                    progressDialogue(title: "Delete Account");
+                    bool hasInternet = await Utils.hasInternetConnection();
+                    if (!hasInternet) {
+                      showInSnackBar(ConstString.noConnection);
                       return;
-                    });
+                    }
+
+                    await deleteUserFirestoreData();
+                    Get.back();
+                    Get.offAll(() => const PhoneLoginScreen());
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.red,
@@ -191,19 +224,20 @@ Future deleteDialogue(BuildContext context, Function() callback) {
             ),
             const SizedBox(height: 25),
             Text(
-              ConstString.deleteAccount,
+              ConstString.deleteAccountDialogue,
               style: Theme.of(context).textTheme.labelLarge!.copyWith(
                     color: AppColors.darkPrimaryColor,
                     fontFamily: AppFont.fontSemiBold,
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
                   ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: TextWidget(
-                "Are you sure you want to delete your account?\nAll information will be deleted. That can't be UNDONE",
+                "Please be aware that this action is irreversible, and all tasks and progress in Buckets will be permanently lost.",
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                     fontSize: 14,

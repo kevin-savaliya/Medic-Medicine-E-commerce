@@ -1,7 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -35,8 +33,15 @@ class CartScreen extends StatelessWidget {
         elevation: 1.5,
         shadowColor: AppColors.txtGrey.withOpacity(0.2),
       ),
-      body: cartWidget(context),
+      body: getContent(context),
     );
+  }
+
+  Widget getContent(BuildContext context) {
+    if (controller.currentUser == null) {
+      return UserNotLoggedInWidget();
+    }
+    return cartWidget(context);
   }
 
   Widget cartWidget(BuildContext context) {
@@ -495,5 +500,30 @@ class CartScreen extends StatelessWidget {
         ),
       );
     }
+  }
+
+  Widget UserNotLoggedInWidget() {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: AppColors.tilePrimaryColor),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(AppIcons.noData, height: 60),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            ConstString.loginToViewCartItems,
+            style: Theme.of(Get.context!).textTheme.titleSmall!.copyWith(
+                color: AppColors.primaryColor,
+                fontSize: 16,
+                fontFamily: AppFont.fontMedium),
+          ),
+        ],
+      ),
+    );
   }
 }

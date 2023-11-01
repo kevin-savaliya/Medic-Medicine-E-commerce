@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/upload_pres_controller.dart';
 import 'package:medic/model/prescription_model.dart';
 import 'package:medic/theme/colors.dart';

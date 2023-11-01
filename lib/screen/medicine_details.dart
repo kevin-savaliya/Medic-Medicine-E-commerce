@@ -142,9 +142,9 @@ class MedicineDetails extends StatelessWidget {
                         top: 5,
                         right: 5,
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             if (isFav) {
-                              controller.removeFavourite(medicineId);
+                              await controller.removeFavourite(medicineId);
                             } else {
                               controller.addFavourite(medicineId);
                             }
@@ -974,9 +974,9 @@ class MedicineDetails extends StatelessWidget {
                                                         top: 10,
                                                         right: 10,
                                                         child: GestureDetector(
-                                                          onTap: () {
+                                                          onTap: () async {
                                                             if (isFav) {
-                                                              controller
+                                                              await controller
                                                                   .removeFavourite(
                                                                       medicineId);
                                                             } else {

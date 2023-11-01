@@ -142,16 +142,15 @@ class Utils {
         title: Text(
           title,
           style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-              ),
+              fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black),
         ),
-        content: Text(
-          (content != null) ? content : "",
-          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                fontSize: 13,
-                fontWeight: FontWeight.w400,
-              ),
+        content: Container(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: Text(
+            (content != null) ? content : "",
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                fontSize: 13, fontWeight: FontWeight.w400, color: Colors.black),
+          ),
         ),
         actions: <CupertinoDialogAction>[
           CupertinoDialogAction(

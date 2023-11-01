@@ -31,7 +31,7 @@ class CartController extends GetxController {
   final CollectionReference addRef =
       FirebaseFirestore.instance.collection("addresses");
 
-  final String currentUser = FirebaseAuth.instance.currentUser!.uid;
+  final String? currentUser = FirebaseAuth.instance.currentUser?.uid;
 
   Rx<OrderData> orderData = OrderData(medicineId: {}).obs;
 

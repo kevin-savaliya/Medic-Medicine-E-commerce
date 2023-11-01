@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/intro_controller.dart';
-import 'package:medic/screen/phone_login_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
@@ -231,32 +230,8 @@ class IntroScreen extends StatelessWidget {
                       child: Obx(() => Visibility(
                             visible: controller.selectedPageIndex.value != 3,
                             child: TextButton(
-                                onPressed: () {
-                                  if (controller.selectedPageIndex.value == 0) {
-                                    controller.pageController.value
-                                        .animateToPage(1,
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            curve: Curves.easeIn);
-                                  } else if (controller
-                                          .selectedPageIndex.value ==
-                                      1) {
-                                    controller.pageController.value
-                                        .animateToPage(2,
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            curve: Curves.easeIn);
-                                  } else if (controller
-                                          .selectedPageIndex.value ==
-                                      2) {
-                                    controller.pageController.value
-                                        .animateToPage(3,
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            curve: Curves.easeIn);
-                                  } else {
-                                    Get.offAll(() => const PhoneLoginScreen());
-                                  }
+                                onPressed: () async {
+                                  await controller.redirectToLogin();
                                 },
                                 child: Text(
                                   "Skip",

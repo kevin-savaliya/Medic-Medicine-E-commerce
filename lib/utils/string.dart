@@ -197,4 +197,8 @@ class ConstString {
   static const String noComment = "No Comments";
 
   static const String noConnection = "No internet connection";
+  static const String loginToViewCartItems = "Login to view your cart items";
+  static const String loginToViewFav = "Login to view your favourites";
+  static const String deleteAccountDialogue =
+      "Do you wish to delete your account?";
 }

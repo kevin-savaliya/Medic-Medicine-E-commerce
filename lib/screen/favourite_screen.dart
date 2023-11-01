@@ -58,8 +58,15 @@ class FavouriteScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: medicineWidget(),
+      body: getContent(),
     );
+  }
+
+  Widget getContent() {
+    if (controller.loggedInUser == null) {
+      return UserNotLoggedInWidget();
+    }
+    return medicineWidget();
   }
 
   Widget medicineWidget() {
@@ -154,10 +161,11 @@ class FavouriteScreen extends StatelessWidget {
                                           top: 10,
                                           right: 10,
                                           child: GestureDetector(
-                                            onTap: () {
+                                            onTap: () async {
                                               if (isFav) {
-                                                controller.removeFavourite(
-                                                    medicineId);
+                                                await controller
+                                                    .removeFavourite(
+                                                        medicineId);
                                               } else {
                                                 controller
                                                     .addFavourite(medicineId);
@@ -341,6 +349,31 @@ class FavouriteScreen extends StatelessWidget {
           );
         }
       },
+    );
+  }
+
+  Widget UserNotLoggedInWidget() {
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: AppColors.tilePrimaryColor),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(AppIcons.noData, height: 60),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            ConstString.loginToViewFav,
+            style: Theme.of(Get.context!).textTheme.titleSmall!.copyWith(
+                color: AppColors.primaryColor,
+                fontSize: 16,
+                fontFamily: AppFont.fontMedium),
+          ),
+        ],
+      ),
     );
   }
 }

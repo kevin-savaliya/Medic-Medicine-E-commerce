@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -17,6 +19,7 @@ import 'package:medic/screen/medicine_category.dart';
 import 'package:medic/screen/medicine_details.dart';
 import 'package:medic/screen/medicine_screen.dart';
 import 'package:medic/screen/notification_screen.dart';
+import 'package:medic/screen/phone_login_screen.dart';
 import 'package:medic/screen/popular_medicine.dart';
 import 'package:medic/screen/profile_screen.dart';
 import 'package:medic/screen/reminder_screen.dart';
@@ -26,6 +29,7 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/utils/utils.dart';
 import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:medic/widgets/user/my_name_text_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
@@ -90,8 +94,12 @@ class HomeScreen extends GetWidget<HomeController> {
           children: [
             Row(
               children: [
-                SvgPicture.asset(AppIcons
-                    .fillpin), // TODO: change icon when user is not logged In
+                controller.firebaseUser != null
+                    ? SvgPicture.asset(AppIcons.fillpin)
+                    : BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                        child: SvgPicture.asset(AppIcons.fillpin),
+                      ), // TODO: change icon when user is not logged In
                 const SizedBox(
                   width: 3,
                 ),
@@ -637,16 +645,12 @@ class HomeScreen extends GetWidget<HomeController> {
                                                           right: 10,
                                                           child:
                                                               GestureDetector(
-                                                            onTap: () {
-                                                              if (isFav) {
-                                                                controller
-                                                                    .removeFavourite(
-                                                                        medicineId);
-                                                              } else {
-                                                                controller
-                                                                    .addFavourite(
-                                                                        medicineId);
-                                                              }
+                                                            onTap: () async {
+                                                              await markFavourite(
+                                                                  controller,
+                                                                  context,
+                                                                  isFav,
+                                                                  medicineId);
                                                             },
                                                             child: isFav
                                                                 ? SvgPicture
@@ -872,6 +876,27 @@ class HomeScreen extends GetWidget<HomeController> {
         ),
       ),
     );
+  }
+
+  Future<void> markFavourite(MedicineController controller,
+      BuildContext context, bool isFav, String medicineId) async {
+    if (controller.loggedInUser == null) {
+      Utils().showAlertDialog(
+          context: context,
+          title: "Login Required!",
+          content:
+              "Ready to Get Started? Confirm with 'Yes' and Login Your Account.",
+          onPressed: () {
+            Get.back();
+            Get.to(() => const PhoneLoginScreen());
+          });
+      return;
+    }
+    if (isFav) {
+      await controller.removeFavourite(medicineId);
+    } else {
+      await controller.addFavourite(medicineId);
+    }
   }
 
   Future<void> _addToCart(
