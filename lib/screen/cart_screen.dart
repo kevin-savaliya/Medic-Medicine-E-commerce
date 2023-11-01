@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -159,10 +161,13 @@ class CartScreen extends StatelessWidget {
                                           fontFamily: AppFont.fontMedium),
                                 ),
                                 const SizedBox(
-                                  width: 30,
+                                  width: 15,
                                 ),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    controller.decrementQuantity(
+                                        medicineList[index].id!);
+                                  },
                                   child: Container(
                                     decoration: BoxDecoration(
                                         color: AppColors.decsGrey,
@@ -171,7 +176,9 @@ class CartScreen extends StatelessWidget {
                                     width: 28,
                                     child: Icon(
                                       Icons.remove,
-                                      color: AppColors.phoneGrey,
+                                      color: medicineList[index].quantity == 0
+                                          ? AppColors.phoneGrey
+                                          : AppColors.primaryColor,
                                       size: 18,
                                     ),
                                   ),
@@ -182,7 +189,7 @@ class CartScreen extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    "0",
+                                    "${medicineList[index].quantity}",
                                     style:
                                         Theme.of(context).textTheme.titleMedium,
                                   ),
@@ -191,7 +198,10 @@ class CartScreen extends StatelessWidget {
                                   width: 10,
                                 ),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    controller.incrementQuantity(
+                                        medicineList[index].id!);
+                                  },
                                   child: Container(
                                     decoration: BoxDecoration(
                                         color: AppColors.decsGrey,

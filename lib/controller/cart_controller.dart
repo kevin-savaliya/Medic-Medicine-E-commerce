@@ -1,6 +1,11 @@
+// ignore_for_file: unnecessary_null_comparison
+
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:medic/model/discount_data_model.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/order_data.dart';
 import 'package:medic/model/user_address.dart';
@@ -8,9 +13,13 @@ import 'package:medic/utils/utils.dart';
 
 class CartController extends GetxController {
   final RxList cartItems = [].obs;
+  RxInt qty = 1.obs;
 
   final CollectionReference medicineRef =
       FirebaseFirestore.instance.collection("medicines");
+
+  final CollectionReference discountRef =
+      FirebaseFirestore.instance.collection("discounts");
 
   late final cartRef = FirebaseFirestore.instance
       .collection("users")
@@ -26,36 +35,54 @@ class CartController extends GetxController {
 
   Rx<OrderData> orderData = OrderData(medicineId: {}).obs;
 
-  // Future<void> addToCart(MedicineData medicine, [int qty = 1]) async {
-  //   // Extend the medicine's map with the quantity
-  //   Map<String, dynamic> medicineWithQty = medicine.toMap();
-  //   medicineWithQty['qty'] = qty;
-  //
-  //   await cartRef.doc(medicine.id).set(medicineWithQty);
-  // }
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    fetchDiscountData();
+  }
 
-  Future<void> addToCart(MedicineData medicine) async {
-    // orderData.value = orderData.value.copyWith(medicineId: [
-    //   ...orderData.value.medicineId,
-    //   {orderData.value.medicineId.length.toString(): medicine.id}
-    // ]);
-
-    // add medicine to orderData
+  Future<void> addToCart(MedicineData medicine, {int qty = 1}) async {
     if (!orderData.value.medicineId.values.toList().contains(medicine.id)) {
       orderData.value.medicineId
           .addAll({orderData.value.medicineId.length.toString(): medicine.id});
     }
 
     orderData.value.medicineData ??= [];
-    List<MedicineData> list = orderData.value.medicineData!
-        .where((element) => element.id == medicine.id)
-        .toList();
-    if (list.isEmpty) {
-      orderData.value.medicineData?.add(medicine);
-    } else {
-      list[0].quantity = list[0].quantity! + 1;
+
+    MedicineData? existMedicine;
+    try {
+      existMedicine = orderData.value.medicineData!
+          .firstWhere((element) => element.id == medicine.id);
+    } catch (e) {
+      if (e is! StateError) {
+        throw e;
+      }
     }
-    orderData.value.medicineData?.add(medicine);
+
+    if (existMedicine == null) {
+      orderData.value.medicineData?.add(medicine.copyWith(quantity: qty));
+    }
+  }
+
+  void incrementQuantity(String medicineId) {
+    var updatedMedicines =
+        List<MedicineData>.from(orderData.value.medicineData ?? []);
+    var medicine = updatedMedicines.firstWhere((m) => m.id == medicineId);
+    medicine.quantity = (medicine.quantity ?? 0) + 1;
+
+    orderData.value.medicineData = updatedMedicines;
+  }
+
+  void decrementQuantity(String medicineId) {
+    var updatedMedicines =
+        List<MedicineData>.from(orderData.value.medicineData ?? []);
+    var medicine = updatedMedicines.firstWhere((m) => m.id == medicineId);
+    if (medicine.quantity! > 0) {
+      medicine.quantity = (medicine.quantity ?? 0) - 1;
+    }
+
+    orderData.value.medicineData = updatedMedicines;
   }
 
   Future<void> _addToCart(MedicineData medicine, [int qty = 2]) async {
@@ -65,15 +92,21 @@ class CartController extends GetxController {
   }
 
   Future<void> removeFromCart(String medicineId) async {
-    if (orderData.value.medicineId.values.toList().isNotEmpty) {
-      orderData.value.medicineId.values
-          .toList()
-          .removeWhere((element) => element == medicineId);
+    // Removing from medicineId Map
+    if (orderData.value.medicineId.isNotEmpty) {
+      Map<String, String> updatedMedicineIds =
+          Map.from(orderData.value.medicineId);
+      updatedMedicineIds.removeWhere((key, value) => value == medicineId);
+      orderData.value.medicineId = updatedMedicineIds;
     }
+
+    // Removing from medicineData List
     if (orderData.value.medicineData != null &&
         orderData.value.medicineData!.isNotEmpty) {
-      orderData.value.medicineData
-          ?.removeWhere((element) => element.id == medicineId);
+      List<MedicineData> updatedMedicineData =
+          List.from(orderData.value.medicineData!);
+      updatedMedicineData.removeWhere((element) => element.id == medicineId);
+      orderData.value.medicineData = updatedMedicineData;
     }
   }
 
@@ -100,43 +133,30 @@ class CartController extends GetxController {
         for (final address in addressList) {
           Map<String, dynamic> addressMap = address as Map<String, dynamic>;
           if (addressMap['isActive'] == true) {
-            return UserAddress.fromMap(
-                addressMap); // This returns the active address
+            return UserAddress.fromMap(addressMap);
           }
         }
       }
-      return null; // Return null if no active address found or document doesn't exist
+      return null;
     });
   }
 
   Future<void> placeOrder() async {
-    final cartSnapshot = await cartRef.get();
-
-    if (cartSnapshot.docs.isEmpty) {
-      showInSnackBar("No items in cart to place order");
-    }
-
-    final Map<String, dynamic> medicineIds = {};
-    for (int i = 0; i < cartSnapshot.docs.length; i++) {
-      medicineIds[i.toString()] = cartSnapshot.docs[i].id;
-    }
-    /*for (final doc in cartSnapshot.docs) {
-      medicineIds.add({'id': doc.id});
-    }*/
-
+    log("${orderData.value.medicineId}");
     String id = orderRef.doc().id;
 
-    final _orderData = orderData.value
-        .copyWith(id: id, creatorId: currentUser, medicineId: medicineIds);
+    final _orderData = orderData.value.copyWith(
+        id: id, creatorId: currentUser, medicineId: orderData.value.medicineId);
 
     await orderRef.doc(id).set(_orderData.toMap());
-
     Get.back();
-    for (final doc in cartSnapshot.docs) {
-      await cartRef.doc(doc.id).delete();
-    }
-
     showInSnackBar("Order Placed Successfully",
         isSuccess: true, title: "The Medic");
+  }
+
+  fetchDiscountData() {
+    var data = discountRef.snapshots().map((event) => event.docs.map(
+        (e) => DiscountDataModel.fromMap(e.data() as Map<String, dynamic>)));
+    return data;
   }
 }

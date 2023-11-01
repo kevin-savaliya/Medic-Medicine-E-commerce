@@ -254,71 +254,79 @@ class MedicineDetails extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.decsGrey,
-                            borderRadius: BorderRadius.circular(5)),
-                        height: 28,
-                        width: 28,
-                        child: Icon(
-                          Icons.remove,
-                          color: AppColors.phoneGrey,
-                          size: 18,
+                Obx(() => Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            cartController.qty--;
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AppColors.decsGrey,
+                                borderRadius: BorderRadius.circular(5)),
+                            height: 28,
+                            width: 28,
+                            child: Icon(
+                              Icons.remove,
+                              color: cartController.qty == 0
+                                  ? AppColors.phoneGrey
+                                  : AppColors.primaryColor,
+                              size: 18,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "0",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: AppColors.decsGrey,
-                            borderRadius: BorderRadius.circular(5)),
-                        height: 28,
-                        width: 28,
-                        child: Icon(
-                          Icons.add,
-                          color: AppColors.primaryColor,
-                          size: 18,
+                        const SizedBox(
+                          width: 10,
                         ),
-                      ),
-                    ),
-                    const Spacer(),
-                    ElevatedButton(
-                        onPressed: () async {
-                          await cartController.addToCart(medicineData!);
-                          Get.to(() => CartScreen());
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryColor,
-                            fixedSize: const Size(110, 20),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30))),
-                        child: Text(
-                          "Add to cart",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                                  color: AppColors.white,
-                                  fontFamily: AppFont.fontMedium),
-                        ))
-                  ],
-                )
+                        Text(
+                          "${cartController.qty.value}",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            cartController.qty++;
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AppColors.decsGrey,
+                                borderRadius: BorderRadius.circular(5)),
+                            height: 28,
+                            width: 28,
+                            child: Icon(
+                              Icons.add,
+                              color: AppColors.primaryColor,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        ElevatedButton(
+                            onPressed: () async {
+                              await cartController.addToCart(medicineData!,
+                                  qty: cartController.qty.value);
+                              Get.to(() => CartScreen());
+                              cartController.qty.value = 1;
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryColor,
+                                fixedSize: const Size(110, 20),
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30))),
+                            child: Text(
+                              "Add to cart",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                      color: AppColors.white,
+                                      fontFamily: AppFont.fontMedium),
+                            ))
+                      ],
+                    ))
               ],
             ),
           ),

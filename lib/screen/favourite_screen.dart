@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
+import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/medicine_details.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
@@ -17,6 +19,7 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 
 class FavouriteScreen extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
+  CartController cartController = Get.put(CartController());
 
   FavouriteScreen({super.key});
 
@@ -273,7 +276,11 @@ class FavouriteScreen extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: ElevatedButton(
-                                          onPressed: () {},
+                                          onPressed: () async {
+                                            await cartController
+                                                .addToCart(medicineList[index]);
+                                            Get.to(() => CartScreen());
+                                          },
                                           style: ElevatedButton.styleFrom(
                                               backgroundColor:
                                                   AppColors.tilePrimaryColor,

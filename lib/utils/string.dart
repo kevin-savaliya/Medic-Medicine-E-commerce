@@ -52,6 +52,8 @@ class ConstString {
   static const String remove = "Remove";
   static const String logout = "Log out";
   static const String logoutDialogue = "Logout";
+  static const String presBy = "Prescribed By";
+  static const String presStatus = "Status";
   static const String pastPres = "Past Prescription from The Medic";
   static const String loginView = "Login to view";
   static const String presUpload = "Prescriptions Uploaded By You";
@@ -94,6 +96,7 @@ class ConstString {
   static const String reminder = "Reminder";
   static const String prescription = "Prescription";
   static const String prescriptions = "Prescriptions";
+  static const String preBy = "Prescribed By";
   static const String notification = "Notifications";
   static const String addAddress = "Add Address";
   static const String savedAddress = "Saved Address";

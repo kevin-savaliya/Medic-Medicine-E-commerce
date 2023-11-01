@@ -226,7 +226,10 @@ class OrderPlacement extends StatelessWidget {
                                   width: 30,
                                 ),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    controller.decrementQuantity(
+                                        medicineList[index].id!);
+                                  },
                                   child: Container(
                                     decoration: BoxDecoration(
                                         color: AppColors.decsGrey,
@@ -235,7 +238,9 @@ class OrderPlacement extends StatelessWidget {
                                     width: 28,
                                     child: Icon(
                                       Icons.remove,
-                                      color: AppColors.phoneGrey,
+                                      color: medicineList[index].quantity == 0
+                                          ? AppColors.phoneGrey
+                                          : AppColors.primaryColor,
                                       size: 18,
                                     ),
                                   ),
@@ -246,7 +251,7 @@ class OrderPlacement extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    "0",
+                                    "${medicineList[index].quantity}",
                                     style:
                                         Theme.of(context).textTheme.titleMedium,
                                   ),
@@ -255,7 +260,10 @@ class OrderPlacement extends StatelessWidget {
                                   width: 10,
                                 ),
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    controller.incrementQuantity(
+                                        medicineList[index].id!);
+                                  },
                                   child: Container(
                                     decoration: BoxDecoration(
                                         color: AppColors.decsGrey,
