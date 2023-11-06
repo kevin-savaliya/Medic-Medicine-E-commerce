@@ -11,6 +11,7 @@ import 'package:medic/screen/screen_screen.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/utils/utils.dart';
 
 class CartScreen extends StatelessWidget {
   CartController controller = Get.put(CartController());
@@ -402,7 +403,15 @@ class CartScreen extends StatelessWidget {
               ),
               ElevatedButton(
                   onPressed: () async {
-                    Get.to(() => OrderPlacement());
+                    if (medicineList.isNotEmpty) {
+                      if (await controller
+                          .checkPrescriptionOrder(medicineList)) {
+                        Get.to(() => OrderPlacement());
+                      } else {
+                        showInSnackBar("Medicine Prescription is not Approved!",
+                            isSuccess: false, title: "The Medic");
+                      }
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,

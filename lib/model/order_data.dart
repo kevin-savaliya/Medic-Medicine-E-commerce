@@ -15,7 +15,7 @@ class OrderData {
   String? addressId;
   String? reviewId;
   String? prescriptionId;
-  Map<String, dynamic> medicineId;
+  Map<String, String> medicineId;
   String? discountId;
   String? categoryId;
   UserModel? userModel;
@@ -50,7 +50,7 @@ class OrderData {
     String? addressId,
     String? reviewId,
     String? prescriptionId,
-    Map<String, dynamic>? medicineId,
+    Map<String, String>? medicineId,
     String? discountId,
     String? categoryId,
     UserModel? userModel,

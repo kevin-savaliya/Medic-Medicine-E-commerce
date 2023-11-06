@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:medic/model/discount_data_model.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/order_data.dart';
+import 'package:medic/model/prescription_model.dart';
 import 'package:medic/model/user_address.dart';
 import 'package:medic/utils/utils.dart';
 
@@ -20,6 +21,11 @@ class CartController extends GetxController {
 
   final CollectionReference discountRef =
       FirebaseFirestore.instance.collection("discounts");
+
+  final CollectionReference prescriptionRef =
+      FirebaseFirestore.instance.collection("prescriptions");
+
+  String prescriptionId = "";
 
   late final cartRef = FirebaseFirestore.instance
       .collection("users")
@@ -44,8 +50,9 @@ class CartController extends GetxController {
 
   Future<void> addToCart(MedicineData medicine, {int qty = 1}) async {
     if (!orderData.value.medicineId.values.toList().contains(medicine.id)) {
-      orderData.value.medicineId
-          .addAll({orderData.value.medicineId.length.toString(): medicine.id});
+      orderData.value.medicineId.addAll({
+        orderData.value.medicineId.length.toString(): medicine.id.toString()
+      });
     }
 
     orderData.value.medicineData ??= [];
@@ -56,7 +63,7 @@ class CartController extends GetxController {
           .firstWhere((element) => element.id == medicine.id);
     } catch (e) {
       if (e is! StateError) {
-        throw e;
+        rethrow;
       }
     }
 
@@ -83,6 +90,60 @@ class CartController extends GetxController {
     }
 
     orderData.value.medicineData = updatedMedicines;
+  }
+
+  Future<bool> isMedicineInApprovedPrescription(String medicineId) async {
+    try {
+      DocumentSnapshot prescriptionDoc =
+          await prescriptionRef.doc(currentUser).get();
+
+      if (prescriptionDoc.exists && prescriptionDoc.data() != null) {
+        var data = prescriptionDoc.data() as Map<String, dynamic>;
+        var prescriptionsList = data['prescriptions'] as List<dynamic>;
+
+        for (var prescriptionMap in prescriptionsList) {
+          PrescriptionData prescription =
+              PrescriptionData.fromMap(prescriptionMap as Map<String, dynamic>);
+
+          if (prescription.isApproved == true &&
+              prescription.medicineList?.contains(medicineId) == true) {
+            // Found the medicine in an approved prescription
+            prescriptionId = prescription.id!;
+            orderData.value.prescriptionId = prescription.id!;
+            return true;
+          }
+        }
+      }
+      return false;
+    } catch (e) {
+      print('An error occurred while checking prescriptions: $e');
+      return false;
+    }
+  }
+
+  Future<bool> checkPrescriptionOrder(List<MedicineData> medicineList) async {
+    for (MedicineData medicine in medicineList) {
+      bool isApproved = await isMedicineInApprovedPrescription(medicine.id!);
+
+      if (!isApproved) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  Stream<PrescriptionData?> fetchPrescriptionData() {
+    return prescriptionRef.doc(currentUser).snapshots().map((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        List<dynamic> prescriptions = snapshot.get('prescriptions');
+        var prescriptionMap = prescriptions.firstWhere((prescription) =>
+            prescription['id'] == "${orderData.value.prescriptionId}");
+        if (prescriptionMap != null) {
+          return PrescriptionData.fromMap(prescriptionMap);
+        }
+      }
+      return null;
+    });
   }
 
   Future<void> _addToCart(MedicineData medicine, [int qty = 2]) async {
@@ -146,7 +207,10 @@ class CartController extends GetxController {
     String id = orderRef.doc().id;
 
     final _orderData = orderData.value.copyWith(
-        id: id, creatorId: currentUser, medicineId: orderData.value.medicineId);
+        id: id,
+        creatorId: currentUser,
+        medicineId: orderData.value.medicineId,
+        prescriptionId: orderData.value.prescriptionId);
 
     await orderRef.doc(id).set(_orderData.toMap());
     Get.back();

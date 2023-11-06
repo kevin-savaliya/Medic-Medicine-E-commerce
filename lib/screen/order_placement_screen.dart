@@ -9,6 +9,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
+import 'package:medic/model/prescription_model.dart';
 import 'package:medic/model/user_address.dart';
 import 'package:medic/screen/myaddress_screen.dart';
 import 'package:medic/screen/order_details_screen.dart';
@@ -611,18 +612,45 @@ class OrderPlacement extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        color: AppColors.lineGrey,
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                ),
+              StreamBuilder(
+                stream: cartController.fetchPrescriptionData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CupertinoActivityIndicator();
+                  } else if (snapshot.hasData) {
+                    PrescriptionData prescription = snapshot.data!;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: CachedNetworkImage(
+                            height: 120,
+                            width: 120,
+                            imageUrl: prescription.images?[0] ?? '',
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) => SizedBox(
+                              width: 120,
+                              child: Center(
+                                child: CupertinoActivityIndicator(
+                                  color: AppColors.primaryColor,
+                                  animating: true,
+                                  radius: 14,
+                                ),
+                              ),
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Text("No Prescription Found!");
+                  }
+                },
               ),
               const SizedBox(
                 height: 70,

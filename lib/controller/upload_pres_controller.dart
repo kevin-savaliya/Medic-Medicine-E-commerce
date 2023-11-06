@@ -122,8 +122,18 @@ class UploadPresController extends GetxController {
 
     String id = presRef.doc().id;
 
+    int prescriptionLength = await getPrescriptionCount(currentUserId!);
+
     PrescriptionData data = PrescriptionData(
-        id, title, imageUrls, DateTime.now(), currentUserId, false);
+        id,
+        title,
+        imageUrls,
+        DateTime.now(),
+        currentUserId,
+        [],
+        false,
+        currentUserId,
+        (prescriptionLength));
 
     DocumentSnapshot snapshot = await presRef.doc(currentUserId).get();
 
@@ -140,6 +150,31 @@ class UploadPresController extends GetxController {
     Get.back();
     showInSnackBar("Prescription Added Successfully",
         isSuccess: true, title: "The Medic");
+  }
+
+  Future<int> getPrescriptionCount(String documentId) async {
+    DocumentReference prescriptionDocRef =
+        FirebaseFirestore.instance.collection('prescriptions').doc(documentId);
+    int prescriptionCount = 0;
+
+    try {
+      DocumentSnapshot documentSnapshot = await prescriptionDocRef.get();
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data() as Map<String, dynamic>?;
+        if (data != null && data.containsKey('prescriptions')) {
+          // Assuming 'prescriptions' is the key for the list of prescriptions in the document
+          List<dynamic> prescriptions = data['prescriptions'] as List<dynamic>;
+          prescriptionCount = prescriptions.length;
+        }
+      } else {
+        print('Document with id $documentId does not exist.');
+      }
+    } catch (e) {
+      print('Error fetching prescription count for document: $e');
+      // Handle the exception appropriately.
+    }
+
+    return prescriptionCount;
   }
 
   Future<String> uploadImage(File image) async {

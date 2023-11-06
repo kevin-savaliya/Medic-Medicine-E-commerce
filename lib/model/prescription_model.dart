@@ -6,9 +6,21 @@ class PrescriptionData {
   List<dynamic>? images;
   DateTime? uploadTime;
   String? userId;
+  List<dynamic>? medicineList;
   bool? isApproved;
+  String? documentId;
+  int? prescriptionIndex;
 
-  PrescriptionData(this.id, this.title, this.images, this.uploadTime,this.userId,this.isApproved);
+  PrescriptionData(
+      this.id,
+      this.title,
+      this.images,
+      this.uploadTime,
+      this.userId,
+      this.medicineList,
+      this.isApproved,
+      this.documentId,
+      this.prescriptionIndex);
 
   PrescriptionData.fromMap(Map<String, dynamic> map) {
     id = map['id'];
@@ -19,7 +31,10 @@ class PrescriptionData {
         ? FirebaseUtils.timestampToDateTime(map['uploadTime'])
         : null;
     userId = map['userId'];
+    medicineList = map['medicineList'];
     isApproved = map['isApproved'];
+    documentId = map['documentId'];
+    prescriptionIndex = map['prescriptionIndex'];
   }
 
   Map<String, dynamic> toMap() {
@@ -29,7 +44,10 @@ class PrescriptionData {
     data['images'] = images;
     data['uploadTime'] = uploadTime;
     data['userId'] = userId;
+    data['medicineList'] = medicineList;
     data['isApproved'] = isApproved;
+    data['documentId'] = documentId;
+    data['prescriptionIndex'] = prescriptionIndex;
     return data;
   }
 }
