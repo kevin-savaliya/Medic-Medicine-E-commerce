@@ -21,87 +21,93 @@ import 'package:medic/widgets/app_dialogue.dart';
 
 class OrderPlacement extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
-  CartController cartController = Get.put(CartController());
+
+  // CartController cartController = Get.put(CartController());
 
   OrderPlacement({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        leading: GestureDetector(
-          onTap: () {
-            Get.back();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: SvgPicture.asset(
-              AppIcons.back,
+    return GetBuilder(
+      init: CartController(),
+      builder: (cartController) {
+        return Scaffold(
+          backgroundColor: AppColors.white,
+          appBar: AppBar(
+            backgroundColor: AppColors.white,
+            leading: GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: SvgPicture.asset(
+                  AppIcons.back,
+                ),
+              ),
             ),
+            titleSpacing: 0,
+            title: Text(ConstString.orderPlacement,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontFamily: AppFont.fontBold)),
+            elevation: 1.5,
+            shadowColor: AppColors.txtGrey.withOpacity(0.2),
+            actions: [
+              GestureDetector(
+                  onTap: () {},
+                  child: SvgPicture.asset(
+                    AppIcons.search,
+                    width: 20,
+                  )),
+              const SizedBox(
+                width: 12,
+              ),
+              GestureDetector(
+                  onTap: () {},
+                  child: SvgPicture.asset(
+                    AppIcons.bag,
+                    width: 22,
+                  )),
+              const SizedBox(
+                width: 15,
+              ),
+            ],
           ),
-        ),
-        titleSpacing: 0,
-        title: Text(ConstString.orderPlacement,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(fontFamily: AppFont.fontBold)),
-        elevation: 1.5,
-        shadowColor: AppColors.txtGrey.withOpacity(0.2),
-        actions: [
-          GestureDetector(
-              onTap: () {},
-              child: SvgPicture.asset(
-                AppIcons.search,
-                width: 20,
-              )),
-          const SizedBox(
-            width: 12,
+          body: orderPlaceWidget(context, cartController),
+          bottomSheet: Container(
+            width: double.infinity,
+            color: AppColors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+            child: ElevatedButton(
+                onPressed: () async {
+                  showProgressDialogue(context);
+                  await cartController.placeOrder();
+                  Get.to(() => const OrderDetailScreen());
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    fixedSize: const Size(80, 45),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30))),
+                child: Text(
+                  ConstString.placeOrder,
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: AppColors.white,
+                      ),
+                )),
           ),
-          GestureDetector(
-              onTap: () {},
-              child: SvgPicture.asset(
-                AppIcons.bag,
-                width: 22,
-              )),
-          const SizedBox(
-            width: 15,
-          ),
-        ],
-      ),
-      body: orderPlaceWidget(context, cartController),
-      bottomSheet: Container(
-        width: double.infinity,
-        color: AppColors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
-        child: ElevatedButton(
-            onPressed: () async {
-              showProgressDialogue(context);
-              await cartController.placeOrder();
-              Get.to(() => const OrderDetailScreen());
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                fixedSize: const Size(80, 45),
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30))),
-            child: Text(
-              ConstString.placeOrder,
-              style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                    color: AppColors.white,
-                  ),
-            )),
-      ),
+        );
+      },
     );
   }
 
-  Widget orderPlaceWidget(BuildContext context, CartController controller) {
-    if ((controller.orderData.value.medicineData ?? []).isNotEmpty) {
+  Widget orderPlaceWidget(BuildContext context, CartController cartController) {
+    if ((cartController.orderData.value.medicineData ?? []).isNotEmpty) {
       List<MedicineData> medicineList =
-          (controller.orderData.value.medicineData ?? []);
+          (cartController.orderData.value.medicineData ?? []);
       return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -228,7 +234,7 @@ class OrderPlacement extends StatelessWidget {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    controller.decrementQuantity(
+                                    cartController.decrementQuantity(
                                         medicineList[index].id!);
                                   },
                                   child: Container(
@@ -262,7 +268,7 @@ class OrderPlacement extends StatelessWidget {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    controller.incrementQuantity(
+                                    cartController.incrementQuantity(
                                         medicineList[index].id!);
                                   },
                                   child: Container(

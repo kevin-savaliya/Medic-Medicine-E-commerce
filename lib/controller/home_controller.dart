@@ -19,7 +19,8 @@ class HomeController extends GetxController {
       FirebaseFirestore.instance.collection('users');
 
   // current logged in user detail from users collection from firestore database
-  Rx<UserModel?> loggedInUser = UserModel.newUser().obs;
+  // Rx<UserModel?> loggedInUser = UserModel.newUser().obs;
+  Rx<UserModel?> loggedInUser = Rx<UserModel?>(null);
 
   @override
   void onInit() {
@@ -74,43 +75,6 @@ class HomeController extends GetxController {
     pageIndex.value = index;
     update();
   }
-
-  List categoryImageList = [
-    AppImages.analgesics,
-    AppImages.antivirus,
-    AppImages.antibiotic,
-    AppImages.cardio,
-    AppImages.ayurveda,
-  ];
-
-  List categoryList = [
-    ConstString.Analgesics,
-    ConstString.mental,
-    ConstString.dental,
-    ConstString.cardio,
-    ConstString.ayurveda,
-  ];
-
-  List popularColorList = [
-    AppColors.listColor1,
-    AppColors.listColor2,
-    AppColors.listColor3,
-    AppColors.listColor4,
-  ];
-
-  List medicineImageList = [
-    AppImages.medicineBox1,
-    AppImages.medicineBox2,
-    AppImages.medicineBox3,
-  ];
-
-  List popularMedicine = [
-    "Tylenol",
-    "Amoxicillin",
-    "Atorvastatin",
-    "Benadryl",
-    "Nexium"
-  ];
 
   List searchList = [
     "Acetaminophen",

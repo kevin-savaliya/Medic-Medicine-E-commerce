@@ -143,8 +143,9 @@ class ReminderScreen extends StatelessWidget {
                     height: 0,
                   ),
           ),
-          body:
-              TabBarView(children: [weekWidget(), monthWidget(), yearWidget()]),
+          body: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
+              children: [weekWidget(), monthWidget(), const yearWidget()]),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 65),
             child: FloatingActionButton(
@@ -410,7 +411,7 @@ class monthWidget extends GetWidget<ReminderController> {
             child: Column(
               children: [
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: EasyDateTimeLine(
                     activeColor: Colors.transparent,
                     initialDate: DateTime.now(),
@@ -420,8 +421,23 @@ class monthWidget extends GetWidget<ReminderController> {
                         dayStructure: DayStructure.dayStrDayNum,
                         height: 85,
                         width: 30),
-                    headerProps: const EasyHeaderProps(
-                        showMonthPicker: false, showSelectedDate: false),
+                    headerProps: EasyHeaderProps(
+                        monthPickerType: MonthPickerType.dropDown,
+                        monthStyle: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(
+                                fontFamily: AppFont.fontMedium, fontSize: 15),
+                        padding: EdgeInsets.zero,
+                        selectedDateStyle: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(
+                                fontFamily: AppFont.fontMedium, fontSize: 15),
+                        selectedDateFormat:
+                            SelectedDateFormat.fullDateDMonthAsStrY,
+                        showMonthPicker: true,
+                        showSelectedDate: true),
                     itemBuilder: (context, dayNumber, dayName, monthName,
                         fullDate, isSelected) {
                       return Container(
@@ -466,7 +482,7 @@ class monthWidget extends GetWidget<ReminderController> {
                   ),
                 ),
                 Expanded(
-                  flex: 9,
+                  flex: 10,
                   child: ListView.builder(
                     physics: const BouncingScrollPhysics(),
                     itemCount: reminders.length,

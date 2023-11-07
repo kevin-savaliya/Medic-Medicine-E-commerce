@@ -59,7 +59,7 @@ class SplashController extends GetxController {
       await Get.offAll(() => const HomeScreen());
     } else {
       if (appStorage.isBoardWatched()) {
-        await Get.offAll(() => const PhoneLoginScreen());
+        await Get.offAll(() => PhoneLoginScreen());
       } else {
         await Get.offAll(() => const IntroScreen());
       }

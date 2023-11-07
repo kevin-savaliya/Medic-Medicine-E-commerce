@@ -133,26 +133,25 @@ class PopularMedicine extends StatelessWidget {
             ),
           );
         } else {
-          return Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: AppColors.tilePrimaryColor),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(AppIcons.noData, height: 60),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  ConstString.noMedicine,
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.primaryColor,
-                      fontSize: 17,
-                      fontFamily: AppFont.fontMedium),
-                ),
-              ],
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noPopular,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
+              ),
             ),
           );
         }

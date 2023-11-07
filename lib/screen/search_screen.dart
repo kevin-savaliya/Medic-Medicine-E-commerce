@@ -281,9 +281,9 @@ class SearchScreen extends StatelessWidget {
                                   .textTheme
                                   .titleSmall!
                                   .copyWith(
-                                  color: AppColors.primaryColor,
-                                  fontSize: 13,
-                                  fontFamily: AppFont.fontMedium),
+                                      color: AppColors.primaryColor,
+                                      fontSize: 13,
+                                      fontFamily: AppFont.fontMedium),
                             ),
                           );
                         } else if (snapshot.hasData &&
@@ -300,27 +300,26 @@ class SearchScreen extends StatelessWidget {
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(5),
-                                      clipBehavior:
-                                      Clip.antiAliasWithSaveLayer,
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
                                       child: CachedNetworkImage(
                                         height: 60,
                                         width: 60,
                                         imageUrl: categoryList[index].image!,
                                         errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
-                                        progressIndicatorBuilder: (context,
-                                            url, downloadProgress) =>
-                                            SizedBox(
-                                              width: 30,
-                                              height: 30,
-                                              child: Center(
-                                                child: CupertinoActivityIndicator(
-                                                  color: AppColors.primaryColor,
-                                                  animating: true,
-                                                  radius: 10,
-                                                ),
-                                              ),
+                                            const Icon(Icons.error),
+                                        progressIndicatorBuilder:
+                                            (context, url, downloadProgress) =>
+                                                SizedBox(
+                                          width: 30,
+                                          height: 30,
+                                          child: Center(
+                                            child: CupertinoActivityIndicator(
+                                              color: AppColors.primaryColor,
+                                              animating: true,
+                                              radius: 10,
                                             ),
+                                          ),
+                                        ),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -333,8 +332,8 @@ class SearchScreen extends StatelessWidget {
                                           .textTheme
                                           .titleSmall!
                                           .copyWith(
-                                          color: AppColors.txtGrey,
-                                          fontFamily: AppFont.fontMedium),
+                                              color: AppColors.txtGrey,
+                                              fontFamily: AppFont.fontMedium),
                                     )
                                   ],
                                 ),
@@ -358,9 +357,9 @@ class SearchScreen extends StatelessWidget {
                                       .textTheme
                                       .titleSmall!
                                       .copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontSize: 14,
-                                      fontFamily: AppFont.fontMedium),
+                                          color: AppColors.primaryColor,
+                                          fontSize: 14,
+                                          fontFamily: AppFont.fontMedium),
                                 ),
                               ],
                             ),

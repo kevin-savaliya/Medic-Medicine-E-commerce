@@ -148,7 +148,27 @@ class MedicineCategory extends StatelessWidget {
             ),
           );
         } else {
-          return const Text("No Data");
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noCategory,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
+              ),
+            ),
+          );
         }
       },
     );

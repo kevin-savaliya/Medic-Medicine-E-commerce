@@ -18,12 +18,12 @@ class IntroController extends GetxController {
         'Our vast catalog helps you find the right \nmedication every time.'),
     IntroModel("asset/intro3.png", 'Upload Prescriptions \nHassle-free',
         'Securely upload your prescriptions for swift \nverification'),
-    IntroModel("asset/intro4.png", 'Timely Medicine \nReminders.',
-        'Never miss a dose with our timely \nreminders.')
+    // IntroModel("asset/intro4.png", 'Timely Medicine \nReminders.',
+    //     'Never miss a dose with our timely \nreminders.')
   ];
 
   Future<void> redirectToLogin() async {
     appStorage.write(StorageKey.kIsBoardWatched, true);
-    Get.offAll(() => const PhoneLoginScreen());
+    Get.offAll(() =>  PhoneLoginScreen());
   }
 }

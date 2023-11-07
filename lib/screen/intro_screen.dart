@@ -17,9 +17,7 @@ class IntroScreen extends StatelessWidget {
       init: IntroController(),
       builder: (controller) {
         return Obx(() => Scaffold(
-            backgroundColor: controller.selectedPageIndex.value == 3
-                ? AppColors.primaryColor
-                : Colors.white,
+            backgroundColor: Colors.white,
             body: Container(
               child: Stack(
                 children: [
@@ -76,7 +74,7 @@ class IntroScreen extends StatelessWidget {
                                           textAlign: TextAlign.center,
                                         ),
                                         const SizedBox(
-                                          height: 4,
+                                          height: 7,
                                         ),
                                         Text(
                                           controller
@@ -85,6 +83,7 @@ class IntroScreen extends StatelessWidget {
                                               .textTheme
                                               .displaySmall!
                                               .copyWith(
+                                                  height: 1.6,
                                                   color: controller
                                                               .selectedPageIndex
                                                               .value ==
@@ -156,12 +155,14 @@ class IntroScreen extends StatelessWidget {
                                 controller.pageController.value.animateToPage(2,
                                     duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeIn);
-                              } else if (controller.selectedPageIndex.value ==
-                                  2) {
-                                controller.pageController.value.animateToPage(3,
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeIn);
-                              } else {
+                              }
+                              // else if (controller.selectedPageIndex.value ==
+                              //     2) {
+                              //   controller.pageController.value.animateToPage(3,
+                              //       duration: const Duration(milliseconds: 300),
+                              //       curve: Curves.easeIn);
+                              // }
+                              else {
                                 await controller.redirectToLogin();
                               }
                             },
@@ -175,7 +176,7 @@ class IntroScreen extends StatelessWidget {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30))),
                             child: Text(
-                              controller.selectedPageIndex.value == 3
+                              controller.selectedPageIndex.value == 2
                                   ? ConstString.getstarted
                                   : ConstString.next,
                               style: Theme.of(context)

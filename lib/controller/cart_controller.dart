@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medic/model/discount_data_model.dart';
 import 'package:medic/model/medicine_data.dart';
@@ -11,6 +12,7 @@ import 'package:medic/model/order_data.dart';
 import 'package:medic/model/prescription_model.dart';
 import 'package:medic/model/user_address.dart';
 import 'package:medic/utils/utils.dart';
+import 'package:path/path.dart';
 
 class CartController extends GetxController {
   final RxList cartItems = [].obs;
@@ -46,6 +48,9 @@ class CartController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     fetchDiscountData();
+    fetchMedicineFromCart();
+    fetchActiveAddress();
+    update();
   }
 
   Future<void> addToCart(MedicineData medicine, {int qty = 1}) async {
@@ -53,6 +58,7 @@ class CartController extends GetxController {
       orderData.value.medicineId.addAll({
         orderData.value.medicineId.length.toString(): medicine.id.toString()
       });
+      log("${orderData.value.medicineId}");
     }
 
     orderData.value.medicineData ??= [];
@@ -70,6 +76,7 @@ class CartController extends GetxController {
     if (existMedicine == null) {
       orderData.value.medicineData?.add(medicine.copyWith(quantity: qty));
     }
+    update();
   }
 
   void incrementQuantity(String medicineId) {
@@ -79,6 +86,7 @@ class CartController extends GetxController {
     medicine.quantity = (medicine.quantity ?? 0) + 1;
 
     orderData.value.medicineData = updatedMedicines;
+    update();
   }
 
   void decrementQuantity(String medicineId) {
@@ -90,60 +98,7 @@ class CartController extends GetxController {
     }
 
     orderData.value.medicineData = updatedMedicines;
-  }
-
-  Future<bool> isMedicineInApprovedPrescription(String medicineId) async {
-    try {
-      DocumentSnapshot prescriptionDoc =
-          await prescriptionRef.doc(currentUser).get();
-
-      if (prescriptionDoc.exists && prescriptionDoc.data() != null) {
-        var data = prescriptionDoc.data() as Map<String, dynamic>;
-        var prescriptionsList = data['prescriptions'] as List<dynamic>;
-
-        for (var prescriptionMap in prescriptionsList) {
-          PrescriptionData prescription =
-              PrescriptionData.fromMap(prescriptionMap as Map<String, dynamic>);
-
-          if (prescription.isApproved == true &&
-              prescription.medicineList?.contains(medicineId) == true) {
-            // Found the medicine in an approved prescription
-            prescriptionId = prescription.id!;
-            orderData.value.prescriptionId = prescription.id!;
-            return true;
-          }
-        }
-      }
-      return false;
-    } catch (e) {
-      print('An error occurred while checking prescriptions: $e');
-      return false;
-    }
-  }
-
-  Future<bool> checkPrescriptionOrder(List<MedicineData> medicineList) async {
-    for (MedicineData medicine in medicineList) {
-      bool isApproved = await isMedicineInApprovedPrescription(medicine.id!);
-
-      if (!isApproved) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  Stream<PrescriptionData?> fetchPrescriptionData() {
-    return prescriptionRef.doc(currentUser).snapshots().map((snapshot) {
-      if (snapshot.exists && snapshot.data() != null) {
-        List<dynamic> prescriptions = snapshot.get('prescriptions');
-        var prescriptionMap = prescriptions.firstWhere((prescription) =>
-            prescription['id'] == "${orderData.value.prescriptionId}");
-        if (prescriptionMap != null) {
-          return PrescriptionData.fromMap(prescriptionMap);
-        }
-      }
-      return null;
-    });
+    update();
   }
 
   Future<void> _addToCart(MedicineData medicine, [int qty = 2]) async {
@@ -153,7 +108,6 @@ class CartController extends GetxController {
   }
 
   Future<void> removeFromCart(String medicineId) async {
-    // Removing from medicineId Map
     if (orderData.value.medicineId.isNotEmpty) {
       Map<String, String> updatedMedicineIds =
           Map.from(orderData.value.medicineId);
@@ -161,7 +115,6 @@ class CartController extends GetxController {
       orderData.value.medicineId = updatedMedicineIds;
     }
 
-    // Removing from medicineData List
     if (orderData.value.medicineData != null &&
         orderData.value.medicineData!.isNotEmpty) {
       List<MedicineData> updatedMedicineData =
@@ -169,6 +122,7 @@ class CartController extends GetxController {
       updatedMedicineData.removeWhere((element) => element.id == medicineId);
       orderData.value.medicineData = updatedMedicineData;
     }
+    update();
   }
 
   Future<void> _removeFromCart(String medicineId) async {
@@ -200,6 +154,114 @@ class CartController extends GetxController {
       }
       return null;
     });
+  }
+
+  Stream<PrescriptionData?> fetchPrescriptionData() {
+    return prescriptionRef.doc(currentUser).snapshots().map((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        List<dynamic> prescriptions = snapshot.get('prescriptions');
+        var prescriptionMap = prescriptions.firstWhere((prescription) =>
+            prescription['id'] == "${orderData.value.prescriptionId}");
+        if (prescriptionMap != null) {
+          return PrescriptionData.fromMap(prescriptionMap);
+        }
+      }
+      return null;
+    });
+  }
+
+  Future<bool> isMedicineInApprovedPrescription(String medicineId) async {
+    try {
+      DocumentSnapshot prescriptionDoc =
+          await prescriptionRef.doc(currentUser).get();
+
+      if (prescriptionDoc.exists && prescriptionDoc.data() != null) {
+        var data = prescriptionDoc.data() as Map<String, dynamic>;
+        var prescriptionsList = data['prescriptions'] as List<dynamic>;
+
+        for (var prescriptionMap in prescriptionsList) {
+          PrescriptionData prescription =
+              PrescriptionData.fromMap(prescriptionMap as Map<String, dynamic>);
+
+          if (prescription.isApproved == true &&
+              prescription.medicineList?.contains(medicineId) == true) {
+            prescriptionId = prescription.id!;
+            orderData.value.prescriptionId = prescription.id!;
+            return true;
+          }
+        }
+      }
+      return false;
+    } catch (e) {
+      print('An error occurred while checking prescriptions: $e');
+      return false;
+    }
+  }
+
+  Future<bool> checkPrescriptionOrder(List<MedicineData> medicineList) async {
+    for (MedicineData medicine in medicineList) {
+      bool isApproved = await isMedicineInApprovedPrescription(medicine.id!);
+
+      if (!isApproved) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  Future<bool> checkPrescriptionStatus(
+      String medicineId, BuildContext context) async {
+    final CollectionReference prescriptionsRef =
+        FirebaseFirestore.instance.collection('prescriptions');
+
+    try {
+      final DocumentSnapshot userPrescriptionDoc =
+          await prescriptionsRef.doc(currentUser).get();
+
+      if (userPrescriptionDoc.exists && userPrescriptionDoc.data() != null) {
+        if (await checkMedicinePrescriptionRequirement(medicineId)) {
+          var data = userPrescriptionDoc.data() as Map<String, dynamic>;
+          var prescriptionList = data['prescriptions'] as List<dynamic>;
+
+          for (var prescriptionMap in prescriptionList) {
+            PrescriptionData prescription = PrescriptionData.fromMap(
+                prescriptionMap as Map<String, dynamic>);
+
+            if (prescription.isApproved != true &&
+                prescription.medicineList?.contains(medicineId) == true) {
+              return true;
+            }
+          }
+        } else {
+          return false;
+        }
+      }
+      return false;
+    } catch (e) {
+      print('Error checking prescription status: $e');
+      return false;
+    }
+  }
+
+  Future<bool> checkMedicinePrescriptionRequirement(String medicineId) async {
+    final CollectionReference medicinesRef =
+        FirebaseFirestore.instance.collection('medicines');
+
+    try {
+      final DocumentSnapshot medicineDoc =
+          await medicinesRef.doc(medicineId).get();
+
+      if (medicineDoc.exists && medicineDoc.data() != null) {
+        var data = medicineDoc.data() as Map<String, dynamic>;
+        var prescriptionRequired = data['prescriptionRequire'] as bool;
+
+        return prescriptionRequired ?? false;
+      }
+      return false;
+    } catch (e) {
+      print('Error checking medicine prescription requirement: $e');
+      return false;
+    }
   }
 
   Future<void> placeOrder() async {

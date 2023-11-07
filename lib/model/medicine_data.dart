@@ -16,42 +16,43 @@ class MedicineData {
   String? directionForUse;
   String? safetyInformation;
   int? quantity;
+  bool? prescriptionRequire;
 
-  MedicineData({
-    this.id,
-    this.about,
-    this.brandName,
-    this.categoryId,
-    this.drugDrugInteractions,
-    this.image,
-    this.placeholderImage,
-    this.ratings,
-    this.genericName,
-    this.description,
-    this.benefits,
-    this.uses,
-    this.directionForUse,
-    this.safetyInformation,
-    this.quantity,
-  });
+  MedicineData(
+      {this.id,
+      this.about,
+      this.brandName,
+      this.categoryId,
+      this.drugDrugInteractions,
+      this.image,
+      this.placeholderImage,
+      this.ratings,
+      this.genericName,
+      this.description,
+      this.benefits,
+      this.uses,
+      this.directionForUse,
+      this.safetyInformation,
+      this.quantity,
+      this.prescriptionRequire});
 
-  MedicineData copyWith({
-    String? id,
-    String? about,
-    String? brandName,
-    String? categoryId,
-    String? drugDrugInteractions,
-    String? image,
-    String? placeholderImage,
-    String? ratings,
-    String? genericName,
-    String? description,
-    String? benefits,
-    String? uses,
-    String? directionForUse,
-    String? safetyInformation,
-    int? quantity,
-  }) {
+  MedicineData copyWith(
+      {String? id,
+      String? about,
+      String? brandName,
+      String? categoryId,
+      String? drugDrugInteractions,
+      String? image,
+      String? placeholderImage,
+      String? ratings,
+      String? genericName,
+      String? description,
+      String? benefits,
+      String? uses,
+      String? directionForUse,
+      String? safetyInformation,
+      int? quantity,
+      bool? prescriptionRequire}) {
     return MedicineData(
       id: id ?? this.id,
       about: about ?? this.about,
@@ -68,6 +69,7 @@ class MedicineData {
       directionForUse: directionForUse ?? this.directionForUse,
       safetyInformation: safetyInformation ?? this.safetyInformation,
       quantity: quantity ?? this.quantity,
+      prescriptionRequire: prescriptionRequire ?? this.prescriptionRequire,
     );
   }
 
@@ -88,6 +90,7 @@ class MedicineData {
       'directionForUse': directionForUse,
       'safetyInformation': safetyInformation,
       'quantity': quantity,
+      'prescriptionRequire': prescriptionRequire,
     };
   }
 
@@ -108,6 +111,7 @@ class MedicineData {
       directionForUse: map['directionForUse'],
       safetyInformation: map['safetyInformation'],
       quantity: map['quantity'],
+      prescriptionRequire: map['prescriptionRequire'],
     );
   }
 

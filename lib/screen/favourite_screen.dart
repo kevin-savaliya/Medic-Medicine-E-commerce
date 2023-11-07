@@ -18,58 +18,63 @@ import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 class FavouriteScreen extends StatelessWidget {
-  MedicineController controller = Get.put(MedicineController());
+  // MedicineController controller = Get.put(MedicineController());
   CartController cartController = Get.put(CartController());
 
   FavouriteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        // titleSpacing: 0,
-        title: Text(ConstString.fav,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(fontFamily: AppFont.fontBold)),
-        elevation: 1.5,
-        shadowColor: AppColors.txtGrey.withOpacity(0.2),
-        actions: [
-          GestureDetector(
-              onTap: () {},
-              child: SvgPicture.asset(
-                AppIcons.search,
-                width: 20,
-              )),
-          const SizedBox(
-            width: 12,
+    return GetBuilder(
+      init: MedicineController(),
+      builder: (controller) {
+        return Scaffold(
+          backgroundColor: AppColors.white,
+          appBar: AppBar(
+            backgroundColor: AppColors.white,
+            // titleSpacing: 0,
+            title: Text(ConstString.fav,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontFamily: AppFont.fontBold)),
+            elevation: 1.5,
+            shadowColor: AppColors.txtGrey.withOpacity(0.2),
+            actions: [
+              GestureDetector(
+                  onTap: () {},
+                  child: SvgPicture.asset(
+                    AppIcons.search,
+                    width: 20,
+                  )),
+              const SizedBox(
+                width: 12,
+              ),
+              GestureDetector(
+                  onTap: () {},
+                  child: SvgPicture.asset(
+                    AppIcons.bag,
+                    width: 22,
+                  )),
+              const SizedBox(
+                width: 15,
+              ),
+            ],
           ),
-          GestureDetector(
-              onTap: () {},
-              child: SvgPicture.asset(
-                AppIcons.bag,
-                width: 22,
-              )),
-          const SizedBox(
-            width: 15,
-          ),
-        ],
-      ),
-      body: getContent(),
+          body: getContent(controller),
+        );
+      },
     );
   }
 
-  Widget getContent() {
+  Widget getContent(MedicineController controller) {
     if (controller.loggedInUser == null) {
       return UserNotLoggedInWidget();
     }
-    return medicineWidget();
+    return medicineWidget(controller);
   }
 
-  Widget medicineWidget() {
+  Widget medicineWidget(MedicineController controller) {
     return StreamBuilder(
       stream: controller.fetchFavouriteMedicine(),
       builder: (context, snapshot) {
@@ -325,26 +330,25 @@ class FavouriteScreen extends StatelessWidget {
             ),
           );
         } else {
-          return Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: AppColors.tilePrimaryColor),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(AppIcons.noData, height: 60),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  ConstString.noMedicine,
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.primaryColor,
-                      fontSize: 16,
-                      fontFamily: AppFont.fontMedium),
-                ),
-              ],
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noMedicine,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
+              ),
             ),
           );
         }

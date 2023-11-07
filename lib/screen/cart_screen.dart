@@ -7,48 +7,53 @@ import 'package:medic/_dart/_init.dart';
 import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/order_placement_screen.dart';
-import 'package:medic/screen/screen_screen.dart';
+import 'package:medic/screen/search_screen.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
 import 'package:medic/utils/utils.dart';
 
 class CartScreen extends StatelessWidget {
-  CartController controller = Get.put(CartController());
+  // CartController controller = Get.put(CartController());
 
   CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        titleSpacing: 15,
-        automaticallyImplyLeading: false,
-        title: Text(ConstString.cart,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(fontFamily: AppFont.fontBold)),
-        elevation: 1.5,
-        shadowColor: AppColors.txtGrey.withOpacity(0.2),
-      ),
-      body: getContent(context),
+    return GetBuilder(
+      init: CartController(),
+      builder: (controller) {
+        return Scaffold(
+          backgroundColor: AppColors.white,
+          appBar: AppBar(
+            backgroundColor: AppColors.white,
+            titleSpacing: 15,
+            automaticallyImplyLeading: false,
+            title: Text(ConstString.cart,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontFamily: AppFont.fontBold)),
+            elevation: 1.5,
+            shadowColor: AppColors.txtGrey.withOpacity(0.2),
+          ),
+          body: getContent(context, controller),
+        );
+      },
     );
   }
 
-  Widget getContent(BuildContext context) {
+  Widget getContent(BuildContext context, CartController controller) {
     if (controller.currentUser == null) {
       return UserNotLoggedInWidget();
     }
-    return cartWidget(context);
+    return cartWidget(context, controller);
   }
 
-  Widget cartWidget(BuildContext context) {
+  Widget cartWidget(BuildContext context, CartController controller) {
     if ((controller.orderData.value.medicineData ?? []).isNotEmpty) {
-      List<MedicineData> medicineList =
-          controller.orderData.value.medicineData ?? [];
+      final orderData = controller.orderData;
+      List<MedicineData> medicineList = orderData.value.medicineData ?? [];
       return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15),

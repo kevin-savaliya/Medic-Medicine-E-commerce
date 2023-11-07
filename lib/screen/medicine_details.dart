@@ -14,11 +14,13 @@ import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/medicine_screen.dart';
 import 'package:medic/screen/order_placement_screen.dart';
+import 'package:medic/screen/phone_login_screen.dart';
 import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/utils/utils.dart';
 import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
@@ -79,31 +81,56 @@ class MedicineDetails extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            color: AppColors.primaryColor,
-            height: 55,
-            child: ListTile(
-              contentPadding: const EdgeInsets.only(left: 15, right: 5),
-              horizontalTitleGap: 5,
-              leading: SvgPicture.asset(AppImages.rxBar),
-              title: Text(
-                ConstString.prescriptionRequirement,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: AppColors.white,
-                    fontFamily: AppFont.fontRegular,
-                    height: 1.4,
-                    fontSize: 12.5),
-              ),
-              trailing: TextButton(
-                  onPressed: () {
-                    Get.to(() => UploadPrescription());
-                  },
-                  child: Text(
-                    ConstString.upload,
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: AppColors.white, fontFamily: AppFont.fontMedium),
-                  )),
-            ),
+          FutureBuilder(
+            future: cartController.checkPrescriptionStatus(
+                medicineData!.id!, context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox(
+                    height: 50,
+                    child: Center(child: CupertinoActivityIndicator()));
+              } else if (snapshot.hasData) {
+                bool isCheck = snapshot.data ?? false;
+                return Visibility(
+                    visible: isCheck,
+                    child: Container(
+                      color: AppColors.primaryColor,
+                      height: 55,
+                      child: ListTile(
+                        contentPadding:
+                            const EdgeInsets.only(left: 15, right: 5),
+                        horizontalTitleGap: 5,
+                        leading: SvgPicture.asset(AppImages.rxBar),
+                        title: Text(
+                          ConstString.prescriptionRequirement,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  color: AppColors.white,
+                                  fontFamily: AppFont.fontRegular,
+                                  height: 1.4,
+                                  fontSize: 12.5),
+                        ),
+                        trailing: TextButton(
+                            onPressed: () {
+                              Get.to(() => UploadPrescription());
+                            },
+                            child: Text(
+                              ConstString.upload,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                      color: AppColors.white,
+                                      fontFamily: AppFont.fontMedium),
+                            )),
+                      ),
+                    ));
+              } else {
+                return const SizedBox();
+              }
+            },
           ),
           const SizedBox(
             height: 15,
@@ -143,6 +170,18 @@ class MedicineDetails extends StatelessWidget {
                         right: 5,
                         child: GestureDetector(
                           onTap: () async {
+                            if (controller.loggedInUser == null) {
+                              Utils().showAlertDialog(
+                                  context: context,
+                                  title: "Login Required!",
+                                  content:
+                                      "Ready to Get Started? Confirm with 'Yes' and Login Your Account.",
+                                  onPressed: () {
+                                    Get.back();
+                                    Get.to(() => const PhoneLoginScreen());
+                                  });
+                              return;
+                            }
                             if (isFav) {
                               await controller.removeFavourite(medicineId);
                             } else {
@@ -222,111 +261,54 @@ class MedicineDetails extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "SLE 120",
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium!
-                              .copyWith(
-                                  color: AppColors.darkPrimaryColor,
-                                  fontFamily: AppFont.fontMedium),
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        Text(
-                          "30% Off",
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "SLE 120",
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayMedium!
+                          .copyWith(
+                              color: AppColors.darkPrimaryColor,
+                              fontFamily: AppFont.fontMedium),
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      "30% Off",
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          fontSize: 11,
+                          color: AppColors.primaryColor,
+                          fontFamily: AppFont.fontMedium),
+                    ),
+                    const Spacer(),
+                    ElevatedButton(
+                        onPressed: () async {
+                          await cartController.addToCart(medicineData!,
+                              qty: cartController.qty.value);
+                          Get.to(() => CartScreen());
+                          cartController.qty.value = 1;
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                            fixedSize: const Size(110, 20),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30))),
+                        child: Text(
+                          "Add to cart",
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall!
                               .copyWith(
-                                  fontSize: 11,
-                                  color: AppColors.primaryColor,
+                                  color: AppColors.white,
                                   fontFamily: AppFont.fontMedium),
-                        ),
-                      ],
-                    )
+                        ))
                   ],
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Obx(() => Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            cartController.qty--;
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.decsGrey,
-                                borderRadius: BorderRadius.circular(5)),
-                            height: 28,
-                            width: 28,
-                            child: Icon(
-                              Icons.remove,
-                              color: cartController.qty == 0
-                                  ? AppColors.phoneGrey
-                                  : AppColors.primaryColor,
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "${cartController.qty.value}",
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            cartController.qty++;
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.decsGrey,
-                                borderRadius: BorderRadius.circular(5)),
-                            height: 28,
-                            width: 28,
-                            child: Icon(
-                              Icons.add,
-                              color: AppColors.primaryColor,
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                        const Spacer(),
-                        ElevatedButton(
-                            onPressed: () async {
-                              await cartController.addToCart(medicineData!,
-                                  qty: cartController.qty.value);
-                              Get.to(() => CartScreen());
-                              cartController.qty.value = 1;
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryColor,
-                                fixedSize: const Size(110, 20),
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30))),
-                            child: Text(
-                              "Add to cart",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.white,
-                                      fontFamily: AppFont.fontMedium),
-                            ))
-                      ],
-                    ))
+                )
               ],
             ),
           ),

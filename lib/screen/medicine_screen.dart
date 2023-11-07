@@ -10,10 +10,12 @@ import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/medicine_details.dart';
+import 'package:medic/screen/phone_login_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/utils/utils.dart';
 import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
@@ -154,6 +156,20 @@ class MedicineScreen extends StatelessWidget {
                                           right: 10,
                                           child: GestureDetector(
                                             onTap: () async {
+                                              if (controller.loggedInUser ==
+                                                  null) {
+                                                Utils().showAlertDialog(
+                                                    context: context,
+                                                    title: "Login Required!",
+                                                    content:
+                                                        "Ready to Get Started? Confirm with 'Yes' and Login Your Account.",
+                                                    onPressed: () {
+                                                      Get.back();
+                                                      Get.to(() =>
+                                                          const PhoneLoginScreen());
+                                                    });
+                                                return;
+                                              }
                                               if (isFav) {
                                                 await controller
                                                     .removeFavourite(
@@ -317,7 +333,27 @@ class MedicineScreen extends StatelessWidget {
             ),
           );
         } else {
-          return Center(child: Text("No Data Found"));
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noMedicine,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
+              ),
+            ),
+          );
         }
       },
     );

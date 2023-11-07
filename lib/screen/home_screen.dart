@@ -23,7 +23,7 @@ import 'package:medic/screen/phone_login_screen.dart';
 import 'package:medic/screen/popular_medicine.dart';
 import 'package:medic/screen/profile_screen.dart';
 import 'package:medic/screen/reminder_screen.dart';
-import 'package:medic/screen/screen_screen.dart';
+import 'package:medic/screen/search_screen.dart';
 import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
@@ -128,14 +128,16 @@ class HomeScreen extends GetWidget<HomeController> {
           ],
         ),
         actions: [
-          IconButton(
-              onPressed: () async {
-                await Get.to(() => const NotificationScreen());
-              },
-              icon: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: SvgPicture.asset(AppIcons.notification),
-              ))
+          controller.firebaseUser != null
+              ? IconButton(
+                  onPressed: () async {
+                    await Get.to(() => const NotificationScreen());
+                  },
+                  icon: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: SvgPicture.asset(AppIcons.notification),
+                  ))
+              : SizedBox()
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
@@ -429,50 +431,55 @@ class HomeScreen extends GetWidget<HomeController> {
                         } else if (snapshot.hasData &&
                             snapshot.data!.isNotEmpty) {
                           List<MedicineData> medicinelist = snapshot.data!;
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: medicinelist.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  height: 130,
-                                  width: 130,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    color: controller.popularColorList[index %
-                                        (controller.popularColorList.length)],
+                          return SizedBox(
+                            height: 130,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: medicinelist.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width: 120,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: controller.popularColorList[index %
+                                          (controller.popularColorList.length)],
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        SvgPicture.asset(
+                                            AppImages.designVector),
+                                        Positioned(
+                                            top: 20,
+                                            left: 15,
+                                            child: Text(
+                                              medicinelist[index].genericName ??
+                                                  "",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium!
+                                                  .copyWith(
+                                                      color: AppColors.white),
+                                            )),
+                                        Positioned(
+                                            bottom: 0,
+                                            right: 0,
+                                            child: Image.asset(
+                                              controller.medicineImageList[
+                                                  index %
+                                                      (controller
+                                                          .medicineImageList
+                                                          .length)],
+                                              height: 60,
+                                            ))
+                                      ],
+                                    ),
                                   ),
-                                  child: Stack(
-                                    children: [
-                                      SvgPicture.asset(AppImages.designVector),
-                                      Positioned(
-                                          top: 20,
-                                          left: 15,
-                                          child: Text(
-                                            medicinelist[index].genericName ??
-                                                "",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium!
-                                                .copyWith(
-                                                    color: AppColors.white),
-                                          )),
-                                      Positioned(
-                                          bottom: 0,
-                                          right: 0,
-                                          child: Image.asset(
-                                            controller.medicineImageList[index %
-                                                (controller
-                                                    .medicineImageList.length)],
-                                            height: 60,
-                                          ))
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           );
                         } else {
                           return Container(
@@ -885,10 +892,10 @@ class HomeScreen extends GetWidget<HomeController> {
           context: context,
           title: "Login Required!",
           content:
-              "Ready to Get Started? Confirm with 'Yes' and Login Your Account.",
+              "Ready to Get Started? \nConfirm with 'Yes' and Login Your Account.",
           onPressed: () {
             Get.back();
-            Get.to(() => const PhoneLoginScreen());
+            Get.to(() => PhoneLoginScreen());
           });
       return;
     }

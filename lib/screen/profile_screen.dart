@@ -51,52 +51,70 @@ class ProfileScreen extends StatelessWidget {
       child: Positioned.fill(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-          child: Container(
-            color: AppColors.textColor
-                .withOpacity(0.5), // Adjust the overlay opacity here
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Explore Your Profile - Login Required!',
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: AppFont.fontBold,
-                          )),
-                ),
-                const SizedBox(height: 10),
-                // Login Now button
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Get.to(() => const PhoneLoginScreen());
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: AppColors.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(color: AppColors.primaryColor),
-                      ),
+          child: Dialog(
+            insetPadding: EdgeInsets.symmetric(vertical: 220, horizontal: 0),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 25,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Text(
-                        'Login Now',
-                        style:
-                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Explore Your Profile - Login Required!',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  color: AppColors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: AppFont.fontBold,
+                                  fontSize: 16)),
+                    ),
+                    const SizedBox(height: 15),
+                    // Login Now button
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Get.to(() => PhoneLoginScreen());
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColors.primaryColor,
+                          fixedSize: Size(150, 45),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            side: BorderSide(color: AppColors.primaryColor),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Text(
+                            'Login Now',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
                                   color: AppColors.white,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: AppFont.fontBold,
                                 ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -328,7 +346,7 @@ class ProfileScreen extends StatelessWidget {
 
                     await deleteUserFirestoreData();
                     Get.back();
-                    Get.offAll(() => const PhoneLoginScreen());
+                    Get.offAll(() => PhoneLoginScreen());
                     return;
                   });
                   /*

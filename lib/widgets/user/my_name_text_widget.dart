@@ -8,15 +8,17 @@ import 'package:medic/utils/app_font.dart';
 import 'package:medic/widgets/circular_profile_avatar.dart';
 import 'package:medic/widgets/custom_widget.dart';
 
-class MyNameTextWidget extends GetWidget<HomeController> {
+class MyNameTextWidget extends StatelessWidget {
   final TextStyle? textStyle;
 
-  const MyNameTextWidget({super.key, this.textStyle});
+  HomeController controller = Get.put(HomeController());
+
+  MyNameTextWidget({this.textStyle});
 
   @override
   Widget build(BuildContext context) {
     return Obx(() => TextWidget(
-          controller.loggedInUser.value?.name ?? '',
+          controller.loggedInUser.value?.name ?? "Medic User",
           style: textStyle ??
               Theme.of(context).textTheme.labelLarge!.copyWith(
                   fontFamily: AppFont.fontSemiBold,
@@ -29,10 +31,12 @@ class MyNameTextWidget extends GetWidget<HomeController> {
 
 //flutter pub add cloud_firestore
 
-class MyNumberTextWidget extends GetWidget<HomeController> {
+class MyNumberTextWidget extends StatelessWidget {
   final TextStyle? textStyle;
 
-  const MyNumberTextWidget({super.key, this.textStyle});
+  HomeController controller = Get.put(HomeController());
+
+  MyNumberTextWidget({this.textStyle});
 
   @override
   Widget build(BuildContext context) {

@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:medic/controller/upload_pres_controller.dart';
 import 'package:medic/model/prescription_model.dart';
+import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -113,7 +114,9 @@ class PrescriptionList extends StatelessWidget {
                               ),
                               const Spacer(),
                               ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.to(() => UploadPrescription());
+                                  },
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.primaryColor,
                                       fixedSize: const Size(150, 18),

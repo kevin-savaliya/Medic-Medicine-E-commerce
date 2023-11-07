@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/upload_pres_controller.dart';
+import 'package:medic/screen/prescription_list.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -46,7 +47,7 @@ class UploadPrescription extends StatelessWidget {
       body: uploadPresWidget(context),
       bottomSheet: Container(
         color: AppColors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 20),
         width: double.infinity,
         child: Obx(
           () => ElevatedButton(
@@ -470,7 +471,10 @@ class UploadPrescription extends StatelessWidget {
                       height: 15,
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Get.back();
+                        Get.to(PrescriptionList());
+                      },
                       child: Container(
                           height: 60,
                           decoration: BoxDecoration(
@@ -516,7 +520,10 @@ class UploadPrescription extends StatelessWidget {
                       height: 15,
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Get.back();
+                        Get.to(PrescriptionList());
+                      },
                       child: Container(
                           height: 60,
                           decoration: BoxDecoration(

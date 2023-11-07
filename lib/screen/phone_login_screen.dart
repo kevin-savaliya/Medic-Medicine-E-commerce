@@ -105,29 +105,29 @@ class PhoneLoginScreen extends GetWidget<AuthController> {
             ),
             const SizedBox(height: 100),
             continueButton(context),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              child: Center(
-                child: ElevatedButton(
-                    onPressed: controller.isLoading
-                        ? null
-                        : () async {
-                            await Get.to(() => const PhoneSignUpScreen());
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      fixedSize: const Size(200, 50),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      'Register now',
-                      style:
-                          Theme.of(context).textTheme.displayMedium!.copyWith(
-                                color: AppColors.primaryColor,
-                              ),
-                    )),
-              ),
-            ),
+            // Container(
+            //   margin: const EdgeInsets.symmetric(vertical: 10),
+            //   child: Center(
+            //     child: ElevatedButton(
+            //         onPressed: controller.isLoading
+            //             ? null
+            //             : () async {
+            //                 await Get.to(() => const PhoneSignUpScreen());
+            //               },
+            //         style: ElevatedButton.styleFrom(
+            //           backgroundColor: Colors.transparent,
+            //           fixedSize: const Size(200, 50),
+            //           elevation: 0,
+            //         ),
+            //         child: Text(
+            //           'Register now',
+            //           style:
+            //               Theme.of(context).textTheme.displayMedium!.copyWith(
+            //                     color: AppColors.primaryColor,
+            //                   ),
+            //         )),
+            //   ),
+            // ),
           ]),
         ),
       )),

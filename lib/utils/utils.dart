@@ -137,6 +137,7 @@ class Utils {
     void Function()? onPressed,
   }) async {
     await showCupertinoModalPopup<void>(
+      barrierColor: Colors.black38,
       context: context,
       builder: (BuildContext context) => CupertinoAlertDialog(
         title: Text(

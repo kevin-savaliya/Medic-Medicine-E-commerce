@@ -60,9 +60,10 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
                               borderRadius: BorderRadius.circular(30))),
                       child: Text(
                         ConstString.cancle,
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: AppColors.txtGrey,
-                            ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: AppColors.txtGrey, fontSize: 14),
                       )),
                 ),
                 const SizedBox(
@@ -84,9 +85,10 @@ Future logoutDialogue(BuildContext context, AuthController authController) {
                               borderRadius: BorderRadius.circular(30))),
                       child: Text(
                         ConstString.logoutDialogue,
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              color: Colors.white,
-                            ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: Colors.white, fontSize: 14),
                       )),
                 ),
               ],
@@ -145,7 +147,7 @@ Future deleteAccountDialogue(
 
                     await deleteUserFirestoreData();
                     Get.back();
-                    Get.offAll(() => const PhoneLoginScreen());
+                    Get.offAll(() => PhoneLoginScreen());
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.red,
