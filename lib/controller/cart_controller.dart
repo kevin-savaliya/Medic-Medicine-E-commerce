@@ -272,7 +272,8 @@ class CartController extends GetxController {
         id: id,
         creatorId: currentUser,
         medicineId: orderData.value.medicineId,
-        prescriptionId: orderData.value.prescriptionId);
+        prescriptionId: orderData.value.prescriptionId,
+        addressId: orderData.value.addressId);
 
     await orderRef.doc(id).set(_orderData.toMap());
     Get.back();

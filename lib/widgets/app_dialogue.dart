@@ -147,7 +147,7 @@ Future deleteAccountDialogue(
 
                     await deleteUserFirestoreData();
                     Get.back();
-                    Get.offAll(() => PhoneLoginScreen());
+                    Get.offAll(() => const PhoneLoginScreen());
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.red,
@@ -376,14 +376,24 @@ Future showProgressDialogue(BuildContext context) {
             child: SizedBox(
                 height: 50,
                 width: 50,
-                child: SizedBox(
-                  height: 10,
-                  width: 10,
-                  child: LoadingIndicator(
-                    colors: [AppColors.primaryColor],
-                    indicatorType: Indicator.ballScaleMultiple,
-                    strokeWidth: 0,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CupertinoActivityIndicator(
+                      color: AppColors.primaryColor,
+                      radius: 15,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "Loading...",
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(fontFamily: AppFont.fontMedium,fontSize: 16),
+                    )
+                  ],
                 )),
           ),
         ],

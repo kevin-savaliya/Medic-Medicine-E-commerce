@@ -10,6 +10,7 @@ import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/category_data.dart';
 import 'package:medic/screen/medicine_category.dart';
 import 'package:medic/screen/notification_screen.dart';
+import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -64,14 +65,16 @@ class SearchScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          IconButton(
-              onPressed: () {
-                Get.to(() => const NotificationScreen());
-              },
-              icon: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: SvgPicture.asset(AppIcons.notification),
-              ))
+          controller.firebaseUser != null
+              ? IconButton(
+                  onPressed: () async {
+                    await Get.to(() => const NotificationScreen());
+                  },
+                  icon: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: SvgPicture.asset(AppIcons.notification),
+                  ))
+              : SizedBox()
         ],
       ),
       body: searchWidget(context, controller),
@@ -177,7 +180,7 @@ class SearchScreen extends StatelessWidget {
                           const Spacer(),
                           ElevatedButton(
                               onPressed: () {
-                                // pickImage(context);
+                                Get.to(() => UploadPrescription());
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primaryColor,
@@ -290,55 +293,63 @@ class SearchScreen extends StatelessWidget {
                             snapshot.data!.isNotEmpty) {
                           List<CategoryData>? categoryList = snapshot.data!;
 
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: categoryList.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                                      child: CachedNetworkImage(
-                                        height: 60,
-                                        width: 60,
-                                        imageUrl: categoryList[index].image!,
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                        progressIndicatorBuilder:
-                                            (context, url, downloadProgress) =>
-                                                SizedBox(
-                                          width: 30,
-                                          height: 30,
-                                          child: Center(
-                                            child: CupertinoActivityIndicator(
-                                              color: AppColors.primaryColor,
-                                              animating: true,
-                                              radius: 10,
-                                            ),
-                                          ),
-                                        ),
-                                        fit: BoxFit.cover,
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 6,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                        child: SvgPicture.network(
+                                            categoryList[index].image!,
+                                            height: 50),
+                                        // child: CachedNetworkImage(
+                                        //   height: 60,
+                                        //   width: 60,
+                                        //   imageUrl: categoryList[index].image!,
+                                        //   errorWidget: (context, url, error) =>
+                                        //       const Icon(Icons.error),
+                                        //   progressIndicatorBuilder: (context,
+                                        //           url, downloadProgress) =>
+                                        //       SizedBox(
+                                        //     width: 30,
+                                        //     height: 30,
+                                        //     child: Center(
+                                        //         child: LoadingIndicator(
+                                        //       colors: [AppColors.primaryColor],
+                                        //       indicatorType:
+                                        //           Indicator.ballScale,
+                                        //       strokeWidth: 1,
+                                        //     )),
+                                        //   ),
+                                        //   fit: BoxFit.cover,
+                                        // ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      height: 7,
-                                    ),
-                                    Text(
-                                      "${categoryList[index].name}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(
-                                              color: AppColors.txtGrey,
-                                              fontFamily: AppFont.fontMedium),
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "${categoryList[index].name}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                                color: AppColors.txtGrey,
+                                                fontFamily: AppFont.fontMedium),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                           );
                         } else {
                           return Container(

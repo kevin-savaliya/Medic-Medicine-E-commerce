@@ -55,7 +55,6 @@ class UserController extends GetxController {
     }
   }
 
-  // create a method to update user data when update on firestore in stream and convert it to UserModel
   Stream<UserModel?> streamUser(String id) {
     return _usersCollection.doc(id).snapshots().map((documentSnapshot) {
       if (documentSnapshot.data() == null) {

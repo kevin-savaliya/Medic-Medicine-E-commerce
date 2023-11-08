@@ -131,6 +131,7 @@ class HomeScreen extends GetWidget<HomeController> {
           controller.firebaseUser != null
               ? IconButton(
                   onPressed: () async {
+                    // controller.checkUserNameExistOrNot();
                     await Get.to(() => const NotificationScreen());
                   },
                   icon: Padding(
@@ -293,40 +294,44 @@ class HomeScreen extends GetWidget<HomeController> {
 
                             return ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: categoryList.length,
+                              itemCount: 6,
                               itemBuilder: (context, index) {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(5),
                                         clipBehavior:
                                             Clip.antiAliasWithSaveLayer,
-                                        child: CachedNetworkImage(
-                                          height: 60,
-                                          width: 60,
-                                          imageUrl: categoryList[index].image!,
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                          progressIndicatorBuilder: (context,
-                                                  url, downloadProgress) =>
-                                              SizedBox(
-                                            width: 30,
-                                            height: 30,
-                                            child: Center(
-                                                child: LoadingIndicator(
-                                              colors: [AppColors.primaryColor],
-                                              indicatorType:
-                                                  Indicator.ballScale,
-                                              strokeWidth: 1,
-                                            )),
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
+                                        child: SvgPicture.network(
+                                            categoryList[index].image!,
+                                            height: 50),
+                                        // child: CachedNetworkImage(
+                                        //   height: 60,
+                                        //   width: 60,
+                                        //   imageUrl: categoryList[index].image!,
+                                        //   errorWidget: (context, url, error) =>
+                                        //       const Icon(Icons.error),
+                                        //   progressIndicatorBuilder: (context,
+                                        //           url, downloadProgress) =>
+                                        //       SizedBox(
+                                        //     width: 30,
+                                        //     height: 30,
+                                        //     child: Center(
+                                        //         child: LoadingIndicator(
+                                        //       colors: [AppColors.primaryColor],
+                                        //       indicatorType:
+                                        //           Indicator.ballScale,
+                                        //       strokeWidth: 1,
+                                        //     )),
+                                        //   ),
+                                        //   fit: BoxFit.cover,
+                                        // ),
                                       ),
                                       const SizedBox(
-                                        height: 7,
+                                        height: 10,
                                       ),
                                       Text(
                                         "${categoryList[index].name}",
@@ -734,7 +739,11 @@ class HomeScreen extends GetWidget<HomeController> {
                                                 SmoothStarRating(
                                                   rating: double.parse(
                                                       medicineList[index]
-                                                          .ratings!),
+                                                                  .ratings ==
+                                                              ""
+                                                          ? "5"
+                                                          : medicineList[index]
+                                                              .ratings!),
                                                   allowHalfRating: true,
                                                   defaultIconData: Icons.star,
                                                   filledIconData: Icons.star,

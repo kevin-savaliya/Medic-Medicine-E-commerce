@@ -4,6 +4,7 @@ class ConstString {
   static const String next = "Next";
   static const String btnContinue = "Continue";
   static const String sendOTP = "Send OTP";
+  static const String saveName = "Save Name";
   static const String save = "Save";
   static const String resendOTP = "Resend OTP";
   static const String saveDetails = "Save details";

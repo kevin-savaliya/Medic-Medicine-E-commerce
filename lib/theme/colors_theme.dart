@@ -42,6 +42,13 @@ class ThemeColor {
       indicatorColor: AppColors.primaryColor,
       outlinedButtonTheme: OutlinedButtonThemeData(style: textButtonStyle),
       primaryTextTheme: textTheme(isDark, context),
+      // datePickerTheme: DatePickerThemeData(
+      //   backgroundColor: AppColors.white,
+      //   headerBackgroundColor: AppColors.primaryColor,
+      //   headerForegroundColor: AppColors.white,
+      //   rangePickerBackgroundColor: AppColors.primaryColor,
+      //   inputDecorationTheme: InputDecorationTheme()
+      // ),
       textButtonTheme: TextButtonThemeData(style: textButtonStyle),
       timePickerTheme: TimePickerThemeData(
           backgroundColor: Colors.white,

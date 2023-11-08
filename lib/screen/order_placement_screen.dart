@@ -333,6 +333,7 @@ class OrderPlacement extends StatelessWidget {
                     return const CupertinoActivityIndicator();
                   } else if (snapshot.hasData) {
                     UserAddress add = snapshot.data!;
+                    cartController.orderData.value.addressId = add.id;
                     String address =
                         "${add.address}, ${add.area}, ${add.landmark}";
                     return Padding(
@@ -411,7 +412,7 @@ class OrderPlacement extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "1 Item",
+                                "${cartController.orderData.value.medicineData!.length}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!

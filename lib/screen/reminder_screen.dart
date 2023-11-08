@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:medic/controller/reminder_controller.dart';
 import 'package:medic/model/reminder_data_model.dart';
 import 'package:medic/screen/add_medicine_screen.dart';
@@ -636,60 +637,101 @@ class yearWidget extends GetWidget<ReminderController> {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Column(
               children: [
-                Expanded(
-                  flex: 2,
-                  child: EasyDateTimeLine(
-                    initialDate: DateTime.now(),
-                    timeLineProps: const EasyTimeLineProps(),
-                    dayProps: const EasyDayProps(
-                        dayStructure: DayStructure.dayStrDayNum,
-                        height: 85,
-                        width: 30),
-                    headerProps: const EasyHeaderProps(
-                        showMonthPicker: false, showSelectedDate: false),
-                    itemBuilder: (context, dayNumber, dayName, monthName,
-                        fullDate, isSelected) {
-                      return Container(
-                        width: 45,
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        decoration: BoxDecoration(
-                            color: isSelected
-                                ? AppColors.primaryColor
-                                : AppColors.decsGrey,
-                            borderRadius: BorderRadius.circular(50)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              dayName,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: isSelected
-                                          ? AppColors.white
-                                          : AppColors.txtGrey),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Obx(() => GestureDetector(
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100),
+                              builder: (BuildContext context, Widget? child) {
+                                return Theme(
+                                  data: ThemeData.light().copyWith(
+                                    primaryColor: AppColors.primaryColor,
+                                    hintColor: AppColors.primaryColor,
+                                    datePickerTheme: DatePickerThemeData(
+                                        dayStyle: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                        weekdayStyle: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                        headerHelpStyle: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
+                                        headerHeadlineStyle: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                        yearStyle: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
+                                        dividerColor: AppColors.green,
+                                        surfaceTintColor: AppColors.green),
+                                    colorScheme: ColorScheme.light(
+                                      primary: AppColors.primaryColor,
+                                      onPrimary: AppColors.white,
+                                      onSurface: AppColors.darkPrimaryColor,
+                                      secondary: AppColors.darkPrimaryColor,
+                                    ),
+                                    textButtonTheme: TextButtonThemeData(
+                                      style: TextButton.styleFrom(
+                                        primary: AppColors
+                                            .primaryColor, // button text color
+                                      ),
+                                    ),
+                                    // Other text styles can be set here too
+                                    textTheme: TextTheme(
+                                      subtitle1: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                      button: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                    ),
+                                  ),
+                                  child: child!,
+                                );
+                              });
+
+                          if (pickedDate != null) {
+                            controller.selectedDate = pickedDate;
+                            controller.selectedFormateDate.value =
+                                DateFormat('dd MMMM yyyy')
+                                    .format(controller.selectedDate!);
+                          }
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          height: 38,
+                          width: 210,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: AppColors.decsGrey,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(AppIcons.calender, height: 20),
+                                const SizedBox(width: 10),
+                                Text(
+                                  "${controller.selectedFormateDate.value}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                          fontSize: 14,
+                                          color: AppColors.txtGrey),
+                                ),
+                              ],
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "${fullDate.day}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      fontSize: 14,
-                                      fontFamily: AppFont.fontMedium,
-                                      color: isSelected
-                                          ? AppColors.white
-                                          : AppColors.txtGrey),
-                            ),
-                          ],
+                          ),
                         ),
-                      );
-                    },
-                  ),
+                      )),
                 ),
                 Expanded(
                   flex: 9,

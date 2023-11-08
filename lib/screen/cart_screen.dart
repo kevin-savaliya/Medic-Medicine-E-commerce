@@ -78,6 +78,7 @@ class CartScreen extends StatelessWidget {
                       children: [
                         SizedBox(
                           height: 70,
+                          width: 100,
                           child: CachedNetworkImage(
                             imageUrl: medicineList[index].image ?? "",
                             errorWidget: (context, url, error) =>
@@ -123,7 +124,7 @@ class CartScreen extends StatelessWidget {
                                         height: 5,
                                       ),
                                       Text(
-                                        "${medicineList[index].uses}",
+                                        "${medicineList[index].description}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall!
@@ -278,7 +279,7 @@ class CartScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "1",
+                                "${controller.orderData.value.medicineData!.length}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!

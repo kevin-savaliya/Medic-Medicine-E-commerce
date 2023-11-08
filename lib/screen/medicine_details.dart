@@ -244,7 +244,9 @@ class MedicineDetails extends StatelessWidget {
                           height: 3,
                         ),
                         SmoothStarRating(
-                          rating: double.parse(medicineData?.ratings ?? "5"),
+                          rating: double.parse(medicineData!.ratings == ""
+                              ? "5"
+                              : medicineData!.ratings!),
                           allowHalfRating: true,
                           defaultIconData: Icons.star,
                           filledIconData: Icons.star,
@@ -620,7 +622,9 @@ class MedicineDetails extends StatelessWidget {
                       height: 5,
                     ),
                     SmoothStarRating(
-                      rating: double.parse(medicineData?.ratings ?? "5"),
+                      rating: double.parse(medicineData!.ratings == ""
+                          ? "5"
+                          : medicineData!.ratings!),
                       allowHalfRating: true,
                       defaultIconData: Icons.star,
                       filledIconData: Icons.star,
@@ -1039,7 +1043,11 @@ class MedicineDetails extends StatelessWidget {
                                               SmoothStarRating(
                                                 rating: double.parse(
                                                     medicineList[index]
-                                                        .ratings!),
+                                                                .ratings ==
+                                                            ""
+                                                        ? "5"
+                                                        : medicineList[index]
+                                                            .ratings!),
                                                 allowHalfRating: true,
                                                 defaultIconData: Icons.star,
                                                 filledIconData: Icons.star,

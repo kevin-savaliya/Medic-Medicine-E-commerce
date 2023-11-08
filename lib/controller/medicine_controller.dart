@@ -137,6 +137,18 @@ class MedicineController extends GetxController {
     return data;
   }
 
+  Stream<List<MedicineData>> getCategoryWiseMedicine(String categoryId) {
+    var data = medicineRef
+        .where('categoryId', isEqualTo: categoryId.trim())
+        .snapshots()
+        .map((event) {
+      return event.docs.map((e) {
+        return MedicineData.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+    return data;
+  }
+
   fetchFavourite() async {
     DocumentSnapshot doc = await favRef.doc(currentUserId).get();
 

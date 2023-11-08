@@ -12,6 +12,9 @@ class ReminderController extends GetxController {
 
   RxString frequencyValue = "".obs;
 
+  DateTime? selectedDate;
+  RxString selectedFormateDate = "Select Date".obs;
+
   TimeOfDay selectedTime = TimeOfDay.now();
 
   final String? currentUser = FirebaseAuth.instance.currentUser?.uid;

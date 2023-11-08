@@ -3,99 +3,90 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:medic/_dart/_init.dart';
 import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
+import 'package:medic/model/category_data.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/medicine_details.dart';
-import 'package:medic/theme/colors.dart';
+import 'package:medic/screen/phone_login_screen.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/utils/utils.dart';
 import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
-class FavouriteScreen extends StatelessWidget {
-  // MedicineController controller = Get.put(MedicineController());
+class CategoryWiseMedicine extends StatelessWidget {
+  CategoryData? categoryData;
+
+  MedicineController controller = Get.put(MedicineController());
   CartController cartController = Get.put(CartController());
 
-  FavouriteScreen({super.key});
+  CategoryWiseMedicine({super.key, this.categoryData});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder(
-      init: MedicineController(),
-      builder: (controller) {
-        return Scaffold(
-          backgroundColor: AppColors.white,
-          appBar: AppBar(
-            backgroundColor: AppColors.white,
-            // titleSpacing: 0,
-            title: Text(ConstString.fav,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge!
-                    .copyWith(fontFamily: AppFont.fontBold)),
-            elevation: 1.5,
-            shadowColor: AppColors.txtGrey.withOpacity(0.2),
-            actions: [
-              GestureDetector(
-                  onTap: () {},
-                  child: SvgPicture.asset(
-                    AppIcons.search,
-                    width: 20,
-                  )),
-              const SizedBox(
-                width: 12,
-              ),
-              GestureDetector(
-                  onTap: () {},
-                  child: SvgPicture.asset(
-                    AppIcons.bag,
-                    width: 22,
-                  )),
-              const SizedBox(
-                width: 15,
-              ),
-            ],
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.white,
+        leading: GestureDetector(
+          onTap: () {
+            Get.back();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: SvgPicture.asset(
+              AppIcons.back,
+            ),
           ),
-          body: getContent(controller),
-        );
-      },
+        ),
+        titleSpacing: 0,
+        title: Text("${categoryData!.name} Medicines",
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(fontFamily: AppFont.fontBold)),
+        elevation: 1.5,
+        shadowColor: AppColors.txtGrey.withOpacity(0.2),
+        actions: [
+          GestureDetector(
+              onTap: () {},
+              child: SvgPicture.asset(
+                AppIcons.search,
+                width: 20,
+              )),
+          const SizedBox(
+            width: 12,
+          ),
+          GestureDetector(
+              onTap: () {},
+              child: SvgPicture.asset(
+                AppIcons.bag,
+                width: 22,
+              )),
+          const SizedBox(
+            width: 15,
+          ),
+        ],
+      ),
+      body: medicineWidget(),
     );
   }
 
-  Widget getContent(MedicineController controller) {
-    if (controller.loggedInUser == null) {
-      return UserNotLoggedInWidget();
-    }
-    return medicineWidget(controller);
-  }
-
-  Widget medicineWidget(MedicineController controller) {
+  Widget medicineWidget() {
     return StreamBuilder(
-      stream: controller.fetchFavouriteMedicine(),
+      stream: controller.getCategoryWiseMedicine(categoryData!.id!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return GridMedicine(itemCount: snapshot.data?.length);
         } else if (snapshot.hasError) {
-          return Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: AppColors.tilePrimaryColor),
-            child: Text(
-              "Error : ${snapshot.error}",
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: AppColors.primaryColor,
-                  fontSize: 15,
-                  fontFamily: AppFont.fontMedium),
-            ),
-          );
+          return const Center(child: Text("Error"));
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          List<MedicineData>? medicineList = snapshot.data!;
+          List<MedicineData> medicineList = snapshot.data!;
           return Padding(
             padding: const EdgeInsets.all(5.0),
             child: GridView.builder(
@@ -167,6 +158,20 @@ class FavouriteScreen extends StatelessWidget {
                                           right: 10,
                                           child: GestureDetector(
                                             onTap: () async {
+                                              if (controller.loggedInUser ==
+                                                  null) {
+                                                Utils().showAlertDialog(
+                                                    context: context,
+                                                    title: "Login Required!",
+                                                    content:
+                                                        "Ready to Get Started? Confirm with 'Yes' and Login Your Account.",
+                                                    onPressed: () {
+                                                      Get.back();
+                                                      Get.to(() =>
+                                                          const PhoneLoginScreen());
+                                                    });
+                                                return;
+                                              }
                                               if (isFav) {
                                                 await controller
                                                     .removeFavourite(
@@ -355,31 +360,6 @@ class FavouriteScreen extends StatelessWidget {
           );
         }
       },
-    );
-  }
-
-  Widget UserNotLoggedInWidget() {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: AppColors.tilePrimaryColor),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(AppIcons.noData, height: 60),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            ConstString.loginToViewFav,
-            style: Theme.of(Get.context!).textTheme.titleSmall!.copyWith(
-                color: AppColors.primaryColor,
-                fontSize: 16,
-                fontFamily: AppFont.fontMedium),
-          ),
-        ],
-      ),
     );
   }
 }

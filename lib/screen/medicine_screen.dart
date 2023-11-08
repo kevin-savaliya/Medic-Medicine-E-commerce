@@ -236,7 +236,9 @@ class MedicineScreen extends StatelessWidget {
                                 ),
                                 SmoothStarRating(
                                   rating: double.parse(
-                                      medicineList[index].ratings!),
+                                      medicineList[index].ratings == ""
+                                          ? "5"
+                                          : medicineList[index].ratings!),
                                   allowHalfRating: true,
                                   defaultIconData: Icons.star,
                                   filledIconData: Icons.star,

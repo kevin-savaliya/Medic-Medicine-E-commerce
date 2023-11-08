@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/category_data.dart';
+import 'package:medic/screen/categorywise_medicine.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -88,59 +89,69 @@ class MedicineCategory extends StatelessWidget {
               itemCount: categoryList.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 3.3,
+                  childAspectRatio: 2.8,
                   mainAxisSpacing: 15,
                   crossAxisSpacing: 15),
               itemBuilder: (context, index) {
-                return Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.decsGrey),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // SvgPicture.asset(
-                        //     controller.medicineCategoryImageList[index]),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: CachedNetworkImage(
-                            height: 35,
-                            width: 35,
-                            imageUrl: categoryList[index].image!,
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) => SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: Center(
-                                  child: LoadingIndicator(
-                                colors: [AppColors.primaryColor],
-                                indicatorType: Indicator.ballScale,
-                                strokeWidth: 1,
-                              )),
+                return GestureDetector(
+                  onTap: () {
+                    Get.to(() => CategoryWiseMedicine(
+                        categoryData: categoryList.elementAt(index)));
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColors.decsGrey),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            child: SvgPicture.network(
+                              categoryList[index].image!,
+                              height: 25,
                             ),
-                            fit: BoxFit.cover,
+                            // child: CachedNetworkImage(
+                            //   height: 35,
+                            //   width: 35,
+                            //   imageUrl: categoryList[index].image!,
+                            //   errorWidget: (context, url, error) =>
+                            //       const Icon(Icons.error),
+                            //   progressIndicatorBuilder:
+                            //       (context, url, downloadProgress) => SizedBox(
+                            //     width: 30,
+                            //     height: 30,
+                            //     child: Center(
+                            //         child: LoadingIndicator(
+                            //       colors: [AppColors.primaryColor],
+                            //       indicatorType: Indicator.ballScale,
+                            //       strokeWidth: 1,
+                            //     )),
+                            //   ),
+                            //   fit: BoxFit.cover,
+                            // ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        Text(
-                          categoryList[index].name!,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                  fontSize: 13,
-                                  fontFamily: AppFont.fontMedium,
-                                  color: AppColors.darkPrimaryColor),
-                        )
-                      ],
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: Text(
+                              categoryList[index].name!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                      fontSize: 13,
+                                      fontFamily: AppFont.fontMedium,
+                                      color: AppColors.darkPrimaryColor),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );
