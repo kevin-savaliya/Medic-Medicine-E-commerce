@@ -81,7 +81,6 @@ class PopularMedicine extends StatelessWidget {
             padding: const EdgeInsets.all(15.0),
             child: GridView.builder(
               padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
               itemCount: medicineList.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,

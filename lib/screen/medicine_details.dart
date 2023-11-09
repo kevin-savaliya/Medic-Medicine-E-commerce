@@ -170,12 +170,12 @@ class MedicineDetails extends StatelessWidget {
                         right: 5,
                         child: GestureDetector(
                           onTap: () async {
-                            if (controller.loggedInUser == null) {
+                            if (controller.firebaseuser == null) {
                               Utils().showAlertDialog(
                                   context: context,
                                   title: "Login Required!",
                                   content:
-                                      "Ready to Get Started? Confirm with 'Yes' and Login Your Account.",
+                                      "Ready to Get Started? \nConfirm with 'Yes' and Login Your Account.",
                                   onPressed: () {
                                     Get.back();
                                     Get.to(() => const PhoneLoginScreen());

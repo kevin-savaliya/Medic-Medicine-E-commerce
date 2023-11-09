@@ -20,7 +20,7 @@ import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 class MedicineScreen extends StatelessWidget {
-  MedicineController controller = Get.find();
+  MedicineController controller = Get.put(MedicineController());
   CartController cartController = Get.put(CartController());
 
   MedicineScreen({super.key});
@@ -156,13 +156,13 @@ class MedicineScreen extends StatelessWidget {
                                           right: 10,
                                           child: GestureDetector(
                                             onTap: () async {
-                                              if (controller.loggedInUser ==
+                                              if (controller.firebaseuser ==
                                                   null) {
                                                 Utils().showAlertDialog(
                                                     context: context,
                                                     title: "Login Required!",
                                                     content:
-                                                        "Ready to Get Started? Confirm with 'Yes' and Login Your Account.",
+                                                        "Ready to Get Started? \nConfirm with 'Yes' and Login Your Account.",
                                                     onPressed: () {
                                                       Get.back();
                                                       Get.to(() =>

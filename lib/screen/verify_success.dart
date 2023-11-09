@@ -44,7 +44,7 @@ class VerifySuccess extends StatelessWidget {
               ),
               ElevatedButton(
                   onPressed: () {
-                    Get.offAll(() => const HomeScreen());
+                    Get.offAll(() => HomeScreen());
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,

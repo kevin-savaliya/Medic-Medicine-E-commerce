@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:medic/_dart/_init.dart';
 import 'package:medic/controller/home_controller.dart';
 import 'package:medic/controller/user_controller.dart';
 import 'package:medic/model/category_data.dart';
@@ -28,6 +29,8 @@ class MedicineController extends GetxController {
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
   UserModel? loggedInUser = Get.find<HomeController>().loggedInUser.value;
+
+  final firebaseuser = FirebaseAuth.instance.currentUser;
 
   @override
   void onInit() {

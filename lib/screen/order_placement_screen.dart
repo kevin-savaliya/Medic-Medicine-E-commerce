@@ -84,7 +84,7 @@ class OrderPlacement extends StatelessWidget {
                 onPressed: () async {
                   showProgressDialogue(context);
                   await cartController.placeOrder();
-                  Get.to(() => const OrderDetailScreen());
+                  Get.to(() => OrderDetailScreen());
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
@@ -136,6 +136,7 @@ class OrderPlacement extends StatelessWidget {
                       children: [
                         SizedBox(
                           height: 70,
+                          width: 100,
                           child: CachedNetworkImage(
                             imageUrl: medicineList[index].image ?? "",
                             errorWidget: (context, url, error) =>

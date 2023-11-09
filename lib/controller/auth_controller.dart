@@ -74,7 +74,7 @@ class AuthController extends GetxController {
     if (gotUser != null) {
       await appStorage.setUserData(gotUser);
       await NotificationService.instance.getTokenAndUpdateCurrentUser();
-      await Get.offAll(() => const HomeScreen());
+      await Get.offAll(() => HomeScreen());
     }
   }
 
@@ -87,7 +87,7 @@ class AuthController extends GetxController {
       if (currentUser != null) {
         await appStorage.setUserData(currentUser);
         await NotificationService.instance.getTokenAndUpdateCurrentUser();
-        await Get.offAll(() => const HomeScreen());
+        await Get.offAll(() => HomeScreen());
       }
     } else {
       update([continueButtonId]);
@@ -180,8 +180,8 @@ class AuthController extends GetxController {
     Get.delete<AuthController>();
     Get.put(AuthController(), permanent: true);
     Get.back();
-    await Get.offAll(() => const PhoneLoginScreen());
     await FirebaseAuth.instance.signOut();
+    await Get.offAll(() => const PhoneLoginScreen());
   }
 
   bool validateData({bool isLogin = false}) {

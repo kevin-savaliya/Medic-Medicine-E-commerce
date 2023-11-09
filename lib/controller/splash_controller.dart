@@ -56,7 +56,7 @@ class SplashController extends GetxController {
 
   Future<void> _redirectToNextScreen() async {
     if (appStorage.checkLoginAndUserData()) {
-      await Get.offAll(() => const HomeScreen());
+      await Get.offAll(() => HomeScreen());
     } else {
       if (appStorage.isBoardWatched()) {
         await Get.offAll(() => PhoneLoginScreen());

@@ -68,7 +68,7 @@ class FavouriteScreen extends StatelessWidget {
   }
 
   Widget getContent(MedicineController controller) {
-    if (controller.loggedInUser == null) {
+    if (controller.firebaseuser == null) {
       return UserNotLoggedInWidget();
     }
     return medicineWidget(controller);

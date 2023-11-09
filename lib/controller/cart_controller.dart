@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_null_comparison
 
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,13 +11,18 @@ import 'package:medic/model/discount_data_model.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/order_data.dart';
 import 'package:medic/model/prescription_model.dart';
+import 'package:medic/model/review_data_model.dart';
 import 'package:medic/model/user_address.dart';
+import 'package:medic/model/user_model.dart';
 import 'package:medic/utils/utils.dart';
 import 'package:path/path.dart';
 
 class CartController extends GetxController {
   final RxList cartItems = [].obs;
   RxInt qty = 1.obs;
+  double rating = 0.0;
+
+  TextEditingController reviewText = TextEditingController();
 
   final CollectionReference medicineRef =
       FirebaseFirestore.instance.collection("medicines");
@@ -26,6 +32,12 @@ class CartController extends GetxController {
 
   final CollectionReference prescriptionRef =
       FirebaseFirestore.instance.collection("prescriptions");
+
+  final CollectionReference reviewRef =
+      FirebaseFirestore.instance.collection("reviews");
+
+  final CollectionReference userRef =
+      FirebaseFirestore.instance.collection("users");
 
   String prescriptionId = "";
 
@@ -40,6 +52,8 @@ class CartController extends GetxController {
       FirebaseFirestore.instance.collection("addresses");
 
   final String? currentUser = FirebaseAuth.instance.currentUser?.uid;
+
+  final firebaseUser = FirebaseAuth.instance.currentUser;
 
   Rx<OrderData> orderData = OrderData(medicineId: {}).obs;
 
@@ -58,7 +72,6 @@ class CartController extends GetxController {
       orderData.value.medicineId.addAll({
         orderData.value.medicineId.length.toString(): medicine.id.toString()
       });
-      log("${orderData.value.medicineId}");
     }
 
     orderData.value.medicineData ??= [];
@@ -265,17 +278,16 @@ class CartController extends GetxController {
   }
 
   Future<void> placeOrder() async {
-    log("${orderData.value.medicineId}");
-    String id = orderRef.doc().id;
+    orderData.value.id = orderRef.doc().id;
 
     final _orderData = orderData.value.copyWith(
-        id: id,
+        id: orderData.value.id,
         creatorId: currentUser,
         medicineId: orderData.value.medicineId,
         prescriptionId: orderData.value.prescriptionId,
         addressId: orderData.value.addressId);
 
-    await orderRef.doc(id).set(_orderData.toMap());
+    await orderRef.doc(orderData.value.id).set(_orderData.toMap());
     Get.back();
     showInSnackBar("Order Placed Successfully",
         isSuccess: true, title: "The Medic");
@@ -285,5 +297,98 @@ class CartController extends GetxController {
     var data = discountRef.snapshots().map((event) => event.docs.map(
         (e) => DiscountDataModel.fromMap(e.data() as Map<String, dynamic>)));
     return data;
+  }
+
+  Future<void> uploadReview(ReviewDataModel review) async {
+    await reviewRef.doc(review.id).set(review.toMap()).then((value) {
+      Get.back();
+      Get.back();
+      showInSnackBar("Review Added Successfully",
+          isSuccess: true, title: "The Medic");
+      rating = 2;
+      reviewText.clear();
+    }).onError((error, stackTrace) {
+      showInSnackBar("Error : $error");
+    });
+  }
+
+  Future<OrderData?> fetchOrderIds() async {
+    try {
+      DocumentSnapshot snapshot = await orderRef.doc(orderData.value.id).get();
+
+      if (snapshot.exists && snapshot.data() != null) {
+        return OrderData.fromMap(snapshot.data() as Map<String, dynamic>);
+      } else {
+        showInSnackBar("Document Doesn't Exist");
+        return null;
+      }
+    } catch (e) {
+      print("Error Fetching Data : $e");
+      return null;
+    }
+  }
+
+  Stream<UserModel?> fetchUserById(String userid) {
+    return userRef.doc(userid).snapshots().map((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        return UserModel.fromMap(snapshot.data() as Map<String, dynamic>);
+      } else {
+        return null;
+      }
+    });
+  }
+
+  Stream<PrescriptionData?>? fetchPrescriptionById(String prescriptionId) {
+    try {
+      return prescriptionRef.doc(currentUser).snapshots().map((snapshot) {
+        if (snapshot.exists && snapshot.data() != null) {
+          List<dynamic> prescriptions = snapshot.get('prescriptions');
+          var prescriptionMap = prescriptions.firstWhere(
+              (prescription) => prescription['id'] == prescriptionId);
+          if (prescriptionMap != null) {
+            return PrescriptionData.fromMap(prescriptionMap);
+          }
+        }
+        return null;
+      });
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Stream<UserAddress?>? fetchAddressById(String addressId) {
+    try {
+      return addRef.doc(currentUser).snapshots().map((snapshot) {
+        if (snapshot.exists && snapshot.data() != null) {
+          List<dynamic> addresses = snapshot.get('addresses');
+          var addressMap =
+              addresses.firstWhere((address) => address['id'] == addressId);
+          if (addressMap != null) {
+            return UserAddress.fromMap(addressMap);
+          }
+        }
+        return null;
+      });
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Future<List<String>> fetchMedicineNames(List<String> medicineIds) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final CollectionReference medicineCollection =
+        firestore.collection('medicines');
+
+    List<String> medicineNames = [];
+    for (String id in medicineIds) {
+      DocumentSnapshot snapshot = await medicineCollection.doc(id).get();
+      if (snapshot.exists) {
+        medicineNames.add(snapshot.get('genericName'));
+      }
+    }
+
+    return medicineNames;
   }
 }

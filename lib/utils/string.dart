@@ -53,8 +53,15 @@ class ConstString {
   static const String remove = "Remove";
   static const String logout = "Log out";
   static const String logoutDialogue = "Logout";
+  static const String login = "Log in";
+  static const String submit = "Submit";
+  static const String review = "Review";
+  static const String selectMedicine = "Select Medicine";
   static const String presBy = "Prescribed By";
   static const String presStatus = "Status";
+  static const String writereview = "Write a Review";
+  static const String rateproduct = "Rate the products";
+  static const String leavereview = "Leave a review here";
   static const String pastPres = "Past Prescription from The Medic";
   static const String loginView = "Login to view";
   static const String presUpload = "Prescriptions Uploaded By You";

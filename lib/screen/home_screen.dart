@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, must_be_immutable
 
 import 'dart:ui';
 
@@ -8,11 +8,13 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:medic/controller/auth_controller.dart';
 import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/controller/home_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/category_data.dart';
 import 'package:medic/model/medicine_data.dart';
+import 'package:medic/screen/add_review_screen.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/favourite_screen.dart';
 import 'package:medic/screen/medicine_category.dart';
@@ -34,8 +36,12 @@ import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:medic/widgets/user/my_name_text_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
-class HomeScreen extends GetWidget<HomeController> {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  HomeController controller = Get.put(HomeController());
+
+  final AuthController _authController = Get.find();
+
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +137,6 @@ class HomeScreen extends GetWidget<HomeController> {
           controller.firebaseUser != null
               ? IconButton(
                   onPressed: () async {
-                    // controller.checkUserNameExistOrNot();
                     await Get.to(() => const NotificationScreen());
                   },
                   icon: Padding(
@@ -577,7 +582,7 @@ class HomeScreen extends GetWidget<HomeController> {
                             height: 260,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: medicineList.length,
+                              itemCount: 4,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
@@ -896,7 +901,7 @@ class HomeScreen extends GetWidget<HomeController> {
 
   Future<void> markFavourite(MedicineController controller,
       BuildContext context, bool isFav, String medicineId) async {
-    if (controller.loggedInUser == null) {
+    if (controller.firebaseuser == null) {
       Utils().showAlertDialog(
           context: context,
           title: "Login Required!",
@@ -928,6 +933,11 @@ class HomeScreen extends GetWidget<HomeController> {
           // alignment: Alignment.topCenter,
           height: 80,
           child: BottomNavigationBar(
+              // backgroundColor: _authController.appStorage.getUserData() == null
+              //     ? controller.pageIndex.value == 4
+              //         ? AppColors.darkPrimaryColor.withOpacity(0.78)
+              //         : AppColors.white
+              //     : AppColors.white,
               currentIndex: controller.pageIndex.value,
               type: BottomNavigationBarType.fixed,
               showSelectedLabels: true,

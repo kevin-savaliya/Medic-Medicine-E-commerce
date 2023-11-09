@@ -44,7 +44,7 @@ class CartScreen extends StatelessWidget {
   }
 
   Widget getContent(BuildContext context, CartController controller) {
-    if (controller.currentUser == null) {
+    if (controller.firebaseUser == null) {
       return UserNotLoggedInWidget();
     }
     return cartWidget(context, controller);

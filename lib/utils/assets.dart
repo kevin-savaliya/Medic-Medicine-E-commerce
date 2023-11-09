@@ -29,6 +29,7 @@ class AppImages {
 class AppIcons {
   static const String back_icon = 'asset/icons/arrow_left.svg';
   static const String verify = 'asset/icons/verify.svg';
+  static const String info = 'asset/icons/Info.svg';
   static const String homeIcon = 'asset/icons/home.svg';
   static const String fillpin = 'asset/icons/pin.svg';
   static const String fillpinround = 'asset/icons/fillpinround.svg';

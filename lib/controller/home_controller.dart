@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:medic/model/user_model.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
-import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
 import 'package:medic/utils/utils.dart';
 
@@ -24,14 +23,16 @@ class HomeController extends GetxController {
   TextEditingController nameController = TextEditingController();
 
   // current logged in user detail from users collection from firestore database
-  // Rx<UserModel?> loggedInUser = UserModel.newUser().obs;
-  Rx<UserModel?> loggedInUser = Rx<UserModel?>(null);
+  Rx<UserModel?> loggedInUser = UserModel.newUser().obs;
+
+  // Rx<UserModel?> loggedInUser = Rx<UserModel?>(null);
 
   @override
   void onInit() {
     super.onInit();
     _fetchUser();
-    // checkUserNameExistOrNot();
+    fetchUser();
+    checkUserNameExistOrNot();
   }
 
   Future<void> _fetchUser({
@@ -60,6 +61,7 @@ class HomeController extends GetxController {
               UserModel.fromMap(snapshot.data() as Map<String, dynamic>);
           if (userModel.name == null || userModel.name!.isEmpty) {
             showDialog(
+              barrierDismissible: false,
               context: Get.context!,
               builder: (context) {
                 return SimpleDialog(
@@ -69,9 +71,6 @@ class HomeController extends GetxController {
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 25),
                   children: [
-                    // Column(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -90,6 +89,7 @@ class HomeController extends GetxController {
                     ),
                     TextFormField(
                       controller: nameController,
+                      textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(
                         filled: true,
                         enabled: true,
@@ -134,7 +134,15 @@ class HomeController extends GetxController {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            if (nameController.text.isNotEmpty) {
+                              String name = nameController.text;
+                              saveName(name);
+                            } else {
+                              showInSnackBar("Please Enter Name",
+                                  title: "The Medic");
+                            }
+                          },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryColor,
                               fixedSize: const Size(200, 50),
@@ -165,19 +173,22 @@ class HomeController extends GetxController {
     }
   }
 
-  // void _saveUsername(String username) {
-  //   if (user != null) {
-  //     firestore.collection('users').doc(user.uid).update({
-  //       'name': username,
-  //     }).then((_) {
-  //       // Handle successful update
-  //       print('Username updated successfully');
-  //     }).catchError((error) {
-  //       // Handle update error
-  //       print('Error updating username: $error');
-  //     });
-  //   }
-  // }
+  void saveName(String name) {
+    if (firebaseUser != null) {
+      _usersCollection
+          .doc(firebaseUser!.uid)
+          .update({'name': name}).then((value) {
+        loggedInUser.value = loggedInUser.value?.copyWith(name: name);
+        Get.back();
+        showInSnackBar("Name Saved Successfully",
+            title: "The Medic", isSuccess: true);
+        nameController.clear();
+      }).catchError((error) {
+        print("Error : $error");
+        nameController.clear();
+      });
+    }
+  }
 
   // fetch current logged in user detail using currentUser.uid from users collection from firestore database
   Future<void> fetchUser({

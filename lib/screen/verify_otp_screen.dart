@@ -20,6 +20,7 @@ class VerifyOtpScreen extends GetWidget<AuthController> {
     return Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
             backgroundColor: AppColors.white,
             title: Padding(
                 padding:

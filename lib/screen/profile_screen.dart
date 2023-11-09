@@ -27,7 +27,9 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: _authController.appStorage.getUserData() == null
+            ? AppColors.darkPrimaryColor.withOpacity(0.775)
+            : AppColors.white,
         title: Text(ConstString.profile,
             style: Theme.of(context)
                 .textTheme
@@ -48,74 +50,88 @@ class ProfileScreen extends StatelessWidget {
   Visibility NoLoginUI(BuildContext context) {
     return Visibility(
       visible: _authController.appStorage.getUserData() == null,
-      child: Positioned.fill(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-          child: Dialog(
-            insetPadding: EdgeInsets.symmetric(vertical: 220, horizontal: 0),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 25,
+      child: Container(
+        color: AppColors.darkPrimaryColor.withOpacity(0.8),
+        child: AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+          backgroundColor: AppColors.white,
+          shape: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(12)),
+          alignment: Alignment.center,
+          title: Column(
+            children: [
+              Text(
+                ConstString.login,
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: AppColors.darkPrimaryColor,
+                      fontFamily: AppFont.fontBold,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text('Explore Your Profile - Login Required!',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: AppFont.fontBold,
-                                  fontSize: 16)),
-                    ),
-                    const SizedBox(height: 15),
-                    // Login Now button
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Get.to(() => PhoneLoginScreen());
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: AppColors.primaryColor,
-                          fixedSize: Size(150, 45),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            side: BorderSide(color: AppColors.primaryColor),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Text(
-                            'Login Now',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: AppFont.fontBold,
-                                ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                  ],
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  "Please Login to your account",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                      fontSize: 14, color: AppColors.txtGrey, letterSpacing: 0),
                 ),
               ),
-            ),
+              const SizedBox(height: 25),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.indGrey.withOpacity(0.5),
+                            fixedSize: const Size(200, 45),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30))),
+                        child: Text(
+                          ConstString.cancle,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(
+                                  color: AppColors.txtGrey,
+                                  fontSize: 14,
+                                  fontFamily: AppFont.fontMedium),
+                        )),
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          Get.to(() => const PhoneLoginScreen());
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                            fixedSize: const Size(200, 45),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30))),
+                        child: Text(
+                          ConstString.login,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontFamily: AppFont.fontMedium),
+                        )),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+            ],
           ),
         ),
       ),
@@ -128,6 +144,9 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(
+              height: 10,
+            ),
             ClipOval(
                 child: Container(
                     height: 90,
@@ -303,72 +322,82 @@ class ProfileScreen extends StatelessWidget {
                 color: AppColors.lineGrey,
               ),
             ),
-            ListTile(
-              onTap: () async {
-                bool isUserLoggedIn =
-                    _authController.appStorage.getUserData() != null;
-                if (isUserLoggedIn) {
-                  await logoutDialogue(context, _authController);
-                }
-              },
-              horizontalTitleGap: 0,
-              leading: SvgPicture.asset(
-                AppIcons.logout,
-                height: 21,
-              ),
-              title: Text(
-                ConstString.logout,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontFamily: AppFont.fontBold, color: AppColors.red),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Container(
-                height: 1,
-                width: double.infinity,
-                color: AppColors.lineGrey,
+            Visibility(
+              visible: _authController.appStorage.getUserData() != null,
+              child: ListTile(
+                onTap: () async {
+                  bool isUserLoggedIn =
+                      _authController.appStorage.getUserData() != null;
+                  if (isUserLoggedIn) {
+                    await logoutDialogue(context, _authController);
+                  }
+                },
+                horizontalTitleGap: 0,
+                leading: SvgPicture.asset(
+                  AppIcons.logout,
+                  height: 21,
+                ),
+                title: Text(
+                  ConstString.logout,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontFamily: AppFont.fontBold, color: AppColors.red),
+                ),
               ),
             ),
-            ListTile(
-              onTap: () async {
-                bool isUserLoggedIn =
-                    _authController.appStorage.getUserData() != null;
-                if (isUserLoggedIn) {
-                  deleteDialogue(context, () async {
-                    Get.back();
-                    progressDialogue(title: "Delete Account");
-                    bool hasInternet = await Utils.hasInternetConnection();
-                    if (!hasInternet) {
-                      showInSnackBar(ConstString.noConnection);
-                      return;
-                    }
+            Visibility(
+              visible: _authController.appStorage.getUserData() != null,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                child: Container(
+                  height: 1,
+                  width: double.infinity,
+                  color: AppColors.lineGrey,
+                ),
+              ),
+            ),
+            Visibility(
+              visible: _authController.appStorage.getUserData() != null,
+              child: ListTile(
+                onTap: () async {
+                  bool isUserLoggedIn =
+                      _authController.appStorage.getUserData() != null;
+                  if (isUserLoggedIn) {
+                    deleteDialogue(context, () async {
+                      Get.back();
+                      progressDialogue(title: "Delete Account");
+                      bool hasInternet = await Utils.hasInternetConnection();
+                      if (!hasInternet) {
+                        showInSnackBar(ConstString.noConnection);
+                        return;
+                      }
 
-                    await deleteUserFirestoreData();
-                    Get.back();
-                    Get.offAll(() => PhoneLoginScreen());
-                    return;
-                  });
-                  /*
-                  await deleteAccountDialogue(context, _authController, (bool value) async {
-                    if (value) {
-                      showProgressDialogue(context);
-                      await _authController.signOut();
+                      await deleteUserFirestoreData();
+                      Get.back();
                       Get.offAll(() => const PhoneLoginScreen());
-                    }
-                  });*/
-                }
-              },
-              horizontalTitleGap: 0,
-              leading: SvgPicture.asset(
-                AppIcons.delete,
-                height: 21,
-                color: AppColors.red,
-              ),
-              title: Text(
-                ConstString.deleteAccount,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontFamily: AppFont.fontBold, color: AppColors.red),
+                      return;
+                    });
+                    /*
+                    await deleteAccountDialogue(context, _authController, (bool value) async {
+                      if (value) {
+                        showProgressDialogue(context);
+                        await _authController.signOut();
+                        Get.offAll(() => const PhoneLoginScreen());
+                      }
+                    });*/
+                  }
+                },
+                horizontalTitleGap: 0,
+                leading: SvgPicture.asset(
+                  AppIcons.delete,
+                  height: 21,
+                  color: AppColors.red,
+                ),
+                title: Text(
+                  ConstString.deleteAccount,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      fontFamily: AppFont.fontBold, color: AppColors.red),
+                ),
               ),
             ),
           ],

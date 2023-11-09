@@ -19,6 +19,7 @@ class PhoneLoginScreen extends GetWidget<AuthController> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: AppColors.white,
           title: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
@@ -28,7 +29,7 @@ class PhoneLoginScreen extends GetWidget<AuthController> {
               onTap: controller.isLoading
                   ? null
                   : () async {
-                      await Get.offAll(() => const HomeScreen());
+                      await Get.offAll(() => HomeScreen());
                     },
               child: Container(
                 padding:

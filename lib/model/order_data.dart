@@ -95,18 +95,38 @@ class OrderData {
     };
   }
 
+  // factory OrderData.fromMap(Map<String, dynamic> map) {
+  //   return OrderData(
+  //     id: map['id'],
+  //     creatorId: map['creatorId'],
+  //     addressId: map['addressId'],
+  //     reviewId: map['reviewId'],
+  //     prescriptionId: map['prescriptionId'],
+  //     medicineId: map['medicineId'],
+  //     discountId: map['discountId'],
+  //     categoryId: map['categoryId'],
+  //   );
+  // }
+
   factory OrderData.fromMap(Map<String, dynamic> map) {
+    Map<String, dynamic> rawMedicineId = map['medicineId'] ?? {};
+    Map<String, String> parsedMedicineId = rawMedicineId.map((key, value) {
+      return MapEntry<String, String>(key, value.toString());
+    });
+
     return OrderData(
       id: map['id'],
       creatorId: map['creatorId'],
       addressId: map['addressId'],
       reviewId: map['reviewId'],
       prescriptionId: map['prescriptionId'],
-      medicineId: map['medicineId'],
+      medicineId: parsedMedicineId,
       discountId: map['discountId'],
       categoryId: map['categoryId'],
+      // ... other fields
     );
   }
+
 
   String toJson() => json.encode(toMap());
 

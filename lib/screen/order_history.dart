@@ -94,7 +94,7 @@ class CurrentOrder extends GetWidget<MedicineController> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Get.to(() => const OrderDetailScreen());
+              Get.to(() => OrderDetailScreen());
             },
             child: Padding(
               padding:
@@ -262,7 +262,7 @@ class PastOrder extends GetWidget<MedicineController> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Get.to(() => const OrderDetailScreen());
+              Get.to(() =>  OrderDetailScreen());
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
