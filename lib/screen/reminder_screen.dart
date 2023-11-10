@@ -69,7 +69,7 @@ class ReminderScreen extends StatelessWidget {
                   letterSpacing: 0.3,
                   fontFamily: AppFont.fontMedium),
               unselectedLabelColor: AppColors.txtGrey,
-              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorSize: TabBarIndicatorSize.tab,indicatorColor: AppColors.primaryColor,
               unselectedLabelStyle: Theme.of(context)
                   .textTheme
                   .titleSmall!
@@ -149,7 +149,7 @@ class ReminderScreen extends StatelessWidget {
               children: [weekWidget(), monthWidget(), const yearWidget()]),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 65),
-            child: FloatingActionButton(
+            child: FloatingActionButton(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                 backgroundColor: AppColors.primaryColor,
                 onPressed: () {
                   Get.to(() => AddMedicineScreen());

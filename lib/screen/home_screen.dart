@@ -154,11 +154,13 @@ class HomeScreen extends StatelessWidget {
         activeIcon: Icons.close,
         closeDialOnPop: true,
         overlayColor: AppColors.darkPrimaryColor,
-        childrenButtonSize: const Size(60, 60),
+        childrenButtonSize: const Size(60, 65),
         iconTheme: IconThemeData(color: AppColors.white),
         backgroundColor: AppColors.primaryColor,
         children: [
           SpeedDialChild(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               onTap: () {
                 Get.to(() => ReminderScreen());
               },
@@ -170,6 +172,8 @@ class HomeScreen extends StatelessWidget {
               label: "Add Reminders",
               labelStyle: Theme.of(context).textTheme.titleMedium),
           SpeedDialChild(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
               onTap: () {
                 Get.to(() => UploadPrescription());
               },
@@ -842,6 +846,8 @@ class HomeScreen extends StatelessWidget {
                                                                 .textTheme
                                                                 .titleSmall!
                                                                 .copyWith(
+                                                                    fontSize:
+                                                                        11.5,
                                                                     color: AppColors
                                                                         .primaryColor,
                                                                     fontFamily:

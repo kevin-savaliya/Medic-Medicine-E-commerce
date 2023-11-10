@@ -94,7 +94,7 @@ class CategoryWiseMedicine extends StatelessWidget {
               itemCount: medicineList.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.73,
+                  childAspectRatio: 0.7,
                   mainAxisSpacing: 5),
               itemBuilder: (context, index) {
                 return GestureDetector(
@@ -303,25 +303,27 @@ class CategoryWiseMedicine extends StatelessWidget {
                                             Get.to(() => CartScreen());
                                           },
                                           style: ElevatedButton.styleFrom(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 10),
                                               backgroundColor:
-                                                  AppColors.tilePrimaryColor,
+                                              AppColors.tilePrimaryColor,
                                               fixedSize: const Size(110, 20),
                                               elevation: 0,
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          30))),
+                                                  BorderRadius.circular(
+                                                      30))),
                                           child: Text(
                                             "Add to cart",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleSmall!
                                                 .copyWith(
-                                                    fontSize: 9.5,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    fontFamily:
-                                                        AppFont.fontMedium),
+                                                fontSize: 10.5,
+                                                color:
+                                                AppColors.primaryColor,
+                                                fontFamily:
+                                                AppFont.fontMedium),
                                           )),
                                     )
                                   ],

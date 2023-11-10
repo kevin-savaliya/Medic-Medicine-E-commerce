@@ -29,6 +29,7 @@ class ConstString {
   static const String items = "Items";
   static const String subtotal = "Subtotal";
   static const String discount = "Discount";
+  static const String applyDiscount = "Apply Discount";
   static const String totalAmount = "Total Amount";
   static const String paymentMethod = "Payment Method";
   static const String paymentDetails = "Payment Details";

@@ -120,6 +120,7 @@ class PrescriptionList extends StatelessWidget {
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.primaryColor,
                                       fixedSize: const Size(150, 18),
+                                      padding: const EdgeInsets.symmetric(horizontal: 10),
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(
                                           borderRadius:

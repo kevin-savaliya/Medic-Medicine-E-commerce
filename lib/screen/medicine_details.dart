@@ -299,6 +299,7 @@ class MedicineDetails extends StatelessWidget {
                           cartController.qty.value = 1;
                         },
                         style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.zero,
                             backgroundColor: AppColors.primaryColor,
                             fixedSize: const Size(110, 20),
                             elevation: 0,
@@ -310,6 +311,7 @@ class MedicineDetails extends StatelessWidget {
                               .textTheme
                               .titleSmall!
                               .copyWith(
+                            fontSize: 11,
                                   color: AppColors.white,
                                   fontFamily: AppFont.fontMedium),
                         ))
@@ -1235,6 +1237,7 @@ class MedicineDetails extends StatelessWidget {
                                                               .textTheme
                                                               .titleSmall!
                                                               .copyWith(
+                                                            fontSize: 11.5,
                                                                   color: AppColors
                                                                       .primaryColor,
                                                                   fontFamily:

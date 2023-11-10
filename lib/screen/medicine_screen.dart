@@ -91,9 +91,7 @@ class MedicineScreen extends StatelessWidget {
               padding: EdgeInsets.zero,
               itemCount: medicineList.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.73,
-                  mainAxisSpacing: 5),
+                  crossAxisCount: 2, childAspectRatio: 0.7, mainAxisSpacing: 5),
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
@@ -104,7 +102,7 @@ class MedicineScreen extends StatelessWidget {
                   child: Container(
                     margin:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                    height: 250,
+                    height: 260,
                     width: 200,
                     decoration: BoxDecoration(
                         color: AppColors.white,
@@ -300,6 +298,8 @@ class MedicineScreen extends StatelessWidget {
                                             Get.to(() => CartScreen());
                                           },
                                           style: ElevatedButton.styleFrom(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 10),
                                               backgroundColor:
                                                   AppColors.tilePrimaryColor,
                                               fixedSize: const Size(110, 20),
@@ -314,7 +314,7 @@ class MedicineScreen extends StatelessWidget {
                                                 .textTheme
                                                 .titleSmall!
                                                 .copyWith(
-                                                    fontSize: 9.5,
+                                                    fontSize: 10.5,
                                                     color:
                                                         AppColors.primaryColor,
                                                     fontFamily:

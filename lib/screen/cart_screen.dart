@@ -241,6 +241,62 @@ class CartScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        ConstString.discount,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                color: AppColors.darkPrimaryColor,
+                                fontFamily: AppFont.fontBold),
+                      ),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          controller.applyDiscount();
+                        },
+                        child: Text(
+                          ConstString.applyDiscount,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  fontSize: 14,
+                                  color: AppColors.primaryColor,
+                                  fontFamily: AppFont.fontBold),
+                        ))
+                  ],
+                ),
+              ),
+              Obx(
+                () => controller.selectedDiscount != null
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "${controller.discountName}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    color: AppColors.primaryColor,
+                                    fontFamily: AppFont.fontBold),
+                          ),
+                        ),
+                      )
+                    : SizedBox(),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(

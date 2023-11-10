@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +22,8 @@ class CartController extends GetxController {
   final RxList cartItems = [].obs;
   RxInt qty = 1.obs;
   RxDouble rating = RxDouble(0);
+
+  RxList<DiscountDataModel> discounts = <DiscountDataModel>[].obs;
 
   RxString selectedMedicineName = "".obs;
   RxString selectedMedicineId = "".obs;
@@ -44,6 +47,9 @@ class CartController extends GetxController {
   final CollectionReference userRef =
       FirebaseFirestore.instance.collection("users");
 
+  DiscountDataModel? selectedDiscount;
+  RxString discountName = "".obs;
+
   String prescriptionId = "";
 
   late final cartRef = FirebaseFirestore.instance
@@ -66,10 +72,30 @@ class CartController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    fetchDiscountData();
+    fetchDiscount();
     fetchMedicineFromCart();
     fetchActiveAddress();
     update();
+  }
+
+  void fetchDiscount() {
+    discountRef.snapshots().listen((snapshot) {
+      discounts.assignAll(snapshot.docs.map((doc) {
+        return DiscountDataModel.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList());
+    });
+  }
+
+  void applyDiscount() {
+    if (discounts.isNotEmpty) {
+      final randomIndex = Random().nextInt(discounts.length);
+      selectedDiscount = discounts[randomIndex];
+      orderData.value.discountId = selectedDiscount!.id;
+      discountName.value = selectedDiscount?.discountName ?? "";
+      print("Applied Discount : ${selectedDiscount!.discountName}");
+    } else {
+      print("No Discount Available");
+    }
   }
 
   Future<void> addToCart(MedicineData medicine, {int qty = 1}) async {
@@ -297,12 +323,6 @@ class CartController extends GetxController {
     Get.back();
     showInSnackBar("Order Placed Successfully",
         isSuccess: true, title: "The Medic");
-  }
-
-  fetchDiscountData() {
-    var data = discountRef.snapshots().map((event) => event.docs.map(
-        (e) => DiscountDataModel.fromMap(e.data() as Map<String, dynamic>)));
-    return data;
   }
 
   Future<void> uploadReview(ReviewDataModel review) async {

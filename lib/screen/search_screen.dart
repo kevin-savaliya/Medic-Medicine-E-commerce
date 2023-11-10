@@ -185,6 +185,7 @@ class SearchScreen extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primaryColor,
                                   fixedSize: const Size(150, 18),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30))),
@@ -388,36 +389,34 @@ class SearchScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            SizedBox(
-              height: 250,
-              child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: controller.searchList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          controller.searchList[index],
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                                  color: AppColors.txtGrey, fontSize: 13.5),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: AppColors.primaryColor,
-                          size: 15,
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: controller.searchList.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        controller.searchList[index],
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(
+                                color: AppColors.txtGrey, fontSize: 13.5),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: AppColors.primaryColor,
+                        size: 15,
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
             const SizedBox(
               height: 30,

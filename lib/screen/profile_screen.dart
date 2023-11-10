@@ -175,7 +175,7 @@ class ProfileScreen extends StatelessWidget {
                   Get.to(() => MyAddressScreen());
                 }
               },
-              horizontalTitleGap: 0,
+              horizontalTitleGap: 5,
               leading: SvgPicture.asset(AppIcons.pin, height: 22),
               trailing: Icon(
                 Icons.arrow_forward_ios_rounded,
@@ -204,7 +204,7 @@ class ProfileScreen extends StatelessWidget {
                   Get.to(() => const OrderHistory());
                 }
               },
-              horizontalTitleGap: 0,
+              horizontalTitleGap: 5,
               leading: SvgPicture.asset(AppIcons.timer, height: 22),
               trailing: Icon(
                 Icons.arrow_forward_ios_rounded,
@@ -233,7 +233,7 @@ class ProfileScreen extends StatelessWidget {
                   Get.to(() => ReminderScreen());
                 }
               },
-              horizontalTitleGap: 0,
+              horizontalTitleGap: 5,
               leading: SvgPicture.asset(
                 AppIcons.reminder,
                 height: 21,
@@ -265,7 +265,7 @@ class ProfileScreen extends StatelessWidget {
                   Get.to(() => PrescriptionList());
                 }
               },
-              horizontalTitleGap: 0,
+              horizontalTitleGap: 5,
               leading: SvgPicture.asset(
                 AppIcons.file,
                 color: AppColors.txtGrey,
@@ -298,7 +298,7 @@ class ProfileScreen extends StatelessWidget {
                   Get.to(() => const NotificationScreen());
                 }
               },
-              horizontalTitleGap: 0,
+              horizontalTitleGap: 5,
               leading: SvgPicture.asset(
                 AppIcons.notification,
                 height: 21,
@@ -332,7 +332,7 @@ class ProfileScreen extends StatelessWidget {
                     await logoutDialogue(context, _authController);
                   }
                 },
-                horizontalTitleGap: 0,
+                horizontalTitleGap: 5,
                 leading: SvgPicture.asset(
                   AppIcons.logout,
                   height: 21,
@@ -387,7 +387,7 @@ class ProfileScreen extends StatelessWidget {
                     });*/
                   }
                 },
-                horizontalTitleGap: 0,
+                horizontalTitleGap: 5,
                 leading: SvgPicture.asset(
                   AppIcons.delete,
                   height: 21,
