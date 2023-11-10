@@ -75,25 +75,6 @@ class UserRepository {
   }
 
   Stream<List<UserModel>> streamAllUser() {
-    // Query query = _usersCollection.orderBy('createdTime', descending: false);
-    // if (allUserLastDocument != null) {
-    //   query = query.startAfterDocument(allUserLastDocument!);
-    // }
-    // Stream<List<UserModel>> data = query.snapshots().map((querySnapshot) {
-    //   return querySnapshot.docs
-    //       .map((documentSnapshot) => UserModel.fromMap(
-    //           documentSnapshot.data()! as Map<String, dynamic>))
-    //       .toList();
-    // });
-
-    // get last documentSnapshot from the list
-    // query.snapshots().listen((querySnapshot) {
-    //   if (querySnapshot.docs.isNotEmpty) {
-    //     allUserLastDocument = querySnapshot.docs.last;
-    //   }
-    // });
-    // return data;
-
     return _usersCollection.snapshots().map((querySnapshot) {
       return querySnapshot.docs
           .map((documentSnapshot) => UserModel.fromMap(

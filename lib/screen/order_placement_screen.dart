@@ -17,6 +17,7 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/utils/utils.dart';
 import 'package:medic/widgets/app_dialogue.dart';
 
 class OrderPlacement extends StatelessWidget {
@@ -82,6 +83,10 @@ class OrderPlacement extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
             child: ElevatedButton(
                 onPressed: () async {
+                  if (cartController.orderData.value.addressId == null) {
+                    showInSnackBar("Please Enter Delivery Address");
+                    return;
+                  }
                   showProgressDialogue(context);
                   await cartController.placeOrder();
                   Get.to(() => OrderDetailScreen());

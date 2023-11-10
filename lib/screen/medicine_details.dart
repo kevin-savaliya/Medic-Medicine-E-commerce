@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +13,8 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
+import 'package:medic/model/review_data_model.dart';
+import 'package:medic/model/user_model.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/medicine_screen.dart';
 import 'package:medic/screen/order_placement_screen.dart';
@@ -602,160 +606,177 @@ class MedicineDetails extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      medicineData!.ratings!.toString(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayLarge!
-                          .copyWith(fontSize: 30, fontFamily: AppFont.fontBold),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    SmoothStarRating(
-                      rating: double.parse(medicineData!.ratings == ""
-                          ? "5"
-                          : medicineData!.ratings!),
-                      allowHalfRating: true,
-                      defaultIconData: Icons.star,
-                      filledIconData: Icons.star,
-                      halfFilledIconData: Icons.star_half,
-                      starCount: 5,
-                      spacing: 4,
-                      onRatingChanged: (rating) {},
-                      size: 16,
-                      color: AppColors.secondaryColor,
-                      borderColor: AppColors.indGrey,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      "45,683",
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          fontSize: 12, fontFamily: AppFont.fontMedium),
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "5",
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: GFProgressBar(
-                            backgroundColor: AppColors.lineGrey,
-                            lineHeight: 7,
-                            progressBarColor: AppColors.secondaryColor,
-                            percentage: 0.8,
-                            width: 180,
+          StreamBuilder(
+            stream: controller.streamRatingCounts(medicineData!.id!),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CupertinoActivityIndicator());
+              } else if (snapshot.hasData) {
+                Map<int, int> ratingCount = snapshot.data!;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            medicineData!.ratings!.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayLarge!
+                                .copyWith(
+                                    fontSize: 30, fontFamily: AppFont.fontBold),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "4",
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: GFProgressBar(
-                            backgroundColor: AppColors.lineGrey,
-                            lineHeight: 7,
-                            progressBarColor: AppColors.secondaryColor,
-                            percentage: 0.6,
-                            width: 180,
+                          const SizedBox(
+                            height: 5,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "3",
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: GFProgressBar(
-                            backgroundColor: AppColors.lineGrey,
-                            lineHeight: 7,
-                            progressBarColor: AppColors.secondaryColor,
-                            percentage: 0.4,
-                            width: 180,
+                          SmoothStarRating(
+                            rating: double.parse(medicineData!.ratings == ""
+                                ? "5"
+                                : medicineData!.ratings!),
+                            allowHalfRating: true,
+                            defaultIconData: Icons.star,
+                            filledIconData: Icons.star,
+                            halfFilledIconData: Icons.star_half,
+                            starCount: 5,
+                            spacing: 4,
+                            onRatingChanged: (rating) {},
+                            size: 16,
+                            color: AppColors.secondaryColor,
+                            borderColor: AppColors.indGrey,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "2",
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: GFProgressBar(
-                            backgroundColor: AppColors.lineGrey,
-                            lineHeight: 7,
-                            progressBarColor: AppColors.secondaryColor,
-                            percentage: 0.2,
-                            width: 180,
+                          const SizedBox(
+                            height: 5,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "1",
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: GFProgressBar(
-                            backgroundColor: AppColors.lineGrey,
-                            lineHeight: 7,
-                            progressBarColor: AppColors.secondaryColor,
-                            percentage: 0.1,
-                            width: 180,
+                          Text(
+                            "12345",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    fontSize: 12,
+                                    fontFamily: AppFont.fontMedium),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "5",
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              SizedBox(
+                                width: 200,
+                                child: GFProgressBar(
+                                  backgroundColor: AppColors.lineGrey,
+                                  lineHeight: 7,
+                                  progressBarColor: AppColors.secondaryColor,
+                                  percentage: ratingCount[5]!.toDouble() / 100,
+                                  width: 180,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "4",
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              SizedBox(
+                                width: 200,
+                                child: GFProgressBar(
+                                  backgroundColor: AppColors.lineGrey,
+                                  lineHeight: 7,
+                                  progressBarColor: AppColors.secondaryColor,
+                                  percentage: ratingCount[4]!.toDouble() / 100,
+                                  width: 180,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "3",
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              SizedBox(
+                                width: 200,
+                                child: GFProgressBar(
+                                  backgroundColor: AppColors.lineGrey,
+                                  lineHeight: 7,
+                                  progressBarColor: AppColors.secondaryColor,
+                                  percentage: ratingCount[3]!.toDouble() / 100,
+                                  width: 180,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "2",
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              SizedBox(
+                                width: 200,
+                                child: GFProgressBar(
+                                  backgroundColor: AppColors.lineGrey,
+                                  lineHeight: 7,
+                                  progressBarColor: AppColors.secondaryColor,
+                                  percentage: ratingCount[2]!.toDouble() / 100,
+                                  width: 180,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "1",
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              SizedBox(
+                                width: 200,
+                                child: GFProgressBar(
+                                  backgroundColor: AppColors.lineGrey,
+                                  lineHeight: 7,
+                                  progressBarColor: AppColors.secondaryColor,
+                                  percentage: ratingCount[1]!.toDouble() / 100,
+                                  width: 180,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                return Text("No Review!");
+              }
+            },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -765,52 +786,110 @@ class MedicineDetails extends StatelessWidget {
               width: double.infinity,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  leading: Image.asset("asset/dummy1.png", height: 35),
-                  title: Text(
-                    "Brandie",
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(fontFamily: AppFont.fontBold, fontSize: 14),
-                  ),
-                  subtitle: Text(
-                    "June,2023",
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(),
-                  ),
-                  horizontalTitleGap: 8,
-                  contentPadding: EdgeInsets.zero,
-                ),
-                SmoothStarRating(
-                  rating: 4,
-                  allowHalfRating: true,
-                  defaultIconData: Icons.star,
-                  filledIconData: Icons.star,
-                  halfFilledIconData: Icons.star_half,
-                  starCount: 5,
-                  spacing: 2,
-                  onRatingChanged: (rating) {},
-                  size: 15,
-                  color: AppColors.secondaryColor,
-                  borderColor: AppColors.indGrey,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "I've had the pleasure of using the Iconic Remidies for a few months now, and I couldn't be happier with my purchase. This device has genuinely transformed the way I manage my daily tasks and entertainment needs.",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .copyWith(height: 1.5, color: AppColors.txtGrey),
-                )
-              ],
-            ),
+          StreamBuilder(
+            stream: controller.getReview(medicineData!.id!),
+            builder: (context, snapshot) {
+              List<ReviewDataModel>? reviewList;
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CupertinoActivityIndicator();
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                reviewList = snapshot.data;
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: reviewList!.length,
+                  separatorBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
+                      child: Divider(
+                        color: AppColors.lineGrey,
+                        height: 1,
+                        thickness: 1,
+                      ),
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    ReviewDataModel review = reviewList![index];
+                    UserModel user =
+                        controller.findSingleUserFromAllUser(review.userId!);
+                    String formattedDate =
+                        controller.formatDateTime(review.createdTime!);
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ListTile(
+                            leading: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.primaryColor),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: SvgPicture.asset(
+                                    AppImages.medic_white_text),
+                              ),
+                            ),
+                            title: Text(
+                              "${user.name}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                      fontFamily: AppFont.fontBold,
+                                      fontSize: 14),
+                            ),
+                            subtitle: Text(
+                              formattedDate,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(),
+                            ),
+                            horizontalTitleGap: 8,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          SmoothStarRating(
+                            rating: review.rating!,
+                            allowHalfRating: true,
+                            defaultIconData: Icons.star_border,
+                            filledIconData: Icons.star,
+                            halfFilledIconData: Icons.star_half,
+                            starCount: 5,
+                            spacing: 2,
+                            onRatingChanged: (rating) {},
+                            size: 15,
+                            color: AppColors.secondaryColor,
+                            borderColor: AppColors.secondaryColor,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "${review.review}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    height: 1.5, color: AppColors.txtGrey),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return Text(
+                  "No Reviews Found",
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: AppColors.secondaryColor,
+                      fontFamily: AppFont.fontMedium),
+                );
+              }
+            },
           ),
           const SizedBox(
             height: 15,
@@ -961,12 +1040,31 @@ class MedicineDetails extends StatelessWidget {
                                                         right: 10,
                                                         child: GestureDetector(
                                                           onTap: () async {
+                                                            if (controller
+                                                                    .firebaseuser ==
+                                                                null) {
+                                                              Utils()
+                                                                  .showAlertDialog(
+                                                                      context:
+                                                                          context,
+                                                                      title:
+                                                                          "Login Required!",
+                                                                      content:
+                                                                          "Ready to Get Started? \nConfirm with 'Yes' and Login Your Account.",
+                                                                      onPressed:
+                                                                          () {
+                                                                        Get.back();
+                                                                        Get.to(() =>
+                                                                            PhoneLoginScreen());
+                                                                      });
+                                                              return;
+                                                            }
                                                             if (isFav) {
                                                               await controller
                                                                   .removeFavourite(
                                                                       medicineId);
                                                             } else {
-                                                              controller
+                                                              await controller
                                                                   .addFavourite(
                                                                       medicineId);
                                                             }
@@ -1106,9 +1204,16 @@ class MedicineDetails extends StatelessWidget {
                                                   ),
                                                   Expanded(
                                                     child: ElevatedButton(
-                                                        onPressed: () {
+                                                        onPressed: () async {
+                                                          await cartController
+                                                              .addToCart(
+                                                                  medicineList[
+                                                                      index],
+                                                                  qty: cartController
+                                                                      .qty
+                                                                      .value);
                                                           Get.to(() =>
-                                                              OrderPlacement());
+                                                              CartScreen());
                                                         },
                                                         style: ElevatedButton.styleFrom(
                                                             backgroundColor:

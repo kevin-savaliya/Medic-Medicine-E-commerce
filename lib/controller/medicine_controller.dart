@@ -1,11 +1,16 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:medic/_dart/_init.dart';
 import 'package:medic/controller/home_controller.dart';
 import 'package:medic/controller/user_controller.dart';
+import 'package:medic/controller/user_repository.dart';
 import 'package:medic/model/category_data.dart';
 import 'package:medic/model/medicine_data.dart';
+import 'package:medic/model/review_data_model.dart';
 import 'package:medic/model/user_model.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/assets.dart';
@@ -19,12 +24,16 @@ class MedicineController extends GetxController {
 
   RxList<String> favMedicinesIds = <String>[].obs;
 
+  RxList<UserModel> allUsers = <UserModel>[].obs;
+
   final CollectionReference categoryref =
       FirebaseFirestore.instance.collection('categories');
   final CollectionReference medicineRef =
       FirebaseFirestore.instance.collection('medicines');
   final CollectionReference favRef =
       FirebaseFirestore.instance.collection('favourites');
+  final CollectionReference reviewRef =
+      FirebaseFirestore.instance.collection("reviews");
 
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
@@ -37,26 +46,9 @@ class MedicineController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     fetchFavourite();
+    fetchFavouriteMedicine();
+    fetchAllUser();
   }
-
-  List medicineCategoryList = [
-    "Allopathy",
-    "Ayurveda",
-    "Homeo",
-    "Skin & Hair",
-    "Dental",
-    "Child",
-    "Mental",
-    "Digestive",
-    "Sexual",
-    "Cardio",
-    "Nerves",
-    "Diabetes",
-    "Bones",
-    "Eye",
-    "Urinary",
-    "Kidney"
-  ];
 
   List medicineCategoryImageList = [
     AppIcons.allopathy,
@@ -90,14 +82,6 @@ class MedicineController extends GetxController {
     AppImages.medicineBox3,
   ];
 
-  List popularMedicine = [
-    "Tylenol",
-    "Amoxicillin",
-    "Atorvastatin",
-    "Benadryl",
-    "Nexium"
-  ];
-
   List paymentMethod = [
     ConstString.creditCard,
     ConstString.orangeMoney,
@@ -121,7 +105,7 @@ class MedicineController extends GetxController {
 
   Stream<List<MedicineData>> fetchPopularMedicines() {
     var data = medicineRef
-        // .where('ratings', isGreaterThanOrEqualTo: '3.5')
+        .where('ratings', isGreaterThanOrEqualTo: '3.5')
         .snapshots()
         .map((event) {
       return event.docs.map((e) {
@@ -146,6 +130,7 @@ class MedicineController extends GetxController {
         .snapshots()
         .map((event) {
       return event.docs.map((e) {
+
         return MedicineData.fromMap(e.data() as Map<String, dynamic>);
       }).toList();
     });
@@ -222,5 +207,64 @@ class MedicineController extends GetxController {
       }).toList();
     });
     return data;
+  }
+
+  Stream<List<ReviewDataModel>> getReview(String medicineId) {
+    var data = FirebaseFirestore.instance
+        .collection('reviews')
+        .where('medicineId', isEqualTo: medicineId)
+        .orderBy('createdTime', descending: true)
+        .snapshots()
+        .map((event) {
+      return event.docs.map((e) {
+        return ReviewDataModel.fromMap(e.data());
+      }).toList();
+    });
+    return data;
+  }
+
+  fetchAllUser() {
+    try {
+      UserRepository.instance.streamAllUser().listen((updatedUserData) async {
+        print(
+            'updatedUserData fetchAllUser hasData ${updatedUserData.isNotEmpty}');
+        if (updatedUserData.isNotEmpty) {
+          allUsers.value = updatedUserData;
+        }
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  UserModel findSingleUserFromAllUser(String userId) {
+    UserModel user = allUsers.firstWhere((element) => element.id == userId);
+    return user;
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('dd MMMM, yyyy');
+    return formatter.format(dateTime);
+  }
+
+  Stream<Map<int, int>> streamRatingCounts(String medicineId) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    return firestore
+        .collection('reviews')
+        .where('medicineId', isEqualTo: medicineId)
+        .snapshots()
+        .map((snapshot) {
+      Map<int, int> ratingCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+
+      for (var doc in snapshot.docs) {
+        var data = doc.data();
+        int rating = data['rating']?.round() ?? 0;
+        if (rating >= 1 && rating <= 5) {
+          ratingCounts[rating] = (ratingCounts[rating] ?? 0) + 1;
+        }
+      }
+
+      return ratingCounts;
+    });
   }
 }

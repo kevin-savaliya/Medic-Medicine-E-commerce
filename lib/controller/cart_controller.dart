@@ -20,7 +20,12 @@ import 'package:path/path.dart';
 class CartController extends GetxController {
   final RxList cartItems = [].obs;
   RxInt qty = 1.obs;
-  double rating = 0.0;
+  RxDouble rating = RxDouble(0);
+
+  RxString selectedMedicineName = "".obs;
+  RxString selectedMedicineId = "".obs;
+  RxList<String> medicineName = RxList<String>();
+  RxMap<String, String> idToNameMap = RxMap<String, String>();
 
   TextEditingController reviewText = TextEditingController();
 
@@ -285,7 +290,8 @@ class CartController extends GetxController {
         creatorId: currentUser,
         medicineId: orderData.value.medicineId,
         prescriptionId: orderData.value.prescriptionId,
-        addressId: orderData.value.addressId);
+        addressId: orderData.value.addressId,
+        orderDate: DateTime.now());
 
     await orderRef.doc(orderData.value.id).set(_orderData.toMap());
     Get.back();
@@ -305,8 +311,12 @@ class CartController extends GetxController {
       Get.back();
       showInSnackBar("Review Added Successfully",
           isSuccess: true, title: "The Medic");
-      rating = 2;
+      rating.value = 0.0;
       reviewText.clear();
+      selectedMedicineName.value = "";
+      selectedMedicineId.value = "";
+      idToNameMap = RxMap<String, String>();
+      medicineName = RxList<String>();
     }).onError((error, stackTrace) {
       showInSnackBar("Error : $error");
     });
@@ -376,19 +386,23 @@ class CartController extends GetxController {
     }
   }
 
-  Future<List<String>> fetchMedicineNames(List<String> medicineIds) async {
+  void fetchMedicineNames(List<String?> medicineIds) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final CollectionReference medicineCollection =
         firestore.collection('medicines');
-
-    List<String> medicineNames = [];
-    for (String id in medicineIds) {
+    for (String? id in medicineIds) {
       DocumentSnapshot snapshot = await medicineCollection.doc(id).get();
       if (snapshot.exists) {
-        medicineNames.add(snapshot.get('genericName'));
+        String name = snapshot['genericName'];
+        idToNameMap[id!] = name;
+        medicineName.add(name);
       }
     }
+  }
 
-    return medicineNames;
+  void selectedReviewMedicine(String name) {
+    selectedMedicineName.value = name;
+    selectedMedicineId.value =
+        idToNameMap.keys.firstWhere((id) => idToNameMap[id] == name);
   }
 }

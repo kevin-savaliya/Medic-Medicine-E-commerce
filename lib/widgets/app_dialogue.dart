@@ -383,16 +383,16 @@ Future showProgressDialogue(BuildContext context) {
                       color: AppColors.primaryColor,
                       radius: 15,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "Loading...",
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium!
-                          .copyWith(fontFamily: AppFont.fontMedium,fontSize: 16),
-                    )
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Text(
+                    //   "Loading...",
+                    //   style: Theme.of(context)
+                    //       .textTheme
+                    //       .titleMedium!
+                    //       .copyWith(fontFamily: AppFont.fontMedium,fontSize: 16),
+                    // )
                   ],
                 )),
           ),

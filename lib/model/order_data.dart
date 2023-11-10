@@ -8,6 +8,7 @@ import 'package:medic/model/prescription_model.dart';
 import 'package:medic/model/review_data.dart';
 import 'package:medic/model/user_address.dart';
 import 'package:medic/model/user_model.dart';
+import 'package:medic/utils/firebase_utils.dart';
 
 class OrderData {
   String? id;
@@ -25,42 +26,43 @@ class OrderData {
   List<MedicineData>? medicineData;
   DiscountDataModel? discountData;
   CategoryData? categoryData;
+  DateTime? orderDate;
 
-  OrderData({
-    this.id,
-    this.creatorId,
-    this.addressId,
-    this.reviewId,
-    this.prescriptionId,
-    required this.medicineId,
-    this.discountId,
-    this.categoryId,
-    this.userModel,
-    this.userAddress,
-    this.reviewData,
-    this.prescriptionData,
-    this.medicineData,
-    this.discountData,
-    this.categoryData,
-  });
+  OrderData(
+      {this.id,
+      this.creatorId,
+      this.addressId,
+      this.reviewId,
+      this.prescriptionId,
+      required this.medicineId,
+      this.discountId,
+      this.categoryId,
+      this.userModel,
+      this.userAddress,
+      this.reviewData,
+      this.prescriptionData,
+      this.medicineData,
+      this.discountData,
+      this.categoryData,
+      this.orderDate});
 
-  OrderData copyWith({
-    String? id,
-    String? creatorId,
-    String? addressId,
-    String? reviewId,
-    String? prescriptionId,
-    Map<String, String>? medicineId,
-    String? discountId,
-    String? categoryId,
-    UserModel? userModel,
-    UserAddress? userAddress,
-    ReviewData? reviewData,
-    PrescriptionData? prescriptionData,
-    MedicineData? medicineData,
-    DiscountDataModel? discountData,
-    CategoryData? categoryData,
-  }) {
+  OrderData copyWith(
+      {String? id,
+      String? creatorId,
+      String? addressId,
+      String? reviewId,
+      String? prescriptionId,
+      Map<String, String>? medicineId,
+      String? discountId,
+      String? categoryId,
+      UserModel? userModel,
+      UserAddress? userAddress,
+      ReviewData? reviewData,
+      PrescriptionData? prescriptionData,
+      MedicineData? medicineData,
+      DiscountDataModel? discountData,
+      CategoryData? categoryData,
+      DateTime? orderDate}) {
     return OrderData(
       id: id ?? this.id,
       creatorId: creatorId ?? this.creatorId,
@@ -79,6 +81,7 @@ class OrderData {
           : this.medicineData,
       discountData: discountData ?? this.discountData,
       categoryData: categoryData ?? this.categoryData,
+      orderDate: orderDate ?? this.orderDate,
     );
   }
 
@@ -92,6 +95,7 @@ class OrderData {
       'medicineId': medicineId,
       'discountId': discountId,
       'categoryId': categoryId,
+      'orderDate': orderDate,
     };
   }
 
@@ -115,18 +119,18 @@ class OrderData {
     });
 
     return OrderData(
-      id: map['id'],
-      creatorId: map['creatorId'],
-      addressId: map['addressId'],
-      reviewId: map['reviewId'],
-      prescriptionId: map['prescriptionId'],
-      medicineId: parsedMedicineId,
-      discountId: map['discountId'],
-      categoryId: map['categoryId'],
-      // ... other fields
-    );
+        id: map['id'],
+        creatorId: map['creatorId'],
+        addressId: map['addressId'],
+        reviewId: map['reviewId'],
+        prescriptionId: map['prescriptionId'],
+        medicineId: parsedMedicineId,
+        discountId: map['discountId'],
+        categoryId: map['categoryId'],
+        orderDate: map['orderDate'] != null
+            ? FirebaseUtils.timestampToDateTime(map['orderDate'])
+            : null);
   }
-
 
   String toJson() => json.encode(toMap());
 
