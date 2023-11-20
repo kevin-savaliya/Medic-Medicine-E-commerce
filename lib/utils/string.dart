@@ -121,6 +121,7 @@ class ConstString {
   static const String noPres = "No Prescription Found!";
   static const String noReview = "No Review Found!";
   static const String noPopular = "No Popular Medicine Found!";
+  static const String noOrder = "No Order Found!";
 
   static const String Analgesics = "Analgesics";
   static const String Antivirals = "Antivirals";

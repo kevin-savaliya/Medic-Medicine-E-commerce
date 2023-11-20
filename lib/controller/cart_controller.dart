@@ -1,13 +1,13 @@
 // ignore_for_file: unnecessary_null_comparison
 
 import 'dart:async';
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:medic/model/discount_data_model.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/order_data.dart';
@@ -16,7 +16,6 @@ import 'package:medic/model/review_data_model.dart';
 import 'package:medic/model/user_address.dart';
 import 'package:medic/model/user_model.dart';
 import 'package:medic/utils/utils.dart';
-import 'package:path/path.dart';
 
 class CartController extends GetxController {
   final RxList cartItems = [].obs;
@@ -47,10 +46,12 @@ class CartController extends GetxController {
   final CollectionReference userRef =
       FirebaseFirestore.instance.collection("users");
 
-  DiscountDataModel? selectedDiscount;
+  final Rx<DiscountDataModel?> selectedDiscount = Rx<DiscountDataModel?>(null);
   RxString discountName = "".obs;
 
   String prescriptionId = "";
+
+  RxInt cartQty = 1.obs;
 
   late final cartRef = FirebaseFirestore.instance
       .collection("users")
@@ -68,6 +69,8 @@ class CartController extends GetxController {
 
   Rx<OrderData> orderData = OrderData(medicineId: {}).obs;
 
+  var isDiscountApplied = false.obs;
+
   @override
   void onInit() {
     // TODO: implement onInit
@@ -76,6 +79,10 @@ class CartController extends GetxController {
     fetchMedicineFromCart();
     fetchActiveAddress();
     update();
+  }
+
+  bool checkMedicineInCart(String medicineId) {
+    return orderData.value.medicineId.containsValue(medicineId);
   }
 
   void fetchDiscount() {
@@ -87,12 +94,15 @@ class CartController extends GetxController {
   }
 
   void applyDiscount() {
-    if (discounts.isNotEmpty) {
+    if (!isDiscountApplied.value && discounts.isNotEmpty) {
       final randomIndex = Random().nextInt(discounts.length);
-      selectedDiscount = discounts[randomIndex];
-      orderData.value.discountId = selectedDiscount!.id;
-      discountName.value = selectedDiscount?.discountName ?? "";
-      print("Applied Discount : ${selectedDiscount!.discountName}");
+      selectedDiscount.value = discounts[randomIndex];
+      orderData.value.discountId = selectedDiscount.value!.id;
+      discountName.value = selectedDiscount.value!.discountName ?? "";
+      isDiscountApplied.value = true;
+      print("Applied Discount : ${selectedDiscount.value!.discountName}");
+    } else if (isDiscountApplied.value) {
+      print("Discount Already Applied");
     } else {
       print("No Discount Available");
     }
@@ -342,10 +352,34 @@ class CartController extends GetxController {
     });
   }
 
+  Future<void> editReview(ReviewDataModel review) async {
+    await reviewRef.doc(review.id).update(review.toMap()).then((value) {
+      Get.back();
+      Get.back();
+      showInSnackBar("Review Updated Successfully",
+          isSuccess: true, title: "The Medic");
+      rating.value = 0.0;
+      reviewText.clear();
+      selectedMedicineName.value = "";
+      selectedMedicineId.value = "";
+      idToNameMap = RxMap<String, String>();
+      medicineName = RxList<String>();
+    }).onError((error, stackTrace) {
+      showInSnackBar("Error : $error");
+    });
+  }
+
+  Future<void> deleteReview(String reviewId) async {
+    await reviewRef.doc(reviewId).delete().then((value) {
+      Get.back();
+      showInSnackBar("Review Deleted Successfully",
+          title: "The Medic", isSuccess: true);
+    });
+  }
+
   Future<OrderData?> fetchOrderIds() async {
     try {
       DocumentSnapshot snapshot = await orderRef.doc(orderData.value.id).get();
-
       if (snapshot.exists && snapshot.data() != null) {
         return OrderData.fromMap(snapshot.data() as Map<String, dynamic>);
       } else {
@@ -424,5 +458,36 @@ class CartController extends GetxController {
     selectedMedicineName.value = name;
     selectedMedicineId.value =
         idToNameMap.keys.firstWhere((id) => idToNameMap[id] == name);
+  }
+
+  Stream<List<OrderData>> fetchCurrentOrders() {
+    return orderRef
+        .where('creatorId', isEqualTo: currentUser)
+        // .where('orderDate', isGreaterThanOrEqualTo: startDate)
+        // .where('orderDate', isLessThanOrEqualTo: endDate)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => OrderData.fromMap(doc.data())).toList());
+  }
+
+  Stream<List<OrderData>> fetchPastOrders() {
+    return orderRef.where('creatorId', isEqualTo: currentUser).snapshots().map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => OrderData.fromMap(doc.data())).toList());
+  }
+
+  Stream<MedicineData> fetchMedicineFromOrder(String id) {
+    return medicineRef.doc(id).snapshots().map((snapshot) =>
+        MedicineData.fromMap(snapshot.data() as Map<String, dynamic>));
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('d MMM yyyy hh:mm a');
+    return formatter.format(dateTime);
+  }
+
+  String OrderDateFormat(DateTime dateTime) {
+    final DateFormat format = DateFormat('d MMM yyyy');
+    return format.format(dateTime);
   }
 }

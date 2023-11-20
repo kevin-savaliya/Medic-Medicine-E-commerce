@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/cart_controller.dart';
@@ -15,6 +16,7 @@ import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/review_data_model.dart';
 import 'package:medic/model/user_model.dart';
+import 'package:medic/screen/add_review_screen.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/medicine_screen.dart';
 import 'package:medic/screen/order_placement_screen.dart';
@@ -25,6 +27,7 @@ import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
 import 'package:medic/utils/utils.dart';
+import 'package:medic/widgets/app_dialogue.dart';
 import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
@@ -267,7 +270,51 @@ class MedicineDetails extends StatelessWidget {
                         ),
                       ],
                     ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "SLE",
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(
+                                  color: AppColors.darkPrimaryColor,
+                                  fontFamily: AppFont.fontMedium,
+                                  fontSize: 13),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "120",
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(
+                                  color: AppColors.darkPrimaryColor,
+                                  fontFamily: AppFont.fontMedium,
+                                  fontSize: 13),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          "30% Off",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(
+                                  fontSize: 11,
+                                  color: AppColors.primaryColor,
+                                  fontFamily: AppFont.fontMedium),
+                        ),
+                      ],
+                    )
                   ],
+                ),
+                const SizedBox(
+                  height: 8,
                 ),
                 Row(
                   children: [
@@ -291,30 +338,77 @@ class MedicineDetails extends StatelessWidget {
                           fontFamily: AppFont.fontMedium),
                     ),
                     const Spacer(),
-                    ElevatedButton(
-                        onPressed: () async {
-                          await cartController.addToCart(medicineData!,
-                              qty: cartController.qty.value);
-                          Get.to(() => CartScreen());
-                          cartController.qty.value = 1;
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                            backgroundColor: AppColors.primaryColor,
-                            fixedSize: const Size(110, 20),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30))),
-                        child: Text(
-                          "Add to cart",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                            fontSize: 11,
-                                  color: AppColors.white,
-                                  fontFamily: AppFont.fontMedium),
-                        ))
+                    !(cartController.checkMedicineInCart(medicineData!.id!))
+                        ? ElevatedButton(
+                            onPressed: () async {
+                              await cartController.addToCart(medicineData!,
+                                  qty: cartController.qty.value);
+                              Get.to(() => const CartScreen());
+                              cartController.qty.value = 1;
+                            },
+                            style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                backgroundColor: AppColors.primaryColor,
+                                fixedSize: const Size(110, 20),
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30))),
+                            child: Text(
+                              "Add to cart",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                      fontSize: 12,
+                                      color: AppColors.white,
+                                      fontFamily: AppFont.fontMedium),
+                            ))
+                        : Obx(() => Container(
+                              alignment: Alignment.center,
+                              height: 35,
+                              width: 90,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  border:
+                                      Border.all(color: AppColors.decsGrey)),
+                              child: PopupMenuButton<int>(
+                                position: PopupMenuPosition.under,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                onSelected: (int value) {
+                                  cartController.cartQty.value = value;
+                                },
+                                itemBuilder: (BuildContext context) {
+                                  return List.generate(5, (index) {
+                                    return PopupMenuItem<int>(
+                                      height: 35,
+                                      value: index + 1,
+                                      child: Text('${index + 1}'),
+                                    );
+                                  });
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      'Qty  ${cartController.cartQty}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(fontSize: 13),
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: AppColors.txtGrey,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ))
                   ],
                 )
               ],
@@ -609,10 +703,10 @@ class MedicineDetails extends StatelessWidget {
             height: 10,
           ),
           StreamBuilder(
-            stream: controller.streamRatingCounts(medicineData!.id!),
+            stream: controller.reviewRatingCounts(medicineData!.id!),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CupertinoActivityIndicator());
+                return const Center(child: CupertinoActivityIndicator());
               } else if (snapshot.hasData) {
                 Map<int, int> ratingCount = snapshot.data!;
                 return Padding(
@@ -776,7 +870,7 @@ class MedicineDetails extends StatelessWidget {
                   ),
                 );
               } else {
-                return Text("No Review!");
+                return const Text("No Review!");
               }
             },
           ),
@@ -851,6 +945,78 @@ class MedicineDetails extends StatelessWidget {
                                   .titleSmall!
                                   .copyWith(),
                             ),
+                            trailing: controller.currentUserId == review.userId
+                                ? PopupMenuButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5)),
+                                    elevation: 3,
+                                    shadowColor: AppColors.decsGrey,
+                                    icon: SvgPicture.asset(AppIcons.more),
+                                    onSelected: (value) async {},
+                                    padding: EdgeInsets.zero,
+                                    itemBuilder: (context) => <PopupMenuEntry>[
+                                      PopupMenuItem(
+                                        onTap: () {
+                                          Get.to(() => AddReviewScreen(
+                                                review: review,
+                                              ));
+                                        },
+                                        height: 35,
+                                        value: "Edit",
+                                        child: Row(
+                                          children: [
+                                            SvgPicture.asset(AppIcons.edit),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              "Edit",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                      fontFamily:
+                                                          AppFont.fontMedium,
+                                                      fontSize: 14,
+                                                      color: AppColors.txtGrey),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        onTap: () async {
+                                          showProgressDialogue(context);
+                                          await cartController
+                                              .deleteReview(review.id!);
+                                        },
+                                        height: 35,
+                                        value: "Delete",
+                                        child: Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                              AppIcons.delete,
+                                              height: 14,
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              "Delete",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                      fontFamily:
+                                                          AppFont.fontMedium,
+                                                      fontSize: 14,
+                                                      color: AppColors.txtGrey),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                : const SizedBox(),
                             horizontalTitleGap: 8,
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -1057,7 +1223,7 @@ class MedicineDetails extends StatelessWidget {
                                                                           () {
                                                                         Get.back();
                                                                         Get.to(() =>
-                                                                            PhoneLoginScreen());
+                                                                            const PhoneLoginScreen());
                                                                       });
                                                               return;
                                                             }
@@ -1215,7 +1381,7 @@ class MedicineDetails extends StatelessWidget {
                                                                       .qty
                                                                       .value);
                                                           Get.to(() =>
-                                                              CartScreen());
+                                                              const CartScreen());
                                                         },
                                                         style: ElevatedButton.styleFrom(
                                                             backgroundColor:
@@ -1237,7 +1403,8 @@ class MedicineDetails extends StatelessWidget {
                                                               .textTheme
                                                               .titleSmall!
                                                               .copyWith(
-                                                            fontSize: 11.5,
+                                                                  fontSize:
+                                                                      11.5,
                                                                   color: AppColors
                                                                       .primaryColor,
                                                                   fontFamily:

@@ -103,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                 controller.firebaseUser != null
                     ? SvgPicture.asset(AppIcons.fillpin)
                     : BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                        filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
                         child: SvgPicture.asset(AppIcons.fillpin),
                       ), // TODO: change icon when user is not logged In
                 const SizedBox(
@@ -143,46 +143,48 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(5.0),
                     child: SvgPicture.asset(AppIcons.notification),
                   ))
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      floatingActionButton: SpeedDial(
-        icon: Icons.add,
-        mini: false,
-        spaceBetweenChildren: 4,
-        activeIcon: Icons.close,
-        closeDialOnPop: true,
-        overlayColor: AppColors.darkPrimaryColor,
-        childrenButtonSize: const Size(60, 65),
-        iconTheme: IconThemeData(color: AppColors.white),
-        backgroundColor: AppColors.primaryColor,
-        children: [
-          SpeedDialChild(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
-              onTap: () {
-                Get.to(() => ReminderScreen());
-              },
-              child: SvgPicture.asset(
-                AppIcons.addReminder,
-                color: AppColors.primaryColor,
-              ),
-              backgroundColor: AppColors.white,
-              label: "Add Reminders",
-              labelStyle: Theme.of(context).textTheme.titleMedium),
-          SpeedDialChild(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
-              onTap: () {
-                Get.to(() => UploadPrescription());
-              },
-              child: SvgPicture.asset(AppIcons.uploadPres),
-              backgroundColor: AppColors.white,
-              label: "Upload Prescription",
-              labelStyle: Theme.of(context).textTheme.titleMedium),
-        ],
-      ),
+      floatingActionButton: controller.firebaseUser != null
+          ? SpeedDial(
+              icon: Icons.add,
+              mini: false,
+              spaceBetweenChildren: 4,
+              activeIcon: Icons.close,
+              closeDialOnPop: true,
+              overlayColor: AppColors.darkPrimaryColor,
+              childrenButtonSize: const Size(60, 65),
+              iconTheme: IconThemeData(color: AppColors.white),
+              backgroundColor: AppColors.primaryColor,
+              children: [
+                SpeedDialChild(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    onTap: () {
+                      Get.to(() => ReminderScreen());
+                    },
+                    child: SvgPicture.asset(
+                      AppIcons.addReminder,
+                      color: AppColors.primaryColor,
+                    ),
+                    backgroundColor: AppColors.white,
+                    label: "Add Reminders",
+                    labelStyle: Theme.of(context).textTheme.titleMedium),
+                SpeedDialChild(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    onTap: () {
+                      Get.to(() => UploadPrescription());
+                    },
+                    child: SvgPicture.asset(AppIcons.uploadPres),
+                    backgroundColor: AppColors.white,
+                    label: "Upload Prescription",
+                    labelStyle: Theme.of(context).textTheme.titleMedium),
+              ],
+            )
+          : const SizedBox(),
       body: SingleChildScrollView(
         child: Padding(
           padding:
@@ -915,7 +917,7 @@ class HomeScreen extends StatelessWidget {
               "Ready to Get Started? \nConfirm with 'Yes' and Login Your Account.",
           onPressed: () {
             Get.back();
-            Get.to(() => PhoneLoginScreen());
+            Get.to(() => const PhoneLoginScreen());
           });
       return;
     }

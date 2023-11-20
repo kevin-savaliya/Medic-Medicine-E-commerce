@@ -2,17 +2,14 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:medic/_dart/_init.dart';
 import 'package:medic/controller/home_controller.dart';
-import 'package:medic/controller/user_controller.dart';
 import 'package:medic/controller/user_repository.dart';
 import 'package:medic/model/category_data.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/review_data_model.dart';
 import 'package:medic/model/user_model.dart';
-import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
 
@@ -43,7 +40,6 @@ class MedicineController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     fetchFavourite();
     fetchFavouriteMedicine();
@@ -130,7 +126,6 @@ class MedicineController extends GetxController {
         .snapshots()
         .map((event) {
       return event.docs.map((e) {
-
         return MedicineData.fromMap(e.data() as Map<String, dynamic>);
       }).toList();
     });
@@ -247,7 +242,7 @@ class MedicineController extends GetxController {
     return formatter.format(dateTime);
   }
 
-  Stream<Map<int, int>> streamRatingCounts(String medicineId) {
+  Stream<Map<int, int>> reviewRatingCounts(String medicineId) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     return firestore
         .collection('reviews')

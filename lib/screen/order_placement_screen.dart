@@ -528,8 +528,7 @@ class OrderPlacement extends StatelessWidget {
                   ),
                 ),
               ),
-              // TODO: Kevin setup payment method
-              /*SizedBox(
+              SizedBox(
                   height: 260,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -539,77 +538,73 @@ class OrderPlacement extends StatelessWidget {
                       itemCount: 3,
                       itemBuilder: (context, index) {
                         return Obx(() => GestureDetector(
-                          onTap: () {
-                            // controller.selectedPaymentMethod.value =
-                            // controller.paymentMethod[index];
-                            // print(controller.selectedPaymentMethod);
-                          },
-                          child: Padding(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 5),
-                            child: Container(
-                              height: 70,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: AppColors.lineGrey),
-                                  borderRadius:
-                                  BorderRadius.circular(10)),
+                              onTap: () {
+                                controller.selectedPaymentMethod.value =
+                                    controller.paymentMethod[index];
+                              },
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 40,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                          BorderRadius.circular(10),
-                                          border: Border.all(
-                                              color:
-                                              AppColors.lineGrey)),
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.all(8.0),
-                                        child: SvgPicture.asset(
-                                          controller
-                                              .paymentMethodIcon[index],
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: Container(
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: AppColors.lineGrey),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: AppColors.lineGrey)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SvgPicture.asset(
+                                              controller
+                                                  .paymentMethodIcon[index],
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          controller.paymentMethod[index],
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall!
+                                              .copyWith(
+                                                  color: AppColors
+                                                      .darkPrimaryColor,
+                                                  fontFamily:
+                                                      AppFont.fontMedium,
+                                                  fontSize: 13),
+                                        ),
+                                        const Spacer(),
+                                        SvgPicture.asset(
+                                          controller.selectedPaymentMethod ==
+                                                  controller
+                                                      .paymentMethod[index]
+                                              ? AppIcons.radioFill
+                                              : AppIcons.radio,
+                                          height: 22,
+                                        )
+                                      ],
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      controller.paymentMethod[index],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(
-                                          color: AppColors
-                                              .darkPrimaryColor,
-                                          fontFamily:
-                                          AppFont.fontMedium,
-                                          fontSize: 13),
-                                    ),
-                                    const Spacer(),
-                                    SvgPicture.asset(
-                                      controller.selectedPaymentMethod ==
-                                          controller
-                                              .paymentMethod[index]
-                                          ? AppIcons.radioFill
-                                          : AppIcons.radio,
-                                      height: 22,
-                                    )
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ));
+                            ));
                       },
                     ),
-                  )),*/
+                  )),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Align(
@@ -629,7 +624,7 @@ class OrderPlacement extends StatelessWidget {
                 stream: cartController.fetchPrescriptionData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CupertinoActivityIndicator();
+                    return const CupertinoActivityIndicator();
                   } else if (snapshot.hasData) {
                     PrescriptionData prescription = snapshot.data!;
                     return Padding(
@@ -661,7 +656,7 @@ class OrderPlacement extends StatelessWidget {
                       ),
                     );
                   } else {
-                    return Text("No Prescription Found!");
+                    return const Text("No Prescription Found!");
                   }
                 },
               ),

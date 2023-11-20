@@ -16,14 +16,20 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 class AddReviewScreen extends StatelessWidget {
   String? orderId;
   Map<String, String>? medicineIdMap;
+  ReviewDataModel? review;
 
   CartController controller = Get.put(CartController());
 
-  AddReviewScreen({super.key, this.orderId, this.medicineIdMap});
+  AddReviewScreen({super.key, this.orderId, this.medicineIdMap, this.review});
 
   @override
   Widget build(BuildContext context) {
-    List<String?> medicineIdList = medicineIdMap!.values.toList();
+    List<String?> medicineIdList = medicineIdMap?.values.toList() ?? [];
+
+    if (review != null) {
+      controller.reviewText.text = review!.review!;
+      controller.rating.value = review!.rating!.toDouble();
+    }
 
     controller.fetchMedicineNames(medicineIdList);
 
@@ -289,16 +295,28 @@ class AddReviewScreen extends StatelessWidget {
                   return;
                 }
                 showProgressDialogue(context);
-                String id = controller.reviewRef.doc().id;
-                ReviewDataModel review = ReviewDataModel(
-                    id: id,
-                    rating: controller.rating.value.toPrecision(2),
-                    review: controller.reviewText.text,
-                    medicineId: controller.selectedMedicineId.value,
-                    userId: controller.currentUser,
-                    orderId: orderId,
-                    createdTime: DateTime.now());
-                await controller.uploadReview(review);
+                if (review == null) {
+                  String id = controller.reviewRef.doc().id;
+                  ReviewDataModel review = ReviewDataModel(
+                      id: id,
+                      rating: controller.rating.value.toPrecision(2),
+                      review: controller.reviewText.text,
+                      medicineId: controller.selectedMedicineId.value,
+                      userId: controller.currentUser,
+                      orderId: orderId,
+                      createdTime: DateTime.now());
+                  await controller.uploadReview(review);
+                } else {
+                  ReviewDataModel reviewModel = ReviewDataModel(
+                      id: review!.id,
+                      rating: controller.rating.value.toPrecision(2),
+                      review: controller.reviewText.text,
+                      medicineId: review!.medicineId,
+                      userId: review!.userId,
+                      orderId: review!.orderId,
+                      createdTime: DateTime.now());
+                  await controller.editReview(reviewModel);
+                }
               },
               style: ElevatedButton.styleFrom(
                   elevation: 0,

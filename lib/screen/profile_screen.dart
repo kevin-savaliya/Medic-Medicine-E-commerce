@@ -201,7 +201,7 @@ class ProfileScreen extends StatelessWidget {
                 bool isUserLoggedIn =
                     _authController.appStorage.getUserData() != null;
                 if (isUserLoggedIn) {
-                  Get.to(() => const OrderHistory());
+                  Get.to(() => OrderHistory());
                 }
               },
               horizontalTitleGap: 5,

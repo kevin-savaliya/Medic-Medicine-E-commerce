@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, non_constant_identifier_names
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,7 +7,6 @@ import 'package:medic/_dart/_init.dart';
 import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/order_placement_screen.dart';
-import 'package:medic/screen/search_screen.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
@@ -16,7 +15,7 @@ import 'package:medic/utils/utils.dart';
 class CartScreen extends StatelessWidget {
   // CartController controller = Get.put(CartController());
 
-  CartScreen({super.key});
+  const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -274,7 +273,7 @@ class CartScreen extends StatelessWidget {
                 ),
               ),
               Obx(
-                () => controller.selectedDiscount != null
+                () => controller.selectedDiscount.value != null
                     ? Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Align(
@@ -290,7 +289,7 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
               ),
               const SizedBox(
                 height: 20,
@@ -496,65 +495,62 @@ class CartScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(
                 height: 10,
               ),
-              SizedBox(
-                height: 45,
-                child: TextFormField(
-                  readOnly: true,
-                  onTap: () async {
-                    await Get.to(() => SearchScreen());
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    enabled: true,
-                    prefixIcon: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 14, bottom: 14, left: 10),
-                      child: SvgPicture.asset(
-                        AppIcons.search,
-                        height: 18,
-                      ),
-                    ),
-                    fillColor: AppColors.transparentDetails,
-                    hintText: "Search Medicines...",
-                    hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        fontFamily: AppFont.fontMedium,
-                        fontSize: 14,
-                        color: AppColors.skipGrey),
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.transparent, width: 0.5),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.transparent, width: 0.5),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.transparent, width: 0.5),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.transparent, width: 0.5),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 17,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 200,
-              ),
+              // SizedBox(
+              //   height: 45,
+              //   child: TextFormField(
+              //     readOnly: true,
+              //     onTap: () async {
+              //       await Get.to(() => SearchScreen());
+              //     },
+              //     decoration: InputDecoration(
+              //       filled: true,
+              //       enabled: true,
+              //       prefixIcon: Padding(
+              //         padding:
+              //             const EdgeInsets.only(top: 14, bottom: 14, left: 10),
+              //         child: SvgPicture.asset(
+              //           AppIcons.search,
+              //           height: 18,
+              //         ),
+              //       ),
+              //       fillColor: AppColors.transparentDetails,
+              //       hintText: "Search Medicines...",
+              //       hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+              //           fontFamily: AppFont.fontMedium,
+              //           fontSize: 14,
+              //           color: AppColors.skipGrey),
+              //       border: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //             color: Colors.transparent, width: 0.5),
+              //         borderRadius: BorderRadius.circular(30),
+              //       ),
+              //       focusedBorder: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //             color: Colors.transparent, width: 0.5),
+              //         borderRadius: BorderRadius.circular(30),
+              //       ),
+              //       disabledBorder: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //             color: Colors.transparent, width: 0.5),
+              //         borderRadius: BorderRadius.circular(30),
+              //       ),
+              //       enabledBorder: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //             color: Colors.transparent, width: 0.5),
+              //         borderRadius: BorderRadius.circular(30),
+              //       ),
+              //       contentPadding: const EdgeInsets.symmetric(
+              //         horizontal: 10,
+              //         vertical: 17,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SvgPicture.asset(AppImages.emptyBin),
               const SizedBox(
                 height: 10,
@@ -564,7 +560,7 @@ class CartScreen extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium!
-                    .copyWith(fontSize: 13, color: AppColors.skipGrey),
+                    .copyWith(fontSize: 14, color: AppColors.skipGrey),
               )
             ],
           ),

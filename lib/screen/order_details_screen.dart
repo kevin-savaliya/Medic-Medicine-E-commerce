@@ -62,6 +62,7 @@ class OrderDetailScreen extends StatelessWidget {
           return const Center(child: CupertinoActivityIndicator());
         } else if (snapshot.hasData) {
           OrderData orderData = snapshot.data!;
+          String formatDate = controller.OrderDateFormat(orderData.orderDate!);
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -305,7 +306,7 @@ class OrderDetailScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "2 oct 2023",
+                    formatDate,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: AppColors.darkPrimaryColor,
                         fontFamily: AppFont.fontMedium,
