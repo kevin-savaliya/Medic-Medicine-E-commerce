@@ -1,14 +1,11 @@
 // ignore_for_file: must_be_immutable
 
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:getwidget/components/progress_bar/gf_progress_bar.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/cart_controller.dart';
@@ -19,8 +16,8 @@ import 'package:medic/model/user_model.dart';
 import 'package:medic/screen/add_review_screen.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/medicine_screen.dart';
-import 'package:medic/screen/order_placement_screen.dart';
 import 'package:medic/screen/phone_login_screen.dart';
+import 'package:medic/screen/search_screen.dart';
 import 'package:medic/screen/upload_pres_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
@@ -41,46 +38,55 @@ class MedicineDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        leading: GestureDetector(
-          onTap: () {
-            Get.back();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: SvgPicture.asset(
-              AppIcons.back,
+    return GetBuilder(
+      init: CartController(),
+      builder: (cartController) {
+        return Scaffold(
+          backgroundColor: AppColors.white,
+          appBar: AppBar(
+            backgroundColor: AppColors.white,
+            leading: GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: SvgPicture.asset(
+                  AppIcons.back,
+                ),
+              ),
             ),
+            titleSpacing: 0,
+            elevation: 1.5,
+            shadowColor: AppColors.txtGrey.withOpacity(0.2),
+            actions: [
+              GestureDetector(
+                  onTap: () {
+                    Get.to(() => SearchScreen());
+                  },
+                  child: SvgPicture.asset(
+                    AppIcons.search,
+                    width: 18,
+                  )),
+              const SizedBox(
+                width: 15,
+              ),
+              GestureDetector(
+                  onTap: () {
+                    Get.to(() => CartScreen());
+                  },
+                  child: SvgPicture.asset(
+                    AppIcons.bag,
+                    width: 22,
+                  )),
+              const SizedBox(
+                width: 15,
+              ),
+            ],
           ),
-        ),
-        titleSpacing: 0,
-        elevation: 1.5,
-        shadowColor: AppColors.txtGrey.withOpacity(0.2),
-        actions: [
-          GestureDetector(
-              onTap: () {},
-              child: SvgPicture.asset(
-                AppIcons.search,
-                width: 20,
-              )),
-          const SizedBox(
-            width: 12,
-          ),
-          GestureDetector(
-              onTap: () {},
-              child: SvgPicture.asset(
-                AppIcons.bag,
-                width: 22,
-              )),
-          const SizedBox(
-            width: 15,
-          ),
-        ],
-      ),
-      body: medicineDetailWidget(context),
+          body: medicineDetailWidget(context),
+        );
+      },
     );
   }
 
@@ -93,9 +99,7 @@ class MedicineDetails extends StatelessWidget {
                 medicineData!.id!, context),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SizedBox(
-                    height: 50,
-                    child: Center(child: CupertinoActivityIndicator()));
+                return const SizedBox();
               } else if (snapshot.hasData) {
                 bool isCheck = snapshot.data ?? false;
                 return Visibility(
@@ -281,33 +285,20 @@ class MedicineDetails extends StatelessWidget {
                               .copyWith(
                                   color: AppColors.darkPrimaryColor,
                                   fontFamily: AppFont.fontMedium,
-                                  fontSize: 13),
+                                  fontSize: 14),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
                         Text(
-                          "120",
+                          "${medicineData?.medicinePrice ?? "100"}",
                           style: Theme.of(context)
                               .textTheme
                               .displayMedium!
                               .copyWith(
                                   color: AppColors.darkPrimaryColor,
                                   fontFamily: AppFont.fontMedium,
-                                  fontSize: 13),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "30% Off",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                                  fontSize: 11,
-                                  color: AppColors.primaryColor,
-                                  fontFamily: AppFont.fontMedium),
+                                  fontSize: 15),
                         ),
                       ],
                     )
@@ -338,77 +329,10 @@ class MedicineDetails extends StatelessWidget {
                           fontFamily: AppFont.fontMedium),
                     ),
                     const Spacer(),
-                    !(cartController.checkMedicineInCart(medicineData!.id!))
-                        ? ElevatedButton(
-                            onPressed: () async {
-                              await cartController.addToCart(medicineData!,
-                                  qty: cartController.qty.value);
-                              Get.to(() => const CartScreen());
-                              cartController.qty.value = 1;
-                            },
-                            style: ElevatedButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                backgroundColor: AppColors.primaryColor,
-                                fixedSize: const Size(110, 20),
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30))),
-                            child: Text(
-                              "Add to cart",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      fontSize: 12,
-                                      color: AppColors.white,
-                                      fontFamily: AppFont.fontMedium),
-                            ))
-                        : Obx(() => Container(
-                              alignment: Alignment.center,
-                              height: 35,
-                              width: 90,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  border:
-                                      Border.all(color: AppColors.decsGrey)),
-                              child: PopupMenuButton<int>(
-                                position: PopupMenuPosition.under,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                                onSelected: (int value) {
-                                  cartController.cartQty.value = value;
-                                },
-                                itemBuilder: (BuildContext context) {
-                                  return List.generate(5, (index) {
-                                    return PopupMenuItem<int>(
-                                      height: 35,
-                                      value: index + 1,
-                                      child: Text('${index + 1}'),
-                                    );
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text(
-                                      'Qty  ${cartController.cartQty}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium!
-                                          .copyWith(fontSize: 13),
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: AppColors.txtGrey,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ))
+                    Obx(() =>
+                        !(cartController.checkMedicineInCart(medicineData!.id!))
+                            ? addToCartButton(context)
+                            : qtyPopUpMenu(context))
                   ],
                 )
               ],
@@ -897,7 +821,7 @@ class MedicineDetails extends StatelessWidget {
                   separatorBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 10),
+                          vertical: 5, horizontal: 10),
                       child: Divider(
                         color: AppColors.lineGrey,
                         height: 1,
@@ -950,6 +874,7 @@ class MedicineDetails extends StatelessWidget {
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(5)),
                                     elevation: 3,
+                                    position: PopupMenuPosition.under,
                                     shadowColor: AppColors.decsGrey,
                                     icon: SvgPicture.asset(AppIcons.more),
                                     onSelected: (value) async {},
@@ -1462,5 +1387,73 @@ class MedicineDetails extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Container qtyPopUpMenu(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      height: 35,
+      width: 90,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(color: AppColors.decsGrey)),
+      child: PopupMenuButton<int>(
+        position: PopupMenuPosition.under,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        onSelected: (int value) {
+          cartController.cartQty.value = value;
+        },
+        itemBuilder: (BuildContext context) {
+          return List.generate(5, (index) {
+            return PopupMenuItem<int>(
+              height: 35,
+              value: index + 1,
+              child: Text('${index + 1}'),
+            );
+          });
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              'Qty  ${cartController.cartQty}',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(fontSize: 13),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.txtGrey,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ElevatedButton addToCartButton(BuildContext context) {
+    return ElevatedButton(
+        onPressed: () async {
+          await cartController.addToCart(medicineData!,
+              qty: cartController.qty.value);
+        },
+        style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            backgroundColor: AppColors.primaryColor,
+            fixedSize: const Size(110, 20),
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30))),
+        child: Text(
+          "Add to cart",
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              fontSize: 12,
+              color: AppColors.white,
+              fontFamily: AppFont.fontMedium),
+        ));
   }
 }

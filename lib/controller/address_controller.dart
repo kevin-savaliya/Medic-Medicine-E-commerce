@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -72,6 +74,40 @@ class AddressController extends GetxController {
     });
   }
 
+  // addAddress(UserAddress userAddress) async {
+  //   final addDocRef = addRef.doc(currentUser);
+  //   final doc = await addDocRef.get();
+  //
+  //   List<dynamic> addressList = [];
+  //
+  //   if (doc.exists) {
+  //     Map<String, dynamic>? userData = doc.data() as Map<String, dynamic>?;
+  //     addressList = userData != null
+  //         ? (userData['addresses'] as List<dynamic>?) ?? []
+  //         : [];
+  //     if (addressList.isNotEmpty) {
+  //       Map<String, dynamic> lastAddress =
+  //           addressList.last as Map<String, dynamic>;
+  //       lastAddress['isActive'] = false;
+  //       addressList[addressList.length - 1] = lastAddress;
+  //     }
+  //   }
+  //
+  //   addressList.add(userAddress.copyWith(isActive: true).toMap());
+  //
+  //   if (doc.exists) {
+  //     await addDocRef.update({'addresses': addressList});
+  //   } else {
+  //     await addDocRef.set({'addresses': addressList});
+  //   }
+  //
+  //   Get.back();
+  //   Get.back();
+  //   clearController();
+  //   showInSnackBar("Address Added Successfully",
+  //       isSuccess: true, title: "The Medic");
+  // }
+
   addAddress(UserAddress userAddress) async {
     final addDocRef = addRef.doc(currentUser);
     final doc = await addDocRef.get();
@@ -83,11 +119,9 @@ class AddressController extends GetxController {
       addressList = userData != null
           ? (userData['addresses'] as List<dynamic>?) ?? []
           : [];
-      if (addressList.isNotEmpty) {
-        Map<String, dynamic> lastAddress =
-            addressList.last as Map<String, dynamic>;
-        lastAddress['isActive'] = false;
-        addressList[addressList.length - 1] = lastAddress;
+
+      for (var i = 0; i < addressList.length; i++) {
+        (addressList[i] as Map<String, dynamic>)['isActive'] = false;
       }
     }
 
@@ -106,6 +140,7 @@ class AddressController extends GetxController {
         isSuccess: true, title: "The Medic");
   }
 
+
   editAddress(UserAddress userAddress) async {
     final addDocRef = addRef.doc(currentUser);
     final doc = await addDocRef.get();
@@ -120,7 +155,10 @@ class AddressController extends GetxController {
         (address) => (address as Map<String, dynamic>)['id'] == userAddress.id);
 
     if (editIndex != -1) {
-      addressList[editIndex] = userAddress.toMap();
+      for (var i = 0; i < addressList.length; i++) {
+        (addressList[i] as Map<String, dynamic>)['isActive'] = false;
+      }
+      addressList[editIndex] = userAddress.copyWith(isActive: true).toMap();
 
       await addDocRef.update({'addresses': addressList});
     }
@@ -131,6 +169,35 @@ class AddressController extends GetxController {
     showInSnackBar("Address Edited Successfully",
         isSuccess: true, title: "The Medic");
   }
+
+  // deleteAddress(String addressId) async {
+  //   final addDocRef = addRef.doc(currentUser);
+  //   final doc = await addDocRef.get();
+  //
+  //   if (!doc.exists) return;
+  //
+  //   Map<String, dynamic>? userData = doc.data() as Map<String, dynamic>?;
+  //   List<dynamic> addressList =
+  //       userData != null ? (userData['addresses'] as List<dynamic>?) ?? [] : [];
+  //
+  //   Map<String, dynamic>? deletedAddress;
+  //   addressList = addressList.where((address) {
+  //     bool shouldKeep = (address as Map<String, dynamic>)['id'] != addressId;
+  //     if (!shouldKeep) deletedAddress = address;
+  //     return shouldKeep;
+  //   }).toList();
+  //
+  //   if (deletedAddress != null &&
+  //       deletedAddress!['isActive'] == true &&
+  //       addressList.isNotEmpty) {
+  //     Map<String, dynamic> newLastActive =
+  //         addressList.last as Map<String, dynamic>;
+  //     newLastActive['isActive'] = true;
+  //     addressList[addressList.length - 1] = newLastActive;
+  //   }
+  //
+  //   await addDocRef.update({'addresses': addressList});
+  // }
 
   deleteAddress(String addressId) async {
     final addDocRef = addRef.doc(currentUser);
@@ -152,12 +219,37 @@ class AddressController extends GetxController {
     if (deletedAddress != null &&
         deletedAddress!['isActive'] == true &&
         addressList.isNotEmpty) {
-      Map<String, dynamic> newLastActive =
-          addressList.last as Map<String, dynamic>;
-      newLastActive['isActive'] = true;
-      addressList[addressList.length - 1] = newLastActive;
+      for (var i = 0; i < addressList.length; i++) {
+        (addressList[i] as Map<String, dynamic>)['isActive'] = false;
+      }
+      (addressList.last as Map<String, dynamic>)['isActive'] = true;
     }
 
     await addDocRef.update({'addresses': addressList});
+  }
+
+  Future<void> updateAddressStatus(String? addressId, bool isActive) async {
+    if (addressId == null) {
+      throw ArgumentError("Address ID cannot be null");
+    }
+
+    DocumentReference addressDoc = addRef.doc(currentUser);
+
+    DocumentSnapshot docSnapshot = await addressDoc.get();
+    if (docSnapshot.exists) {
+      List<dynamic> addresses = docSnapshot.get('addresses');
+
+      List<Map<String, dynamic>> updatedAddresses = addresses.map((a) {
+        Map<String, dynamic> addressMap = Map<String, dynamic>.from(a);
+        if (addressMap['id'] == addressId) {
+          addressMap['isActive'] = isActive;
+        } else {
+          addressMap['isActive'] = false;
+        }
+        return addressMap;
+      }).toList();
+
+      await addressDoc.update({'addresses': updatedAddresses});
+    }
   }
 }

@@ -42,7 +42,7 @@ class MedicineController extends GetxController {
   void onInit() {
     super.onInit();
     fetchFavourite();
-    fetchFavouriteMedicine();
+    // fetchFavouriteMedicine();
     fetchAllUser();
   }
 
@@ -143,12 +143,10 @@ class MedicineController extends GetxController {
     favMedicinesIds.value = favouriteMedicines
         .map((medicine) => medicine['medicineId'] as String)
         .toList();
+    update();
   }
 
   bool isFavourite(String medicineId) {
-    // if (loggedInUser == null) {
-    //   return false;
-    // }
     return favouriteMedicines
         .any((medicine) => medicine['medicineId'] == medicineId);
   }
@@ -187,6 +185,7 @@ class MedicineController extends GetxController {
     await favRef.doc(currentUserId).update({
       'medicines': FieldValue.arrayRemove([medicineToRemove])
     });
+    fetchFavourite();
   }
 
   Stream<List<MedicineData>> fetchFavouriteMedicine() {

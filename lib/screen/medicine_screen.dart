@@ -11,6 +11,7 @@ import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/medicine_details.dart';
 import 'package:medic/screen/phone_login_screen.dart';
+import 'package:medic/screen/search_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -52,16 +53,20 @@ class MedicineScreen extends StatelessWidget {
         shadowColor: AppColors.txtGrey.withOpacity(0.2),
         actions: [
           GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Get.to(() => SearchScreen());
+              },
               child: SvgPicture.asset(
                 AppIcons.search,
-                width: 20,
+                width: 18,
               )),
           const SizedBox(
-            width: 12,
+            width: 15,
           ),
           GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Get.to(() => CartScreen());
+              },
               child: SvgPicture.asset(
                 AppIcons.bag,
                 width: 22,
@@ -298,8 +303,9 @@ class MedicineScreen extends StatelessWidget {
                                             Get.to(() => CartScreen());
                                           },
                                           style: ElevatedButton.styleFrom(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
                                               backgroundColor:
                                                   AppColors.tilePrimaryColor,
                                               fixedSize: const Size(110, 20),

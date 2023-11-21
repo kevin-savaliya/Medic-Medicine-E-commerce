@@ -467,7 +467,7 @@ class CartScreen extends StatelessWidget {
                     if (medicineList.isNotEmpty) {
                       if (await controller
                           .checkPrescriptionOrder(medicineList)) {
-                        Get.to(() => OrderPlacement());
+                        Get.off(() => OrderPlacement());
                       } else {
                         showInSnackBar("Medicine Prescription is not Approved!",
                             isSuccess: false, title: "The Medic");
@@ -500,57 +500,6 @@ class CartScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              // SizedBox(
-              //   height: 45,
-              //   child: TextFormField(
-              //     readOnly: true,
-              //     onTap: () async {
-              //       await Get.to(() => SearchScreen());
-              //     },
-              //     decoration: InputDecoration(
-              //       filled: true,
-              //       enabled: true,
-              //       prefixIcon: Padding(
-              //         padding:
-              //             const EdgeInsets.only(top: 14, bottom: 14, left: 10),
-              //         child: SvgPicture.asset(
-              //           AppIcons.search,
-              //           height: 18,
-              //         ),
-              //       ),
-              //       fillColor: AppColors.transparentDetails,
-              //       hintText: "Search Medicines...",
-              //       hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-              //           fontFamily: AppFont.fontMedium,
-              //           fontSize: 14,
-              //           color: AppColors.skipGrey),
-              //       border: OutlineInputBorder(
-              //         borderSide: const BorderSide(
-              //             color: Colors.transparent, width: 0.5),
-              //         borderRadius: BorderRadius.circular(30),
-              //       ),
-              //       focusedBorder: OutlineInputBorder(
-              //         borderSide: const BorderSide(
-              //             color: Colors.transparent, width: 0.5),
-              //         borderRadius: BorderRadius.circular(30),
-              //       ),
-              //       disabledBorder: OutlineInputBorder(
-              //         borderSide: const BorderSide(
-              //             color: Colors.transparent, width: 0.5),
-              //         borderRadius: BorderRadius.circular(30),
-              //       ),
-              //       enabledBorder: OutlineInputBorder(
-              //         borderSide: const BorderSide(
-              //             color: Colors.transparent, width: 0.5),
-              //         borderRadius: BorderRadius.circular(30),
-              //       ),
-              //       contentPadding: const EdgeInsets.symmetric(
-              //         horizontal: 10,
-              //         vertical: 17,
-              //       ),
-              //     ),
-              //   ),
-              // ),
               SvgPicture.asset(AppImages.emptyBin),
               const SizedBox(
                 height: 10,

@@ -453,44 +453,54 @@ class HomeScreen extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               itemCount: medicinelist.length,
                               itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    width: 120,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
-                                      color: controller.popularColorList[index %
-                                          (controller.popularColorList.length)],
-                                    ),
-                                    child: Stack(
-                                      children: [
-                                        SvgPicture.asset(
-                                            AppImages.designVector),
-                                        Positioned(
-                                            top: 20,
-                                            left: 15,
-                                            child: Text(
-                                              medicinelist[index].genericName ??
-                                                  "",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium!
-                                                  .copyWith(
-                                                      color: AppColors.white),
-                                            )),
-                                        Positioned(
-                                            bottom: 0,
-                                            right: 0,
-                                            child: Image.asset(
-                                              controller.medicineImageList[
-                                                  index %
-                                                      (controller
-                                                          .medicineImageList
-                                                          .length)],
-                                              height: 60,
-                                            ))
-                                      ],
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => MedicineDetails(
+                                          medicineData: medicinelist[index],
+                                        ));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      width: 120,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: controller.popularColorList[
+                                            index %
+                                                (controller
+                                                    .popularColorList.length)],
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          SvgPicture.asset(
+                                              AppImages.designVector),
+                                          Positioned(
+                                              top: 20,
+                                              left: 15,
+                                              child: Text(
+                                                medicinelist[index]
+                                                        .genericName ??
+                                                    "",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .copyWith(
+                                                        color: AppColors.white),
+                                              )),
+                                          Positioned(
+                                              bottom: 0,
+                                              right: 0,
+                                              child: Image.asset(
+                                                controller.medicineImageList[
+                                                    index %
+                                                        (controller
+                                                            .medicineImageList
+                                                            .length)],
+                                                height: 60,
+                                              ))
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );

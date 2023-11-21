@@ -16,6 +16,7 @@ class MedicineData {
   String? directionForUse;
   String? safetyInformation;
   int? quantity;
+  int? medicinePrice;
   bool? prescriptionRequire;
 
   MedicineData(
@@ -34,6 +35,7 @@ class MedicineData {
       this.directionForUse,
       this.safetyInformation,
       this.quantity,
+      this.medicinePrice,
       this.prescriptionRequire});
 
   MedicineData copyWith(
@@ -52,6 +54,7 @@ class MedicineData {
       String? directionForUse,
       String? safetyInformation,
       int? quantity,
+      int? medicinePrice,
       bool? prescriptionRequire}) {
     return MedicineData(
       id: id ?? this.id,
@@ -69,6 +72,7 @@ class MedicineData {
       directionForUse: directionForUse ?? this.directionForUse,
       safetyInformation: safetyInformation ?? this.safetyInformation,
       quantity: quantity ?? this.quantity,
+      medicinePrice: medicinePrice ?? this.medicinePrice,
       prescriptionRequire: prescriptionRequire ?? this.prescriptionRequire,
     );
   }
@@ -90,6 +94,7 @@ class MedicineData {
       'directionForUse': directionForUse,
       'safetyInformation': safetyInformation,
       'quantity': quantity,
+      'medicinePrice': medicinePrice,
       'prescriptionRequire': prescriptionRequire,
     };
   }
@@ -111,6 +116,7 @@ class MedicineData {
       directionForUse: map['directionForUse'],
       safetyInformation: map['safetyInformation'],
       quantity: map['quantity'],
+      medicinePrice: map['medicinePrice'],
       prescriptionRequire: map['prescriptionRequire'],
     );
   }

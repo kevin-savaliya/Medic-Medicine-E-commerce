@@ -5,7 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
+import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/medicine_details.dart';
+import 'package:medic/screen/search_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -44,16 +46,20 @@ class PopularMedicine extends StatelessWidget {
         shadowColor: AppColors.txtGrey.withOpacity(0.2),
         actions: [
           GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Get.to(() => SearchScreen());
+              },
               child: SvgPicture.asset(
                 AppIcons.search,
-                width: 20,
+                width: 18,
               )),
           const SizedBox(
-            width: 12,
+            width: 15,
           ),
           GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Get.to(() => CartScreen());
+              },
               child: SvgPicture.asset(
                 AppIcons.bag,
                 width: 22,

@@ -91,9 +91,6 @@ class SearchScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextFormField(
                 style: Theme.of(context).textTheme.titleMedium,
-                onTap: () {
-                  Get.to(() => SearchScreen());
-                },
                 decoration: InputDecoration(
                   filled: true,
                   enabled: true,
@@ -185,7 +182,8 @@ class SearchScreen extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primaryColor,
                                   fixedSize: const Size(150, 18),
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30))),
@@ -395,8 +393,8 @@ class SearchScreen extends StatelessWidget {
               itemCount: controller.searchList.length,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -405,8 +403,7 @@ class SearchScreen extends StatelessWidget {
                         style: Theme.of(context)
                             .textTheme
                             .titleSmall!
-                            .copyWith(
-                                color: AppColors.txtGrey, fontSize: 13.5),
+                            .copyWith(color: AppColors.txtGrey, fontSize: 13.5),
                       ),
                       Icon(
                         Icons.arrow_forward_ios_rounded,

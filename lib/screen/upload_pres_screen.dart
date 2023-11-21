@@ -1,4 +1,4 @@
-// ignore_for_file: unrelated_type_equality_checks, must_be_immutable
+// ignore_for_file: unrelated_type_equality_checks, must_be_immutable, avoid_single_cascade_in_expression_statements
 
 import 'dart:io';
 
@@ -20,62 +20,69 @@ class UploadPrescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
+    return WillPopScope(
+      child: Scaffold(
         backgroundColor: AppColors.white,
-        leading: GestureDetector(
-          onTap: () {
-            Get.back();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: SvgPicture.asset(
-              AppIcons.back,
+        appBar: AppBar(
+          backgroundColor: AppColors.white,
+          leading: GestureDetector(
+            onTap: () {
+              Get.back();
+              presController.selectedImages.clear();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: SvgPicture.asset(
+                AppIcons.back,
+              ),
             ),
           ),
+          titleSpacing: 0,
+          title: Text(ConstString.uploadPres,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(fontFamily: AppFont.fontBold)),
+          elevation: 1.5,
+          shadowColor: AppColors.txtGrey.withOpacity(0.2),
         ),
-        titleSpacing: 0,
-        title: Text(ConstString.uploadPres,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(fontFamily: AppFont.fontBold)),
-        elevation: 1.5,
-        shadowColor: AppColors.txtGrey.withOpacity(0.2),
-      ),
-      body: uploadPresWidget(context),
-      bottomSheet: Container(
-        color: AppColors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 20),
-        width: double.infinity,
-        child: Obx(
-          () => ElevatedButton(
-              onPressed: () {
-                if (presController.isValidate()) {
-                  showProgressDialogue(context);
-                  presController.storePrescription(
-                      presController.titleController.text.trim());
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: presController.selectedImages.isEmpty
-                      ? AppColors.indGrey
-                      : AppColors.primaryColor,
-                  fixedSize: const Size(200, 50),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30))),
-              child: Text(
-                ConstString.btnContinue,
-                style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                      color: presController.selectedImages.isEmpty
-                          ? AppColors.skipGrey
-                          : AppColors.white,
-                    ),
-              )),
+        body: uploadPresWidget(context),
+        bottomSheet: Container(
+          color: AppColors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 20),
+          width: double.infinity,
+          child: Obx(
+            () => ElevatedButton(
+                onPressed: () {
+                  if (presController.isValidate()) {
+                    showProgressDialogue(context);
+                    presController.storePrescription(
+                        presController.titleController.text.trim());
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: presController.selectedImages.isEmpty
+                        ? AppColors.indGrey
+                        : AppColors.primaryColor,
+                    fixedSize: const Size(200, 50),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30))),
+                child: Text(
+                  ConstString.btnContinue,
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: presController.selectedImages.isEmpty
+                            ? AppColors.skipGrey
+                            : AppColors.white,
+                      ),
+                )),
+          ),
         ),
       ),
+      onWillPop: () async {
+        presController.selectedImages.clear();
+        return true;
+      },
     );
   }
 
@@ -130,7 +137,8 @@ class UploadPrescription extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primaryColor,
                                 fixedSize: const Size(150, 18),
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30))),

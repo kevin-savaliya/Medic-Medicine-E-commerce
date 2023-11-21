@@ -4,6 +4,7 @@ class ConstString {
   static const String next = "Next";
   static const String btnContinue = "Continue";
   static const String sendOTP = "Send OTP";
+  static const String pay = "Pay";
   static const String saveName = "Save Name";
   static const String save = "Save";
   static const String resendOTP = "Resend OTP";
@@ -91,6 +92,7 @@ class ConstString {
   static const String medicine = "Medicines";
   static const String fav = "Favourites";
   static const String cart = "Cart";
+  static const String cardDetail = "Card Details";
   static const String medicineName = "Medicine Name";
   static const String amount = "Amount";
   static const String dosage = "Dosage";

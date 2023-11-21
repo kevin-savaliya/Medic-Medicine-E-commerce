@@ -22,7 +22,9 @@ import 'package:medic/widgets/user/my_name_text_widget.dart';
 class OrderDetailScreen extends StatelessWidget {
   CartController controller = Get.put(CartController());
 
-  OrderDetailScreen({super.key});
+  String? orderId;
+
+  OrderDetailScreen({super.key, this.orderId});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class OrderDetailScreen extends StatelessWidget {
 
   Widget orderDetailWidget(BuildContext context) {
     return FutureBuilder(
-      future: controller.fetchOrderIds(),
+      future: controller.fetchOrderIds(orderId!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CupertinoActivityIndicator());
@@ -443,14 +445,16 @@ class OrderDetailScreen extends StatelessWidget {
                                         const SizedBox(
                                           width: 10,
                                         ),
-                                        Text(
-                                          address,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .copyWith(
-                                                  color: AppColors.txtGrey,
-                                                  fontSize: 12),
+                                        Expanded(
+                                          child: Text(
+                                            address,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall!
+                                                .copyWith(
+                                                    color: AppColors.txtGrey,
+                                                    fontSize: 12),
+                                          ),
                                         ),
                                       ],
                                     );
@@ -537,8 +541,9 @@ class OrderDetailScreen extends StatelessWidget {
                             const SizedBox(
                               width: 10,
                             ),
-                            MyNameTextWidget(
-                              textStyle: Theme.of(context)
+                            Text(
+                              "The Medic",
+                              style: Theme.of(context)
                                   .textTheme
                                   .titleSmall!
                                   .copyWith(

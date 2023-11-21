@@ -46,6 +46,7 @@ dependencies:
   getwidget: ^3.1.1
   easy_date_timeline: ^0.1.1
   image_picker: ^1.0.4
+  credit_card_validator: ^2.1.0
   image_cropper: ^5.0.0
   cloud_firestore: ^4.9.3
   firebase_auth: ^4.10.1

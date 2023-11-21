@@ -11,8 +11,11 @@ import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/prescription_model.dart';
 import 'package:medic/model/user_address.dart';
+import 'package:medic/screen/card_details.dart';
+import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/myaddress_screen.dart';
 import 'package:medic/screen/order_details_screen.dart';
+import 'package:medic/screen/search_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -57,16 +60,20 @@ class OrderPlacement extends StatelessWidget {
             shadowColor: AppColors.txtGrey.withOpacity(0.2),
             actions: [
               GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => SearchScreen());
+                  },
                   child: SvgPicture.asset(
                     AppIcons.search,
-                    width: 20,
+                    width: 18,
                   )),
               const SizedBox(
-                width: 12,
+                width: 15,
               ),
               GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => const CartScreen());
+                  },
                   child: SvgPicture.asset(
                     AppIcons.bag,
                     width: 22,
@@ -89,7 +96,9 @@ class OrderPlacement extends StatelessWidget {
                   }
                   showProgressDialogue(context);
                   await cartController.placeOrder();
-                  Get.to(() => OrderDetailScreen());
+                  Get.off(() => OrderDetailScreen(
+                        orderId: cartController.orderData.value.id,
+                      ));
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
@@ -187,7 +196,7 @@ class OrderPlacement extends StatelessWidget {
                                         height: 5,
                                       ),
                                       Text(
-                                        "${medicineList[index].uses}",
+                                        "${medicineList[index].description}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall!
@@ -346,28 +355,34 @@ class OrderPlacement extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 5),
                       child: Container(
-                          height: 50,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(color: AppColors.lineGrey)),
-                          child: Row(
-                            children: [
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              SvgPicture.asset(AppIcons.fillpin, height: 20),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                address,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                        color: AppColors.txtGrey, fontSize: 14),
-                              )
-                            ],
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 5),
+                            child: Row(
+                              children: [
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                SvgPicture.asset(AppIcons.fillpin, height: 20),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    address,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            color: AppColors.txtGrey,
+                                            fontSize: 14),
+                                  ),
+                                )
+                              ],
+                            ),
                           )),
                     );
                   } else {
@@ -528,83 +543,80 @@ class OrderPlacement extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                  height: 260,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 3,
-                      itemBuilder: (context, index) {
-                        return Obx(() => GestureDetector(
-                              onTap: () {
-                                controller.selectedPaymentMethod.value =
-                                    controller.paymentMethod[index];
-                              },
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return Obx(() => GestureDetector(
+                          onTap: () {
+                            controller.selectedPaymentMethod.value =
+                                controller.paymentMethod[index];
+                            if (controller.selectedPaymentMethod.value ==
+                                ConstString.creditCard) {
+                              Get.to(() => CardDetails());
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: Container(
+                              height: 70,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: AppColors.lineGrey),
+                                  borderRadius: BorderRadius.circular(10)),
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: Container(
-                                  height: 70,
-                                  decoration: BoxDecoration(
-                                      border:
-                                          Border.all(color: AppColors.lineGrey),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: 40,
-                                          width: 40,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                  color: AppColors.lineGrey)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: SvgPicture.asset(
-                                              controller
-                                                  .paymentMethodIcon[index],
-                                            ),
-                                          ),
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: AppColors.lineGrey)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: SvgPicture.asset(
+                                          controller.paymentMethodIcon[index],
                                         ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          controller.paymentMethod[index],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .copyWith(
-                                                  color: AppColors
-                                                      .darkPrimaryColor,
-                                                  fontFamily:
-                                                      AppFont.fontMedium,
-                                                  fontSize: 13),
-                                        ),
-                                        const Spacer(),
-                                        SvgPicture.asset(
-                                          controller.selectedPaymentMethod ==
-                                                  controller
-                                                      .paymentMethod[index]
-                                              ? AppIcons.radioFill
-                                              : AppIcons.radio,
-                                          height: 22,
-                                        )
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      controller.paymentMethod[index],
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(
+                                              color: AppColors.darkPrimaryColor,
+                                              fontFamily: AppFont.fontMedium,
+                                              fontSize: 13),
+                                    ),
+                                    const Spacer(),
+                                    SvgPicture.asset(
+                                      controller.selectedPaymentMethod ==
+                                              controller.paymentMethod[index]
+                                          ? AppIcons.radioFill
+                                          : AppIcons.radio,
+                                      height: 22,
+                                    )
+                                  ],
                                 ),
                               ),
-                            ));
-                      },
-                    ),
-                  )),
+                            ),
+                          ),
+                        ));
+                  },
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Align(

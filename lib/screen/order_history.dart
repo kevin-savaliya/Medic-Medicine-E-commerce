@@ -5,10 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/order_data.dart';
+import 'package:medic/model/order_with_medicine.dart';
 import 'package:medic/model/user_address.dart';
 import 'package:medic/screen/order_details_screen.dart';
 import 'package:medic/theme/colors.dart';
@@ -91,263 +93,214 @@ class CurrentOrder extends GetWidget<CartController> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: controller.fetchCurrentOrders(),
+    return StreamBuilder<List<OrderWithMedicines>>(
+      stream: controller.ordersWithMedicines(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
               child: CupertinoActivityIndicator(
             color: AppColors.primaryColor,
+            radius: 12,
           ));
-        } else if (snapshot.hasData) {
-          List<OrderData> orderData = snapshot.data!;
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: ListView.separated(
-              separatorBuilder: (context, index) {
-                return Divider(
-                  height: 20,
-                  color: AppColors.lineGrey,
-                );
-              },
-              itemCount: orderData.length,
-              itemBuilder: (context, index) {
-                String formattedDate =
-                    controller.formatDateTime(orderData[index].orderDate!);
-                return GestureDetector(
-                  onTap: () {
-                    Get.to(() => OrderDetailScreen());
-                  },
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        StreamBuilder(
-                          stream: controller.fetchMedicineFromOrder(
-                              orderData[index].medicineId.values.first),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                  child: CupertinoActivityIndicator());
-                            } else if (snapshot.hasData) {
-                              MedicineData medicine = snapshot.data!;
-                              return Row(
-                                children: [
-                                  SizedBox(
-                                    height: 70,
-                                    width: 100,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: CachedNetworkImage(
-                                        imageUrl: medicine.image ?? "",
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                        progressIndicatorBuilder:
-                                            (context, url, downloadProgress) =>
-                                                SizedBox(
-                                          width: 30,
-                                          height: 30,
-                                          child: Center(
-                                              child: LoadingIndicator(
-                                            colors: [AppColors.primaryColor],
-                                            indicatorType: Indicator.ballScale,
-                                            strokeWidth: 1,
-                                          )),
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${medicine.genericName}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                fontFamily: AppFont.fontBold),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "15 Capsule(s) in Bottle",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(color: AppColors.txtGrey),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "SLE 120",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                fontFamily: AppFont.fontMedium,
-                                                fontSize: 12),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
-                        ),
-                        Divider(
-                          height: 30,
-                          color: AppColors.lineGrey,
-                          thickness: 1,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                StreamBuilder(
-                                  stream: controller.fetchAddressById(
-                                      orderData[index].addressId ?? ""),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const CupertinoActivityIndicator();
-                                    } else if (snapshot.hasData) {
-                                      UserAddress add = snapshot.data!;
-                                      String address =
-                                          "${add.address}, ${add.area}, ${add.landmark}";
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Text('No orders found');
+        }
 
-                                      return Text(
-                                        address,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                                color: AppColors.txtGrey,
-                                                fontSize: 12),
-                                      );
-                                    } else {
-                                      return const SizedBox();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  formattedDate,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                          color: AppColors.txtGrey,
-                                          fontSize: 12),
-                                ),
-                              ],
+        List<OrderWithMedicines> ordersWithMedicines = snapshot.data!;
+
+        // Flatten the list of medicines with their corresponding addresses and order dates
+        List<Widget> medicineAddressDateWidgets = [];
+        for (var order in ordersWithMedicines) {
+          for (var medicine in order.medicines) {
+            medicineAddressDateWidgets.add(GestureDetector(
+              onTap: () {
+                Get.to(() => OrderDetailScreen(
+                      orderId: order.orderData.id,
+                    ));
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          height: 70,
+                          width: 100,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                              imageUrl: medicine.image ?? "",
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: Center(
+                                    child: LoadingIndicator(
+                                  colors: [AppColors.primaryColor],
+                                  indicatorType: Indicator.ballScale,
+                                  strokeWidth: 1,
+                                )),
+                              ),
+                              fit: BoxFit.cover,
                             ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 13,
-                              color: AppColors.txtGrey,
-                            )
-                          ],
+                          ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          width: 10,
                         ),
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.decsGrey,
-                                      fixedSize: const Size(200, 45),
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30))),
-                                  child: Text(
-                                    ConstString.cancle,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .copyWith(
-                                          color: AppColors.txtGrey,
-                                        ),
-                                  )),
+                            Text(
+                              "${medicine.genericName}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontFamily: AppFont.fontBold),
                             ),
                             const SizedBox(
-                              width: 15,
+                              height: 5,
                             ),
-                            Expanded(
-                              child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primaryColor,
-                                      fixedSize: const Size(200, 45),
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30))),
-                                  child: Text(
-                                    ConstString.completed,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .copyWith(
-                                          color: Colors.white,
-                                        ),
-                                  )),
+                            Text(
+                              "15 Capsule(s) in Bottle",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(color: AppColors.txtGrey),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "SLE 120",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                      fontFamily: AppFont.fontMedium,
+                                      fontSize: 12),
                             ),
                           ],
                         )
                       ],
                     ),
-                  ),
-                );
-              },
-            ),
-          );
-        } else {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(AppImages.emptyBin),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    ConstString.noOrder,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
-                  )
-                ],
+                    Divider(
+                      height: 30,
+                      color: AppColors.lineGrey,
+                      thickness: 1,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${order.address!.address}, ${order.address!.area}, ${order.address!.landmark}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.txtGrey, fontSize: 12),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                order.orderData.orderDate != null
+                                    ? DateFormat('d MMM yyyy hh:mm a')
+                                        .format(order.orderData.orderDate!)
+                                    : 'Date not available',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.txtGrey, fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 13,
+                          color: AppColors.txtGrey,
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.decsGrey,
+                                  fixedSize: const Size(200, 45),
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30))),
+                              child: Text(
+                                ConstString.cancle,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(
+                                      color: AppColors.txtGrey,
+                                    ),
+                              )),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryColor,
+                                  fixedSize: const Size(200, 45),
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30))),
+                              child: Text(
+                                ConstString.completed,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(
+                                      color: Colors.white,
+                                    ),
+                              )),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
+            ));
+          }
         }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: ListView(
+            children: medicineAddressDateWidgets,
+          ),
+        );
       },
     );
   }
@@ -358,288 +311,234 @@ class PastOrder extends GetWidget<CartController> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: controller.fetchPastOrders(),
+    return StreamBuilder<List<OrderWithMedicines>>(
+      stream: controller.ordersWithMedicines(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CupertinoActivityIndicator(
+          return Center(
+              child: CupertinoActivityIndicator(
             color: AppColors.primaryColor,
-          );
-        } else if (snapshot.hasData) {
-          List<OrderData> orderData = snapshot.data!;
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: ListView.separated(
-              separatorBuilder: (context, index) {
-                return Divider(
-                  height: 20,
-                  color: AppColors.lineGrey,
-                );
+            radius: 12,
+          ));
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Text('No orders found');
+        }
+
+        List<OrderWithMedicines> ordersWithMedicines = snapshot.data!;
+
+        // Flatten the list of medicines with their corresponding addresses and order dates
+        List<Widget> medicineAddressDateWidgets = [];
+        for (var order in ordersWithMedicines) {
+          for (var medicine in order.medicines) {
+            medicineAddressDateWidgets.add(GestureDetector(
+              onTap: () {
+                Get.to(() => OrderDetailScreen(
+                      orderId: order.orderData.id,
+                    ));
               },
-              itemCount: orderData.length,
-              itemBuilder: (context, index) {
-                String formattedDate =
-                    controller.formatDateTime(orderData[index].orderDate!);
-                return GestureDetector(
-                  onTap: () {
-                    Get.to(() => OrderDetailScreen());
-                  },
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    child: Column(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        StreamBuilder(
-                          stream: controller.fetchMedicineFromOrder(
-                              orderData[index].medicineId.values.first),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                  child: CupertinoActivityIndicator());
-                            } else if (snapshot.hasData) {
-                              MedicineData medicine = snapshot.data!;
-                              return Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 70,
-                                    width: 100,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: CachedNetworkImage(
-                                        imageUrl: medicine.image ?? "",
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                        progressIndicatorBuilder:
-                                            (context, url, downloadProgress) =>
-                                                SizedBox(
-                                          width: 30,
-                                          height: 30,
-                                          child: Center(
-                                              child: LoadingIndicator(
-                                            colors: [AppColors.primaryColor],
-                                            indicatorType: Indicator.ballScale,
-                                            strokeWidth: 1,
-                                          )),
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        medicine.genericName!,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                fontFamily: AppFont.fontBold),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "15 Capsule(s) in Bottle",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(color: AppColors.txtGrey),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "SLE 120",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                fontFamily: AppFont.fontMedium,
-                                                fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        AppIcons.checkFill,
-                                        color: index % 2 == 0
-                                            ? AppColors.green
-                                            : AppColors.red,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        index % 2 == 0
-                                            ? ConstString.delivered
-                                            : ConstString.failed,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                              color: index % 2 == 0
-                                                  ? AppColors.green
-                                                  : AppColors.red,
-                                            ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
-                        ),
-                        Divider(
-                          height: 30,
-                          color: AppColors.lineGrey,
-                          thickness: 1,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                StreamBuilder(
-                                  stream: controller.fetchAddressById(
-                                      orderData[index].addressId ?? ""),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const Center(
-                                          child: CupertinoActivityIndicator());
-                                    } else if (snapshot.hasData) {
-                                      UserAddress add = snapshot.data!;
-                                      String address =
-                                          "${add.address}, ${add.area}, ${add.landmark}";
-                                      return Text(
-                                        address,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                                color: AppColors.txtGrey,
-                                                fontSize: 12),
-                                      );
-                                    } else {
-                                      return const SizedBox();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  formattedDate,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                          color: AppColors.txtGrey,
-                                          fontSize: 12),
-                                ),
-                              ],
+                        SizedBox(
+                          height: 70,
+                          width: 100,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                              imageUrl: medicine.image ?? "",
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: Center(
+                                    child: LoadingIndicator(
+                                  colors: [AppColors.primaryColor],
+                                  indicatorType: Indicator.ballScale,
+                                  strokeWidth: 1,
+                                )),
+                              ),
+                              fit: BoxFit.cover,
                             ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 13,
-                              color: AppColors.txtGrey,
-                            )
-                          ],
+                          ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          width: 10,
                         ),
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.decsGrey,
-                                      fixedSize: const Size(200, 45),
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30))),
-                                  child: Text(
-                                    ConstString.cancle,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .copyWith(
-                                          color: AppColors.txtGrey,
-                                        ),
-                                  )),
+                            Text(
+                              "${medicine.genericName}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontFamily: AppFont.fontBold),
                             ),
                             const SizedBox(
-                              width: 15,
+                              height: 5,
                             ),
-                            Expanded(
-                              child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primaryColor,
-                                      fixedSize: const Size(200, 45),
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(30))),
-                                  child: Text(
-                                    ConstString.reorder,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium!
-                                        .copyWith(
-                                          color: Colors.white,
-                                        ),
-                                  )),
+                            Text(
+                              "15 Capsule(s) in Bottle",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(color: AppColors.txtGrey),
                             ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "SLE 120",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                      fontFamily: AppFont.fontMedium,
+                                      fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              AppIcons.checkFill,
+                              color: AppColors.green,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              ConstString.completed,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                    color: AppColors.green,
+                                  ),
+                            )
                           ],
                         )
                       ],
                     ),
-                  ),
-                );
-              },
-            ),
-          );
-        } else {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(AppImages.emptyBin),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    ConstString.noOrder,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
-                  )
-                ],
+                    Divider(
+                      height: 30,
+                      color: AppColors.lineGrey,
+                      thickness: 1,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${order.address!.address}, ${order.address!.area}, ${order.address!.landmark}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.txtGrey, fontSize: 12),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                order.orderData.orderDate != null
+                                    ? DateFormat('d MMM yyyy hh:mm a')
+                                        .format(order.orderData.orderDate!)
+                                    : 'Date not available',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.txtGrey, fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 13,
+                          color: AppColors.txtGrey,
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.decsGrey,
+                                  fixedSize: const Size(200, 45),
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30))),
+                              child: Text(
+                                ConstString.cancle,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(
+                                      color: AppColors.txtGrey,
+                                    ),
+                              )),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryColor,
+                                  fixedSize: const Size(200, 45),
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30))),
+                              child: Text(
+                                ConstString.reorder,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(
+                                      color: Colors.white,
+                                    ),
+                              )),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
+            ));
+          }
         }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: ListView(
+            children: medicineAddressDateWidgets,
+          ),
+        );
       },
     );
   }

@@ -26,39 +26,93 @@ class UploadPresController extends GetxController {
 
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
+  // pickImageFromCamera() async {
+  //   final XFile? image = await picker.pickImage(
+  //       source: ImageSource.camera,
+  //       imageQuality: 80,
+  //       maxHeight: 480,
+  //       maxWidth: 640);
+  //
+  //   if (image != null) {
+  //     File imageFile = File(image.path);
+  //     croppedProfileFile = await ImageCropper().cropImage(
+  //       sourcePath: imageFile.path,
+  //       uiSettings: [
+  //         AndroidUiSettings(
+  //           toolbarColor: AppColors.white,
+  //           toolbarTitle: 'Crop Image',
+  //         ),
+  //         IOSUiSettings(
+  //           title: 'Crop Image',
+  //         )
+  //       ],
+  //       aspectRatioPresets: [
+  //         CropAspectRatioPreset.square,
+  //         CropAspectRatioPreset.ratio3x2,
+  //         CropAspectRatioPreset.original,
+  //         CropAspectRatioPreset.ratio4x3,
+  //         CropAspectRatioPreset.ratio16x9,
+  //         CropAspectRatioPreset.ratio5x4,
+  //         CropAspectRatioPreset.ratio5x3,
+  //         CropAspectRatioPreset.ratio7x5,
+  //       ],
+  //     );
+  //
+  //     selectedImages.add(croppedProfileFile!.path.obs);
+  //     print("Image Picked From Camera");
+  //   }
+  //   Get.back();
+  // }
+
   pickImageFromCamera() async {
-    final XFile? image =
-        await picker.pickImage(source: ImageSource.camera, imageQuality: 80);
+    try {
+      final XFile? image = await picker.pickImage(
+          source: ImageSource.camera,
+          preferredCameraDevice: CameraDevice.front,
+          imageQuality: 80,
+          maxHeight: 480,
+          maxWidth: 640);
 
-    if (image != null) {
-      File imageFile = File(image.path);
-      croppedProfileFile = await ImageCropper().cropImage(
-        sourcePath: imageFile.path,
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarColor: AppColors.white,
-            toolbarTitle: 'Crop Image',
-          ),
-          IOSUiSettings(
-            title: 'Crop Image',
-          )
-        ],
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9,
-          CropAspectRatioPreset.ratio5x4,
-          CropAspectRatioPreset.ratio5x3,
-          CropAspectRatioPreset.ratio7x5,
-        ],
-      );
+      if (image != null) {
+        File imageFile = File(image.path);
 
-      selectedImages.add(croppedProfileFile!.path.obs);
-      print("Image Picked From Camera");
+        // Cropping the image
+        croppedProfileFile = await ImageCropper().cropImage(
+          sourcePath: imageFile.path,
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarColor: AppColors.white,
+              toolbarTitle: 'Crop Image',
+            ),
+            IOSUiSettings(
+              title: 'Crop Image',
+            )
+          ],
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio3x2,
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9,
+            CropAspectRatioPreset.ratio5x4,
+            CropAspectRatioPreset.ratio5x3,
+            CropAspectRatioPreset.ratio7x5,
+          ],
+        );
+
+        if (croppedProfileFile != null) {
+          selectedImages.add(croppedProfileFile!.path.obs);
+          print("Image Picked and Cropped from Camera : ${selectedImages}");
+        } else {
+          print("Cropping cancelled");
+        }
+      } else {
+        print("Image picking cancelled");
+      }
+    } catch (e) {
+      print("Error picking image: $e");
     }
-    Get.back();
   }
 
   pickImageFromGallery() async {
@@ -162,7 +216,6 @@ class UploadPresController extends GetxController {
       if (documentSnapshot.exists) {
         var data = documentSnapshot.data() as Map<String, dynamic>?;
         if (data != null && data.containsKey('prescriptions')) {
-          // Assuming 'prescriptions' is the key for the list of prescriptions in the document
           List<dynamic> prescriptions = data['prescriptions'] as List<dynamic>;
           prescriptionCount = prescriptions.length;
         }
@@ -171,7 +224,6 @@ class UploadPresController extends GetxController {
       }
     } catch (e) {
       print('Error fetching prescription count for document: $e');
-      // Handle the exception appropriately.
     }
 
     return prescriptionCount;

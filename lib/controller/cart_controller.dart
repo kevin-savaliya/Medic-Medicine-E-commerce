@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names
 
 import 'dart:async';
 import 'dart:math';
@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:medic/model/discount_data_model.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/order_data.dart';
+import 'package:medic/model/order_with_medicine.dart';
 import 'package:medic/model/prescription_model.dart';
 import 'package:medic/model/review_data_model.dart';
 import 'package:medic/model/user_address.dart';
@@ -50,6 +51,13 @@ class CartController extends GetxController {
   RxString discountName = "".obs;
 
   String prescriptionId = "";
+
+  var selectedMonth = '01'.obs;
+  var selectedYear = DateTime.now().year.toString().obs;
+
+  List<String> get months => List<String>.generate(12, (index) => (index + 1).toString().padLeft(2, '0'));
+
+  List<String> get years => List<String>.generate(50, (index) => (DateTime.now().year + index).toString());
 
   RxInt cartQty = 1.obs;
 
@@ -377,9 +385,9 @@ class CartController extends GetxController {
     });
   }
 
-  Future<OrderData?> fetchOrderIds() async {
+  Future<OrderData?> fetchOrderIds(String orderId) async {
     try {
-      DocumentSnapshot snapshot = await orderRef.doc(orderData.value.id).get();
+      DocumentSnapshot snapshot = await orderRef.doc(orderId).get();
       if (snapshot.exists && snapshot.data() != null) {
         return OrderData.fromMap(snapshot.data() as Map<String, dynamic>);
       } else {
@@ -476,6 +484,28 @@ class CartController extends GetxController {
             snapshot.docs.map((doc) => OrderData.fromMap(doc.data())).toList());
   }
 
+  Stream<Map<String, List<String>>> streamAllMedicineIds() {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    return firestore
+        .collection('orders')
+        .where('creatorId', isEqualTo: currentUser)
+        .snapshots()
+        .map((QuerySnapshot querySnapshot) {
+      Map<String, List<String>> allMedicineIds = {};
+
+      for (var doc in querySnapshot.docs) {
+        OrderData orderData = OrderData.fromDocumentSnapshot(doc);
+
+        List<String> medicineIds = orderData.medicineId.values.toList();
+
+        allMedicineIds[orderData.id!] = medicineIds;
+      }
+
+      return allMedicineIds;
+    });
+  }
+
   Stream<MedicineData> fetchMedicineFromOrder(String id) {
     return medicineRef.doc(id).snapshots().map((snapshot) =>
         MedicineData.fromMap(snapshot.data() as Map<String, dynamic>));
@@ -489,5 +519,45 @@ class CartController extends GetxController {
   String OrderDateFormat(DateTime dateTime) {
     final DateFormat format = DateFormat('d MMM yyyy');
     return format.format(dateTime);
+  }
+
+  Stream<List<OrderWithMedicines>> ordersWithMedicines() {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    return firestore
+        .collection('orders')
+        .where('creatorId', isEqualTo: currentUser)
+        .orderBy('orderDate', descending: true)
+        .snapshots()
+        .asyncMap((querySnapshot) async {
+      List<OrderWithMedicines> ordersWithMedicines = [];
+
+      for (var orderDoc in querySnapshot.docs) {
+        OrderData orderData = OrderData.fromDocumentSnapshot(orderDoc);
+
+        UserAddress? address;
+
+        if (orderData.addressId != null) {
+          address = await fetchAddressById(orderData.addressId!)?.first;
+        }
+
+        List<MedicineData> medicines = [];
+        for (String medicineId in orderData.medicineId.values) {
+          DocumentSnapshot medicineSnapshot =
+              await firestore.collection('medicines').doc(medicineId).get();
+          if (medicineSnapshot.exists) {
+            medicines.add(MedicineData.fromMap(
+                medicineSnapshot.data() as Map<String, dynamic>));
+          }
+        }
+
+        ordersWithMedicines.add(OrderWithMedicines(
+          orderData: orderData,
+          medicines: medicines,
+          address: address,
+        ));
+      }
+
+      return ordersWithMedicines;
+    });
   }
 }
