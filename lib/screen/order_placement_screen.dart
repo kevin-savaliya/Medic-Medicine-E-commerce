@@ -12,6 +12,7 @@ import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/prescription_model.dart';
 import 'package:medic/model/user_address.dart';
 import 'package:medic/screen/card_details.dart';
+import 'package:medic/screen/cards_screen.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/myaddress_screen.dart';
 import 'package:medic/screen/order_details_screen.dart';
@@ -225,7 +226,7 @@ class OrderPlacement extends StatelessWidget {
                               // crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "SLE 120",
+                                  "SLL ${medicineList[index].medicinePrice ?? "100"}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium!
@@ -433,7 +434,7 @@ class OrderPlacement extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "${cartController.orderData.value.medicineData!.length}",
+                                "${cartController.getTotalQuantity()}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -458,7 +459,7 @@ class OrderPlacement extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLE 220",
+                                "SLL ${cartController.shippingFee}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -483,7 +484,7 @@ class OrderPlacement extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLE 100",
+                                "SLL ${cartController.discountAmount.toStringAsFixed(1)}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -513,7 +514,7 @@ class OrderPlacement extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLE 120",
+                                "SLL ${cartController.getTotalPrice(cartController.discountPercentage.value, cartController.isDiscountValid)}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -557,7 +558,7 @@ class OrderPlacement extends StatelessWidget {
                                 controller.paymentMethod[index];
                             if (controller.selectedPaymentMethod.value ==
                                 ConstString.creditCard) {
-                              Get.to(() => CardDetails());
+                              Get.to(() => CardsScreen());
                             }
                           },
                           child: Padding(

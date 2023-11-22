@@ -274,34 +274,34 @@ class MedicineDetails extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "SLE",
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium!
-                              .copyWith(
-                                  color: AppColors.darkPrimaryColor,
-                                  fontFamily: AppFont.fontMedium,
-                                  fontSize: 14),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "${medicineData?.medicinePrice ?? "100"}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium!
-                              .copyWith(
-                                  color: AppColors.darkPrimaryColor,
-                                  fontFamily: AppFont.fontMedium,
-                                  fontSize: 15),
-                        ),
-                      ],
-                    )
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.end,
+                    //   children: [
+                    //     Text(
+                    //       "SLE",
+                    //       style: Theme.of(context)
+                    //           .textTheme
+                    //           .displayMedium!
+                    //           .copyWith(
+                    //               color: AppColors.darkPrimaryColor,
+                    //               fontFamily: AppFont.fontMedium,
+                    //               fontSize: 14),
+                    //     ),
+                    //     const SizedBox(
+                    //       height: 5,
+                    //     ),
+                    //     Text(
+                    //       "${medicineData?.medicinePrice ?? "100"}",
+                    //       style: Theme.of(context)
+                    //           .textTheme
+                    //           .displayMedium!
+                    //           .copyWith(
+                    //               color: AppColors.darkPrimaryColor,
+                    //               fontFamily: AppFont.fontMedium,
+                    //               fontSize: 15),
+                    //     ),
+                    //   ],
+                    // )
                   ],
                 ),
                 const SizedBox(
@@ -310,7 +310,7 @@ class MedicineDetails extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "SLE 120",
+                      "SLL ${medicineData!.medicinePrice ?? "100"}",
                       style: Theme.of(context)
                           .textTheme
                           .displayMedium!
@@ -1053,303 +1053,7 @@ class MedicineDetails extends StatelessWidget {
                                 ))
                           ],
                         ),
-                        SizedBox(
-                          height: 260,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: medicineList.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Get.to(() => MedicineDetails(
-                                      medicineData: medicineList[index]));
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 5),
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                          color: AppColors.decsGrey)),
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                          flex: 5,
-                                          child: SizedBox(
-                                            width: double.infinity,
-                                            child: Center(
-                                              child: Stack(
-                                                fit: StackFit.expand,
-                                                children: [
-                                                  ClipRRect(
-                                                    borderRadius:
-                                                        const BorderRadius.only(
-                                                            topLeft:
-                                                                Radius.circular(
-                                                                    10),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    10)),
-                                                    child: CachedNetworkImage(
-                                                      height: 30,
-                                                      width: 30,
-                                                      imageUrl:
-                                                          medicineList[index]
-                                                                  .image ??
-                                                              "",
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          const Icon(
-                                                              Icons.error),
-                                                      progressIndicatorBuilder:
-                                                          (context, url,
-                                                                  downloadProgress) =>
-                                                              SizedBox(
-                                                        width: 30,
-                                                        height: 30,
-                                                        child: Center(
-                                                          child:
-                                                              CupertinoActivityIndicator(
-                                                            color: AppColors
-                                                                .primaryColor,
-                                                            animating: true,
-                                                            radius: 10,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                  Obx(() {
-                                                    String medicineId =
-                                                        medicineList[index].id!;
-                                                    bool isFav =
-                                                        controller.isFavourite(
-                                                            medicineId);
-                                                    return Positioned(
-                                                        top: 10,
-                                                        right: 10,
-                                                        child: GestureDetector(
-                                                          onTap: () async {
-                                                            if (controller
-                                                                    .firebaseuser ==
-                                                                null) {
-                                                              Utils()
-                                                                  .showAlertDialog(
-                                                                      context:
-                                                                          context,
-                                                                      title:
-                                                                          "Login Required!",
-                                                                      content:
-                                                                          "Ready to Get Started? \nConfirm with 'Yes' and Login Your Account.",
-                                                                      onPressed:
-                                                                          () {
-                                                                        Get.back();
-                                                                        Get.to(() =>
-                                                                            const PhoneLoginScreen());
-                                                                      });
-                                                              return;
-                                                            }
-                                                            if (isFav) {
-                                                              await controller
-                                                                  .removeFavourite(
-                                                                      medicineId);
-                                                            } else {
-                                                              await controller
-                                                                  .addFavourite(
-                                                                      medicineId);
-                                                            }
-                                                          },
-                                                          child: isFav
-                                                              ? SvgPicture
-                                                                  .asset(
-                                                                  AppIcons
-                                                                      .favFillRed,
-                                                                  height: 22,
-                                                                )
-                                                              : SvgPicture
-                                                                  .asset(
-                                                                  AppIcons.like,
-                                                                  height: 22,
-                                                                ),
-                                                        ));
-                                                  })
-                                                ],
-                                              ),
-                                            ),
-                                          )),
-                                      Expanded(
-                                        flex: 6,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(10),
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                              color: AppColors.white,
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                      bottomLeft:
-                                                          Radius.circular(12),
-                                                      bottomRight:
-                                                          Radius.circular(12))),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                medicineList[index]
-                                                    .genericName!,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleSmall!
-                                                    .copyWith(
-                                                        fontFamily:
-                                                            AppFont.fontMedium,
-                                                        color: AppColors
-                                                            .darkPrimaryColor,
-                                                        fontSize: 13.5),
-                                              ),
-                                              const SizedBox(
-                                                height: 3,
-                                              ),
-                                              Text(
-                                                medicineList[index].brandName ??
-                                                    "",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleSmall!
-                                                    .copyWith(
-                                                        fontFamily:
-                                                            AppFont.fontRegular,
-                                                        color:
-                                                            AppColors.txtGrey,
-                                                        fontSize: 12),
-                                              ),
-                                              const SizedBox(
-                                                height: 3,
-                                              ),
-                                              SmoothStarRating(
-                                                rating: double.parse(
-                                                    medicineList[index]
-                                                                .ratings ==
-                                                            ""
-                                                        ? "5"
-                                                        : medicineList[index]
-                                                            .ratings!),
-                                                allowHalfRating: true,
-                                                defaultIconData: Icons.star,
-                                                filledIconData: Icons.star,
-                                                halfFilledIconData:
-                                                    Icons.star_half,
-                                                starCount: 5,
-                                                spacing: 2,
-                                                onRatingChanged: (rating) {},
-                                                size: 15,
-                                                color: AppColors.secondaryColor,
-                                                borderColor: AppColors.indGrey,
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        "SLE 120",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .displayMedium!
-                                                            .copyWith(
-                                                                color: AppColors
-                                                                    .darkPrimaryColor,
-                                                                fontFamily: AppFont
-                                                                    .fontMedium),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        "30% Off",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .titleSmall!
-                                                            .copyWith(
-                                                                fontSize: 10,
-                                                                color: AppColors
-                                                                    .primaryColor,
-                                                                fontFamily: AppFont
-                                                                    .fontMedium),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Expanded(
-                                                    child: ElevatedButton(
-                                                        onPressed: () async {
-                                                          await cartController
-                                                              .addToCart(
-                                                                  medicineList[
-                                                                      index],
-                                                                  qty: cartController
-                                                                      .qty
-                                                                      .value);
-                                                          Get.to(() =>
-                                                              const CartScreen());
-                                                        },
-                                                        style: ElevatedButton.styleFrom(
-                                                            backgroundColor:
-                                                                AppColors
-                                                                    .tilePrimaryColor,
-                                                            fixedSize:
-                                                                const Size(
-                                                                    110, 20),
-                                                            elevation: 0,
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            30))),
-                                                        child: Text(
-                                                          "Add to cart",
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .titleSmall!
-                                                              .copyWith(
-                                                                  fontSize:
-                                                                      11.5,
-                                                                  color: AppColors
-                                                                      .primaryColor,
-                                                                  fontFamily:
-                                                                      AppFont
-                                                                          .fontMedium),
-                                                        )),
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                        recommendedMedicineList(medicineList),
                       ],
                     );
                   } else {
@@ -1385,6 +1089,238 @@ class MedicineDetails extends StatelessWidget {
             height: 20,
           )
         ],
+      ),
+    );
+  }
+
+  SizedBox recommendedMedicineList(List<MedicineData> medicineList) {
+    return SizedBox(
+      height: 260,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: medicineList.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              Get.to(() => MedicineDetails(medicineData: medicineList[index]));
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+              width: 200,
+              decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.decsGrey)),
+              child: Column(
+                children: [
+                  Expanded(
+                      flex: 5,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Center(
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
+                                child: CachedNetworkImage(
+                                  height: 30,
+                                  width: 30,
+                                  imageUrl: medicineList[index].image ?? "",
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: Center(
+                                      child: CupertinoActivityIndicator(
+                                        color: AppColors.primaryColor,
+                                        animating: true,
+                                        radius: 10,
+                                      ),
+                                    ),
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Obx(() {
+                                String medicineId = medicineList[index].id!;
+                                bool isFav = controller.isFavourite(medicineId);
+                                return Positioned(
+                                    top: 10,
+                                    right: 10,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        if (controller.firebaseuser == null) {
+                                          Utils().showAlertDialog(
+                                              context: context,
+                                              title: "Login Required!",
+                                              content:
+                                                  "Ready to Get Started? \nConfirm with 'Yes' and Login Your Account.",
+                                              onPressed: () {
+                                                Get.back();
+                                                Get.to(() =>
+                                                    const PhoneLoginScreen());
+                                              });
+                                          return;
+                                        }
+                                        if (isFav) {
+                                          await controller
+                                              .removeFavourite(medicineId);
+                                        } else {
+                                          await controller
+                                              .addFavourite(medicineId);
+                                        }
+                                      },
+                                      child: isFav
+                                          ? SvgPicture.asset(
+                                              AppIcons.favFillRed,
+                                              height: 22,
+                                            )
+                                          : SvgPicture.asset(
+                                              AppIcons.like,
+                                              height: 22,
+                                            ),
+                                    ));
+                              })
+                            ],
+                          ),
+                        ),
+                      )),
+                  Expanded(
+                    flex: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(12),
+                              bottomRight: Radius.circular(12))),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            medicineList[index].genericName!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    fontFamily: AppFont.fontMedium,
+                                    color: AppColors.darkPrimaryColor,
+                                    fontSize: 13.5),
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            medicineList[index].brandName ?? "",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    fontFamily: AppFont.fontRegular,
+                                    color: AppColors.txtGrey,
+                                    fontSize: 12),
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          SmoothStarRating(
+                            rating: double.parse(
+                                medicineList[index].ratings == ""
+                                    ? "5"
+                                    : medicineList[index].ratings!),
+                            allowHalfRating: true,
+                            defaultIconData: Icons.star,
+                            filledIconData: Icons.star,
+                            halfFilledIconData: Icons.star_half,
+                            starCount: 5,
+                            spacing: 2,
+                            onRatingChanged: (rating) {},
+                            size: 15,
+                            color: AppColors.secondaryColor,
+                            borderColor: AppColors.indGrey,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "SLL ${medicineList[index].medicinePrice ?? "100"}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium!
+                                        .copyWith(
+                                            color: AppColors.darkPrimaryColor,
+                                            fontFamily: AppFont.fontMedium),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "30% Off",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(
+                                            fontSize: 10,
+                                            color: AppColors.primaryColor,
+                                            fontFamily: AppFont.fontMedium),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: ElevatedButton(
+                                    onPressed: () async {
+                                      await cartController.addToCart(
+                                          medicineList[index],
+                                          qty: cartController.qty.value);
+                                      Get.to(() => const CartScreen());
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            AppColors.tilePrimaryColor,
+                                        fixedSize: const Size(110, 20),
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30))),
+                                    child: Text(
+                                      "Add to cart",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(
+                                              fontSize: 11.5,
+                                              color: AppColors.primaryColor,
+                                              fontFamily: AppFont.fontMedium),
+                                    )),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

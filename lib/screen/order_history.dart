@@ -183,7 +183,7 @@ class CurrentOrder extends GetWidget<CartController> {
                               height: 5,
                             ),
                             Text(
-                              "SLE 120",
+                              "SLL ${medicine.medicinePrice}",
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!
@@ -402,7 +402,7 @@ class PastOrder extends GetWidget<CartController> {
                               height: 5,
                             ),
                             Text(
-                              "SLE 120",
+                              "SLL ${medicine.medicinePrice}",
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!

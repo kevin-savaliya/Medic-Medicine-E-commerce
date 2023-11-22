@@ -42,7 +42,19 @@ class AppColors {
   static Color listColor2 = const Color(0xFFF75418);
   static Color listColor3 = const Color(0xFFD26293);
   static Color listColor4 = const Color(0xFF25A79A);
+  static Color listColor4dark = const Color(0xFF269B8F);
   static Color listColor5 = const Color(0xFF6CDC06);
+
+  static Color cardGradient1 = const Color(0xFF094C4C);
+  static Color cardGradient11 = const Color(0xFF0FB7B7);
+
+  static Color cardGradient2 = const Color(0xFF52B6FE);
+  static Color cardGradient22 = const Color(0xFF6154FE);
+
+  static List<List<Color>> cardList = [
+    [AppColors.cardGradient1, AppColors.cardGradient11],
+    [AppColors.cardGradient2, AppColors.cardGradient22]
+  ];
 
   static Color red = const Color(0xFFE83A0E);
   static Color green = const Color(0xFF2DB044);

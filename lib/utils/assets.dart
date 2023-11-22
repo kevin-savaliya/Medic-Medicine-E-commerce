@@ -19,6 +19,14 @@ class AppImages {
   static const String medicineBox3 = 'asset/images/medicinebox3.png';
   static const String emptyBin = 'asset/images/emptyBin.svg';
 
+  static const String card1 = 'asset/images/card1.png';
+  static const String card11 = 'asset/images/card11.png';
+  static const String card2 = 'asset/images/card2.png';
+  static const String card22 = 'asset/images/card22.png';
+  static const String creditTxt = 'asset/images/credit_txt.png';
+  static const String creditTxtSVG = 'asset/images/credit_txt.svg';
+  static const String visa = 'asset/images/visaIcon.svg';
+
   static const String medicineBox4 = 'asset/medicineboxPng.png';
   static const String medicineBox = 'asset/medicinebox.jpg';
 
@@ -99,4 +107,5 @@ class AppIcons {
   static const String eye = 'asset/icons/eye.svg';
   static const String urinary = 'asset/icons/urinary.svg';
   static const String kidney = 'asset/icons/kidney.svg';
+  static const String noPres = 'asset/icons/noData.svg';
 }

@@ -216,7 +216,7 @@ class OrderDetailScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLE 2200",
+                                "SLL 2200",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -246,7 +246,7 @@ class OrderDetailScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLE 100",
+                                "SLL 100",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -276,7 +276,7 @@ class OrderDetailScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLE 120",
+                                "SLL 120",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -342,7 +342,7 @@ class OrderDetailScreen extends StatelessWidget {
                         ),
                         const Spacer(),
                         Text(
-                          "SLE 120",
+                          "SLL 120",
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall!

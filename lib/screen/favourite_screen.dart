@@ -257,7 +257,7 @@ class FavouriteScreen extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "SLE 120",
+                                          "SLL ${medicineList[index].medicinePrice ?? "100"}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .displayMedium!

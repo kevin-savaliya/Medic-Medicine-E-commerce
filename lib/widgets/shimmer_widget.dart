@@ -197,6 +197,35 @@ class AddressShimmer extends StatelessWidget {
   }
 }
 
+class CardShimmer extends StatelessWidget {
+  final int? itemCount;
+  final double? height;
+
+  const CardShimmer({required this.itemCount, this.height, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: ListView.builder(
+          itemCount: itemCount,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: Container(
+                height: 150,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Colors.grey[300]!,
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+            );
+          },
+        ));
+  }
+}
+
 class CartShimmer extends StatelessWidget {
   final int? itemCount;
   final double? height;

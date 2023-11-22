@@ -4,7 +4,9 @@ class ConstString {
   static const String next = "Next";
   static const String btnContinue = "Continue";
   static const String sendOTP = "Send OTP";
+  static const String addNewCard = "Add New Card";
   static const String pay = "Pay";
+  static const String addCard = "Add Card";
   static const String saveName = "Save Name";
   static const String save = "Save";
   static const String resendOTP = "Resend OTP";
@@ -31,6 +33,7 @@ class ConstString {
   static const String subtotal = "Subtotal";
   static const String discount = "Discount";
   static const String applyDiscount = "Apply Discount";
+  static const String apply = "Apply";
   static const String totalAmount = "Total Amount";
   static const String paymentMethod = "Payment Method";
   static const String paymentDetails = "Payment Details";
@@ -85,6 +88,7 @@ class ConstString {
       "Your account has been verified successfully ";
 
   static const String medicineCategory = "Medicines Categories";
+  static const String popularSearches = "Popular Searches";
   static const String viewAll = "View all";
   static const String popularMedicine = "Popular Medicines";
   static const String orderPlacement = "Order Placement";
@@ -93,6 +97,7 @@ class ConstString {
   static const String fav = "Favourites";
   static const String cart = "Cart";
   static const String cardDetail = "Card Details";
+  static const String creditCards = "Credit cards";
   static const String medicineName = "Medicine Name";
   static const String amount = "Amount";
   static const String dosage = "Dosage";
@@ -117,6 +122,7 @@ class ConstString {
   static const String area = "Area, Sector, Locality*";
   static const String landmark = "Landmark";
   static const String noCategory = "No Category Found!";
+  static const String noCard = "No Card Found!";
   static const String noReminder = "No Reminder Found!";
   static const String noAddress = "No Address Found!";
   static const String noMedicine = "No Medicine Found!";
@@ -145,6 +151,7 @@ class ConstString {
   static const String FAQ = "FAQ";
   static const String rating_review = "Ratings and Reviews";
   static const String howwork = "How it Works";
+  static const String presNotUpload = "Prescription not Uploaded yet!";
   static const String quickOrder = "Quick Order via \nPrescriptions";
   static const String uploadphoto =
       "Upload the photo and we will deliver \nthe medicines";

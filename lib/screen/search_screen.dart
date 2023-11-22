@@ -31,51 +31,65 @@ class SearchScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: AppColors.white,
         toolbarHeight: 70,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 15),
-          child: Image.asset("asset/dummy1.png"),
+        titleSpacing: 0,
+        leading: GestureDetector(
+          onTap: () {
+            Get.back();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: SvgPicture.asset(
+              AppIcons.back,
+            ),
+          ),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                SvgPicture.asset(AppIcons.fillpin),
-                const SizedBox(
-                  width: 3,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: TextFormField(
+            style: Theme.of(context).textTheme.titleMedium,
+            decoration: InputDecoration(
+              filled: true,
+              enabled: true,
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(top: 16, bottom: 16, left: 10),
+                child: SvgPicture.asset(
+                  AppIcons.search,
+                  height: 18,
                 ),
-                Text(
-                  "Santa, Illinois 85486",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .copyWith(color: AppColors.primaryColor),
-                ),
-              ],
+              ),
+              fillColor: AppColors.transparentDetails,
+              hintText: "Search Drugs, Reviews, and Ratings...",
+              hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  fontFamily: AppFont.fontMedium,
+                  fontSize: 14,
+                  color: AppColors.skipGrey),
+              border: OutlineInputBorder(
+                borderSide:
+                    const BorderSide(color: Colors.transparent, width: 0.5),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide:
+                    const BorderSide(color: Colors.transparent, width: 0.5),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderSide:
+                    const BorderSide(color: Colors.transparent, width: 0.5),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide:
+                    const BorderSide(color: Colors.transparent, width: 0.5),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 17,
+              ),
             ),
-            const SizedBox(
-              height: 5,
-            ),
-            MyNameTextWidget(
-              textStyle: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(fontFamily: AppFont.fontMedium),
-            ),
-          ],
+          ),
         ),
-        actions: [
-          controller.firebaseUser != null
-              ? IconButton(
-                  onPressed: () async {
-                    await Get.to(() => const NotificationScreen());
-                  },
-                  icon: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: SvgPicture.asset(AppIcons.notification),
-                  ))
-              : SizedBox()
-        ],
       ),
       body: searchWidget(context, controller),
     );
@@ -87,54 +101,6 @@ class SearchScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: TextFormField(
-                style: Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                  filled: true,
-                  enabled: true,
-                  prefixIcon: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 16, bottom: 16, left: 10),
-                    child: SvgPicture.asset(
-                      AppIcons.search,
-                      height: 18,
-                    ),
-                  ),
-                  fillColor: AppColors.transparentDetails,
-                  hintText: "Search Drugs, Reviews, and Ratings...",
-                  hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      fontFamily: AppFont.fontMedium,
-                      fontSize: 14,
-                      color: AppColors.skipGrey),
-                  border: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: Colors.transparent, width: 0.5),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: Colors.transparent, width: 0.5),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: Colors.transparent, width: 0.5),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(color: Colors.transparent, width: 0.5),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 17,
-                  ),
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
               child: Container(
@@ -237,8 +203,8 @@ class SearchScreen extends StatelessWidget {
                     ConstString.medicineCategory,
                     style: Theme.of(context).textTheme.displayMedium!.copyWith(
                           color: AppColors.darkPrimaryColor,
-                          fontFamily: AppFont.fontMedium,
-                          fontSize: 15.5,
+                          fontFamily: AppFont.fontSemiBold,
+                          fontSize: 15,
                         ),
                   ),
                   TextButton(
@@ -379,10 +345,22 @@ class SearchScreen extends StatelessWidget {
                     ));
               },
             ),
-            Divider(
+            SizedBox(
               height: 10,
-              color: AppColors.lineGrey,
-              thickness: 1,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  ConstString.popularSearches,
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: AppColors.darkPrimaryColor,
+                        fontFamily: AppFont.fontSemiBold,
+                        fontSize: 15,
+                      ),
+                ),
+              ),
             ),
             const SizedBox(
               height: 10,

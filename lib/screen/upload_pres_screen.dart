@@ -49,7 +49,7 @@ class UploadPrescription extends StatelessWidget {
         body: uploadPresWidget(context),
         bottomSheet: Container(
           color: AppColors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 10),
           width: double.infinity,
           child: Obx(
             () => ElevatedButton(
@@ -268,82 +268,102 @@ class UploadPrescription extends StatelessWidget {
                         const SizedBox(
                           height: 10,
                         ),
-                        Container(
-                          height: 280,
-                          width: double.infinity,
-                          child: GridView.builder(
-                            itemCount: presController.selectedImages.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2, mainAxisSpacing: 15),
-                            itemBuilder: (context, index) {
-                              return Stack(
-                                children: [
-                                  SizedBox(
-                                    height: 150,
-                                    width: 150,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.file(
-                                        File(presController
-                                            .selectedImages[index].value),
-                                        fit: BoxFit.cover,
-                                      ),
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: presController.selectedImages.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2, mainAxisSpacing: 15),
+                          itemBuilder: (context, index) {
+                            return Stack(
+                              children: [
+                                SizedBox(
+                                  height: 150,
+                                  width: 150,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.file(
+                                      File(presController
+                                          .selectedImages[index].value),
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  Positioned(
-                                      bottom: 0,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          presController.selectedImages
-                                              .removeAt(index);
-                                        },
-                                        child: Container(
-                                          height: 30,
-                                          width: 150,
-                                          decoration: BoxDecoration(
-                                              color: AppColors.darkPrimaryColor
-                                                  .withOpacity(0.7),
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                      bottomRight:
-                                                          Radius.circular(10),
-                                                      bottomLeft:
-                                                          Radius.circular(10))),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5, horizontal: 10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  ConstString.remove,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall!
-                                                      .copyWith(
-                                                          color:
-                                                              AppColors.white),
-                                                ),
-                                                SvgPicture.asset(
-                                                  AppIcons.closeRed,
-                                                  height: 16,
-                                                )
-                                              ],
-                                            ),
+                                ),
+                                Positioned(
+                                    bottom: 0,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        presController.selectedImages
+                                            .removeAt(index);
+                                      },
+                                      child: Container(
+                                        height: 30,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.darkPrimaryColor
+                                                .withOpacity(0.7),
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                                    bottomRight:
+                                                        Radius.circular(10),
+                                                    bottomLeft:
+                                                        Radius.circular(10))),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                ConstString.remove,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleSmall!
+                                                    .copyWith(
+                                                        color: AppColors.white),
+                                              ),
+                                              SvgPicture.asset(
+                                                AppIcons.closeRed,
+                                                height: 16,
+                                              )
+                                            ],
                                           ),
                                         ),
-                                      ))
-                                ],
-                              );
-                            },
-                          ),
+                                      ),
+                                    ))
+                              ],
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          height: 60,
                         )
                       ],
                     )
-                  : const SizedBox(),
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 150,
+                        ),
+                        SvgPicture.asset(AppIcons.noPres, height: 45),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          ConstString.presNotUpload,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  color: AppColors.skipGrey.withOpacity(0.7),
+                                  fontSize: 13,
+                                  fontFamily: AppFont.fontMedium),
+                        )
+                      ],
+                    ),
             ),
           ],
         ),

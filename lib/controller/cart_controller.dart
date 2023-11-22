@@ -1,13 +1,15 @@
-// ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names
+// ignore_for_file: unnecessary_null_comparison, non_constant_identifier_names, unrelated_type_equality_checks
 
 import 'dart:async';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:credit_card_validator/credit_card_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:medic/model/credit_card_model.dart';
 import 'package:medic/model/discount_data_model.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/model/order_data.dart';
@@ -23,7 +25,7 @@ class CartController extends GetxController {
   RxInt qty = 1.obs;
   RxDouble rating = RxDouble(0);
 
-  RxList<DiscountDataModel> discounts = <DiscountDataModel>[].obs;
+  TextEditingController expDateController = TextEditingController();
 
   RxString selectedMedicineName = "".obs;
   RxString selectedMedicineId = "".obs;
@@ -47,17 +49,32 @@ class CartController extends GetxController {
   final CollectionReference userRef =
       FirebaseFirestore.instance.collection("users");
 
+  final CollectionReference cardRef =
+      FirebaseFirestore.instance.collection("cards");
+
   final Rx<DiscountDataModel?> selectedDiscount = Rx<DiscountDataModel?>(null);
   RxString discountName = "".obs;
+  RxDouble discountPercentage = 0.0.obs;
+  RxDouble discountAmount = 0.0.obs;
+  RxString discountCode = "".obs;
+
+  RxDouble shippingFee = 100.0.obs;
 
   String prescriptionId = "";
 
-  var selectedMonth = '01'.obs;
-  var selectedYear = DateTime.now().year.toString().obs;
+  TextEditingController disCodeController = TextEditingController();
+  TextEditingController cardNumberController = TextEditingController();
+  TextEditingController cardHolderController = TextEditingController();
+  TextEditingController cvvController = TextEditingController();
 
-  List<String> get months => List<String>.generate(12, (index) => (index + 1).toString().padLeft(2, '0'));
+  RxString selectedMonth = '01'.obs;
+  RxString selectedYear = DateTime.now().year.toString().obs;
 
-  List<String> get years => List<String>.generate(50, (index) => (DateTime.now().year + index).toString());
+  List<String> get months => List<String>.generate(
+      12, (index) => (index + 1).toString().padLeft(2, '0'));
+
+  List<String> get years => List<String>.generate(
+      50, (index) => (DateTime.now().year + index).toString());
 
   RxInt cartQty = 1.obs;
 
@@ -77,15 +94,17 @@ class CartController extends GetxController {
 
   Rx<OrderData> orderData = OrderData(medicineId: {}).obs;
 
-  var isDiscountApplied = false.obs;
+  var isDiscountValid = false.obs;
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    fetchDiscount();
     fetchMedicineFromCart();
     fetchActiveAddress();
+    fetchAndSelectDiscount();
+    expDateController.addListener(_formatExpiryDate);
+    cardNumberController.addListener(_formatCreditCardNumber);
     update();
   }
 
@@ -93,27 +112,48 @@ class CartController extends GetxController {
     return orderData.value.medicineId.containsValue(medicineId);
   }
 
-  void fetchDiscount() {
-    discountRef.snapshots().listen((snapshot) {
-      discounts.assignAll(snapshot.docs.map((doc) {
-        return DiscountDataModel.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList());
-    });
+  Future<List<DiscountDataModel>> fetchAllDiscounts() async {
+    var querySnapshot =
+        await discountRef.where('type', isEqualTo: 'Activate').get();
+
+    return querySnapshot.docs
+        .map((doc) =>
+            DiscountDataModel.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 
-  void applyDiscount() {
-    if (!isDiscountApplied.value && discounts.isNotEmpty) {
-      final randomIndex = Random().nextInt(discounts.length);
-      selectedDiscount.value = discounts[randomIndex];
-      orderData.value.discountId = selectedDiscount.value!.id;
-      discountName.value = selectedDiscount.value!.discountName ?? "";
-      isDiscountApplied.value = true;
-      print("Applied Discount : ${selectedDiscount.value!.discountName}");
-    } else if (isDiscountApplied.value) {
-      print("Discount Already Applied");
-    } else {
-      print("No Discount Available");
+  Future<DiscountDataModel?> selectRandomDiscount() async {
+    List<DiscountDataModel> discounts = await fetchAllDiscounts();
+    if (discounts.isNotEmpty) {
+      Random random = Random();
+      int randomIndex = random.nextInt(discounts.length);
+      return discounts[randomIndex];
     }
+    return null;
+  }
+
+  void fetchAndSelectDiscount() async {
+    selectedDiscount.value = await selectRandomDiscount();
+    orderData.value.discountId = selectedDiscount.value!.id;
+    discountName.value = selectedDiscount.value!.discountName ?? "";
+    discountPercentage.value = selectedDiscount.value!.percentage ?? 0.0;
+    discountCode.value = selectedDiscount.value!.code ?? "";
+    debugPrint("${selectedDiscount.value!.discountName}");
+  }
+
+  void applyDiscount(String enteredCode) {
+    if (enteredCode == discountCode.value) {
+      isDiscountValid.value = true;
+      getTotalPrice(discountPercentage.value, isDiscountValid);
+      showInSnackBar("Discount Applied Successfully",
+          isSuccess: true, title: "The Medic");
+    } else {
+      isDiscountValid.value = false;
+      showInSnackBar("Invalid Discount Code",
+          isSuccess: false, title: "The Medic");
+      discountAmount.value = 0.0;
+    }
+    disCodeController.clear();
   }
 
   Future<void> addToCart(MedicineData medicine, {int qty = 1}) async {
@@ -135,7 +175,9 @@ class CartController extends GetxController {
       }
     }
 
-    if (existMedicine == null) {
+    if (existMedicine != null) {
+      existMedicine.quantity = (existMedicine.quantity ?? 0) + qty;
+    } else {
       orderData.value.medicineData?.add(medicine.copyWith(quantity: qty));
     }
     update();
@@ -163,12 +205,6 @@ class CartController extends GetxController {
     update();
   }
 
-  Future<void> _addToCart(MedicineData medicine, [int qty = 2]) async {
-    Map<String, dynamic> medicineQty = medicine.toMap();
-    medicineQty['quantity'] = qty;
-    await cartRef.doc(medicine.id).set(medicineQty);
-  }
-
   Future<void> removeFromCart(String medicineId) async {
     if (orderData.value.medicineId.isNotEmpty) {
       Map<String, String> updatedMedicineIds =
@@ -185,6 +221,41 @@ class CartController extends GetxController {
       orderData.value.medicineData = updatedMedicineData;
     }
     update();
+  }
+
+  int getTotalQuantity() {
+    if (orderData.value.medicineData == null) {
+      return 0;
+    }
+
+    return orderData.value.medicineData!
+        .fold(0, (sum, item) => sum + (item.quantity ?? 0));
+  }
+
+  double getTotalPrice(double discountPercentage, RxBool isDiscountValid) {
+    if (orderData.value.medicineData == null) {
+      return 0.0;
+    }
+
+    double total = orderData.value.medicineData!.fold(
+        0.0,
+        (sum, item) =>
+            sum + ((item.quantity ?? 0) * item.medicinePrice!.toInt()));
+
+    if (isDiscountValid.value) {
+      discountAmount.value = total * (discountPercentage / 100);
+      total -= discountAmount.value;
+    }
+
+    double totalAmount = total + shippingFee.toDouble();
+
+    return totalAmount.toPrecision(1);
+  }
+
+  Future<void> _addToCart(MedicineData medicine, [int qty = 2]) async {
+    Map<String, dynamic> medicineQty = medicine.toMap();
+    medicineQty['quantity'] = qty;
+    await cartRef.doc(medicine.id).set(medicineQty);
   }
 
   Future<void> _removeFromCart(String medicineId) async {
@@ -559,5 +630,148 @@ class CartController extends GetxController {
 
       return ordersWithMedicines;
     });
+  }
+
+  CreditCardValidator cardValidator = CreditCardValidator();
+
+  bool validateCardInfo() {
+    if (cardHolderController.text.trim().isEmpty) {
+      showInSnackBar("Please enter card holder name.",
+          title: 'Required!', isSuccess: false);
+      return false;
+    } else if (cardNumberController.text.trim().isEmpty) {
+      showInSnackBar("Please enter card number.",
+          title: 'Required!', isSuccess: false);
+      return false;
+    } else if (expDateController.text.trim().isEmpty) {
+      showInSnackBar("Please enter expiry date.",
+          title: 'Required!', isSuccess: false);
+      return false;
+    } else if (cvvController.text.trim().isEmpty) {
+      showInSnackBar("Please enter cvv number.",
+          title: 'Required!', isSuccess: false);
+      return false;
+    }
+    return true;
+  }
+
+  void _formatCreditCardNumber() {
+    String text = cardNumberController.text.replaceAll(' ', '');
+
+    StringBuffer buffer = StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      buffer.write(text[i]);
+      int nonZeroIndex = i + 1;
+      if (nonZeroIndex % 4 == 0 && nonZeroIndex != text.length) {
+        buffer.write(' ');
+      }
+    }
+
+    String formattedText = buffer.toString();
+    if (formattedText.length > 19) {
+      formattedText = formattedText.substring(0, 19);
+    }
+
+    cardNumberController.value = TextEditingValue(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: formattedText.length),
+    );
+  }
+
+  void _formatExpiryDate() {
+    String text = expDateController.text;
+    text = text.replaceAll(RegExp(r'[^0-9/]'), '');
+
+    int cursorPosition = expDateController.selection.baseOffset;
+
+    bool justAddedSlash = false;
+
+    if (text.length == 2 && !text.endsWith('/')) {
+      text += '/';
+      justAddedSlash = true;
+    }
+
+    if (text.length > 5) {
+      text = text.substring(0, 5);
+    }
+
+    if (justAddedSlash && cursorPosition == 2) {
+      cursorPosition += 1;
+    }
+
+    expDateController.value = TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: cursorPosition),
+    );
+  }
+
+  void addCardDetails(CreditCard card) {
+    DocumentReference userDoc = cardRef.doc(currentUser);
+
+    cardRef.doc(currentUser).get().then((doc) {
+      if (doc.exists) {
+        List<dynamic> cards = List.from(doc.get('cards') ?? []);
+        cards.add(card.toMap());
+        userDoc.update({'cards': cards}).then((value) {
+          Get.back();
+          Get.back();
+          showInSnackBar("Card details added successfully",
+              isSuccess: true, title: "The Medic");
+          cardHolderController.clear();
+          cardNumberController.clear();
+          expDateController.clear();
+          cvvController.clear();
+        });
+      } else {
+        userDoc.set({
+          'cards': [card.toMap()]
+        }).then((value) {
+          Get.back();
+          Get.back();
+          showInSnackBar("Card details added successfully",
+              isSuccess: true, title: "The Medic");
+          cardHolderController.clear();
+          cardNumberController.clear();
+          expDateController.clear();
+          cvvController.clear();
+        });
+      }
+    }).catchError((error) {
+      print("Error updating document : $error");
+    });
+  }
+
+  // Stream<List<CreditCard>> getCardsStream(String userId) {
+  //   return FirebaseFirestore.instance
+  //       .collection('cards')
+  //       .doc(userId)
+  //       .snapshots()
+  //       .map((snapshot) {
+  //     if (snapshot.exists && snapshot.data()!.containsKey('cards')) {
+  //       List<dynamic> cardsJson = snapshot.get('cards');
+  //       return cardsJson.map((json) => CreditCard.fromMap(json)).toList();
+  //     } else {
+  //       return [];
+  //     }
+  //   });
+  // }
+
+  Stream<List<CreditCard>> fetchCards() {
+    return cardRef.doc(currentUser).snapshots().map((snapshot) {
+      var data = snapshot.data() as Map<String, dynamic>;
+      if (snapshot.exists && data.containsKey('cards')) {
+        List<dynamic> cardsMap = snapshot.get('cards');
+        return cardsMap.map((json) => CreditCard.fromMap(json)).toList();
+      } else {
+        return [];
+      }
+    });
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    expDateController.dispose();
+    cardNumberController.dispose();
   }
 }

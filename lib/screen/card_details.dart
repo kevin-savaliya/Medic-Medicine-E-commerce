@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/cart_controller.dart';
+import 'package:medic/model/credit_card_model.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/utils/utils.dart';
+import 'package:medic/widgets/app_dialogue.dart';
 
 class CardDetails extends StatelessWidget {
   CartController controller = Get.put(CartController());
@@ -31,7 +35,7 @@ class CardDetails extends StatelessWidget {
           ),
         ),
         titleSpacing: 0,
-        title: Text(ConstString.cardDetail,
+        title: Text(ConstString.addNewCard,
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
@@ -44,234 +48,298 @@ class CardDetails extends StatelessWidget {
   }
 
   Widget cardDetailsWidget(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Enter Card Detail",
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: AppColors.primaryColor,
-                fontFamily: AppFont.fontSemiBold,
-                fontSize: 19),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            "Card Number",
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontSize: 15,
-                color: AppColors.txtGrey,
-                fontFamily: AppFont.fontMedium),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          TextFormField(
-            style: Theme.of(context).textTheme.titleMedium,
-            decoration: InputDecoration(
-              filled: true,
-              enabled: true,
-              fillColor: AppColors.transparentDetails,
-              hintText: "Enter card number...",
-              hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  fontFamily: AppFont.fontMedium,
-                  fontSize: 14,
-                  color: AppColors.skipGrey),
-              border: OutlineInputBorder(
-                borderSide:
-                    const BorderSide(color: Colors.transparent, width: 0.5),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide:
-                    const BorderSide(color: Colors.transparent, width: 0.5),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderSide:
-                    const BorderSide(color: Colors.transparent, width: 0.5),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide:
-                    const BorderSide(color: Colors.transparent, width: 0.5),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 17,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Holder Name",
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  fontSize: 13,
+                  color: AppColors.txtGrey,
+                  fontFamily: AppFont.fontMedium),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            TextFormField(
+              controller: controller.cardHolderController,
+              textCapitalization: TextCapitalization.words,
+              style: Theme.of(context).textTheme.titleMedium,
+              decoration: InputDecoration(
+                filled: true,
+                enabled: true,
+                fillColor: AppColors.transparentDetails,
+                hintText: "Enter Holder Name...",
+                hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    fontFamily: AppFont.fontMedium,
+                    fontSize: 14,
+                    color: AppColors.phoneGrey),
+                border: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.transparent, width: 0.5),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.transparent, width: 0.5),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.transparent, width: 0.5),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.transparent, width: 0.5),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 17,
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Expiration Date",
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          fontSize: 15,
-                          color: AppColors.txtGrey,
-                          fontFamily: AppFont.fontMedium),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Obx(() => Container(
-                              height: 40,
-                              padding: EdgeInsets.symmetric(horizontal: 5),
-                              decoration: BoxDecoration(
-                                  color: AppColors.decsGrey,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: DropdownButton<String>(
-                                underline: SizedBox(),
-                                icon: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: SvgPicture.asset(AppIcons.arrowDown),
-                                ),
-                                value: controller.selectedMonth.value,
-                                onChanged: (String? newValue) {
-                                  controller.selectedMonth.value = newValue!;
-                                },
-                                items: controller.months
-                                    .map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
-                            )),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Obx(() => Container(
-                              height: 40,
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              decoration: BoxDecoration(
-                                  color: AppColors.decsGrey,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: DropdownButton<String>(
-                                underline: SizedBox(),
-                                icon: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: SvgPicture.asset(AppIcons.arrowDown),
-                                ),
-                                value: controller.selectedYear.value,
-                                onChanged: (String? newValue) {
-                                  controller.selectedYear.value = newValue!;
-                                },
-                                items: controller.years
-                                    .map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
-                            )),
-                      ],
-                    )
-                  ],
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "Card Number",
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  fontSize: 13,
+                  color: AppColors.txtGrey,
+                  fontFamily: AppFont.fontMedium),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            TextFormField(
+              controller: controller.cardNumberController,
+              keyboardType: TextInputType.number,
+              style: Theme.of(context).textTheme.titleMedium,
+              decoration: InputDecoration(
+                filled: true,
+                enabled: true,
+                fillColor: AppColors.transparentDetails,
+                hintText: "0000 0000 0000",
+                hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    fontFamily: AppFont.fontMedium,
+                    fontSize: 14,
+                    color: AppColors.phoneGrey),
+                border: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.transparent, width: 0.5),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.transparent, width: 0.5),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.transparent, width: 0.5),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide:
+                      const BorderSide(color: Colors.transparent, width: 0.5),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 17,
                 ),
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "CVV",
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          fontSize: 15,
-                          color: AppColors.txtGrey,
-                          fontFamily: AppFont.fontMedium),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    SizedBox(
-                      height: 40,
-                      child: TextFormField(
-                        style: Theme.of(context).textTheme.titleMedium,
-                        decoration: InputDecoration(
-                          filled: true,
-                          enabled: true,
-                          fillColor: AppColors.transparentDetails,
-                          hintText: "Enter CVV",
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                                  fontFamily: AppFont.fontMedium,
-                                  fontSize: 14,
-                                  color: AppColors.skipGrey),
-                          border: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.transparent, width: 0.5),
-                            borderRadius: BorderRadius.circular(5),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Expire Date",
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            fontSize: 13,
+                            color: AppColors.txtGrey,
+                            fontFamily: AppFont.fontMedium),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      SizedBox(
+                        height: 40,
+                        child: TextFormField(
+                          maxLengthEnforcement:
+                              MaxLengthEnforcement.truncateAfterCompositionEnds,
+                          keyboardType: TextInputType.number,
+                          controller: controller.expDateController,
+                          style: Theme.of(context).textTheme.titleMedium,
+                          decoration: InputDecoration(
+                            counterText: '',
+                            filled: true,
+                            enabled: true,
+                            fillColor: AppColors.transparentDetails,
+                            hintText: "MM/YY",
+                            hintStyle: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    fontFamily: AppFont.fontMedium,
+                                    fontSize: 14,
+                                    color: AppColors.phoneGrey),
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.transparent, width: 0.5),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.transparent, width: 0.5),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            disabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.transparent, width: 0.5),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.transparent, width: 0.5),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.transparent, width: 0.5),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.transparent, width: 0.5),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.transparent, width: 0.5),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 10,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "CVV",
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            fontSize: 13,
+                            color: AppColors.txtGrey,
+                            fontFamily: AppFont.fontMedium),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      SizedBox(
+                        height: 40,
+                        child: TextFormField(
+                          maxLength: 3,
+                          maxLengthEnforcement:
+                              MaxLengthEnforcement.truncateAfterCompositionEnds,
+                          keyboardType: TextInputType.number,
+                          controller: controller.cvvController,
+                          style: Theme.of(context).textTheme.titleMedium,
+                          decoration: InputDecoration(
+                            counterText: '',
+                            filled: true,
+                            enabled: true,
+                            fillColor: AppColors.transparentDetails,
+                            hintText: "Enter CVV",
+                            hintStyle: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    fontFamily: AppFont.fontMedium,
+                                    fontSize: 14,
+                                    color: AppColors.phoneGrey),
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.transparent, width: 0.5),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.transparent, width: 0.5),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            disabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.transparent, width: 0.5),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.transparent, width: 0.5),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 10,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    fixedSize: const Size(200, 50),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30))),
-                child: Text(
-                  ConstString.pay,
-                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                        color: Colors.white,
-                      ),
-                )),
-          )
-        ],
+              ],
+            ),
+            SizedBox(
+              height: 300,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                  onPressed: () {
+                    String cardNumber =
+                        controller.cardNumberController.text.trim();
+                    String cvv = controller.cvvController.text.trim();
+                    String expDate =
+                        "${controller.selectedMonth}/${controller.selectedYear.substring(2)}";
+                    if (controller.validateCardInfo()) {
+                      showProgressDialogue(context);
+                      String id = controller.cardRef.doc().id;
+                      CreditCard card = CreditCard(
+                          id: id,
+                          cardHolder:
+                              controller.cardHolderController.text.trim(),
+                          cardNumber:
+                              controller.cardNumberController.text.trim(),
+                          expiryDate: controller.expDateController.text.trim(),
+                          cvv: controller.cvvController.text.trim());
+                      controller.addCardDetails(card);
+                    } else {
+                      showInSnackBar("Invalid card details",
+                          title: "The Medic", isSuccess: false);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      fixedSize: const Size(200, 45),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30))),
+                  child: Text(
+                    ConstString.addCard,
+                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                          color: Colors.white,
+                        ),
+                  )),
+            )
+          ],
+        ),
       ),
     );
   }
