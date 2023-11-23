@@ -244,10 +244,14 @@ class CartController extends GetxController {
 
     if (isDiscountValid.value) {
       discountAmount.value = total * (discountPercentage / 100);
+      orderData.value.discountAmount = discountAmount.value;
       total -= discountAmount.value;
     }
 
     double totalAmount = total + shippingFee.toDouble();
+    orderData.value.shippingCharge = shippingFee.value;
+    orderData.value.totalAmount = totalAmount;
+    orderData.value.quantity = getTotalQuantity();
 
     return totalAmount.toPrecision(1);
   }
@@ -406,7 +410,11 @@ class CartController extends GetxController {
         medicineId: orderData.value.medicineId,
         prescriptionId: orderData.value.prescriptionId,
         addressId: orderData.value.addressId,
-        orderDate: DateTime.now());
+        orderDate: DateTime.now(),
+        totalAmount: orderData.value.totalAmount,
+        discountAmount: orderData.value.discountAmount,
+        shippingCharge: orderData.value.shippingCharge,
+        quantity: orderData.value.quantity);
 
     await orderRef.doc(orderData.value.id).set(_orderData.toMap());
     Get.back();
@@ -539,20 +547,15 @@ class CartController extends GetxController {
         idToNameMap.keys.firstWhere((id) => idToNameMap[id] == name);
   }
 
-  Stream<List<OrderData>> fetchCurrentOrders() {
-    return orderRef
-        .where('creatorId', isEqualTo: currentUser)
-        // .where('orderDate', isGreaterThanOrEqualTo: startDate)
-        // .where('orderDate', isLessThanOrEqualTo: endDate)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => OrderData.fromMap(doc.data())).toList());
-  }
-
-  Stream<List<OrderData>> fetchPastOrders() {
-    return orderRef.where('creatorId', isEqualTo: currentUser).snapshots().map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => OrderData.fromMap(doc.data())).toList());
+  Stream<String?> fetchMedicinefromId(String medicineId) {
+    return medicineRef.doc(medicineId).snapshots().map((snapshot) {
+      if (snapshot.exists) {
+        MedicineData medicineData =
+            MedicineData.fromMap(snapshot.data() as Map<String, dynamic>);
+        return medicineData.genericName;
+      }
+      return null;
+    });
   }
 
   Stream<Map<String, List<String>>> streamAllMedicineIds() {
@@ -575,16 +578,6 @@ class CartController extends GetxController {
 
       return allMedicineIds;
     });
-  }
-
-  Stream<MedicineData> fetchMedicineFromOrder(String id) {
-    return medicineRef.doc(id).snapshots().map((snapshot) =>
-        MedicineData.fromMap(snapshot.data() as Map<String, dynamic>));
-  }
-
-  String formatDateTime(DateTime dateTime) {
-    final DateFormat formatter = DateFormat('d MMM yyyy hh:mm a');
-    return formatter.format(dateTime);
   }
 
   String OrderDateFormat(DateTime dateTime) {
@@ -740,21 +733,6 @@ class CartController extends GetxController {
       print("Error updating document : $error");
     });
   }
-
-  // Stream<List<CreditCard>> getCardsStream(String userId) {
-  //   return FirebaseFirestore.instance
-  //       .collection('cards')
-  //       .doc(userId)
-  //       .snapshots()
-  //       .map((snapshot) {
-  //     if (snapshot.exists && snapshot.data()!.containsKey('cards')) {
-  //       List<dynamic> cardsJson = snapshot.get('cards');
-  //       return cardsJson.map((json) => CreditCard.fromMap(json)).toList();
-  //     } else {
-  //       return [];
-  //     }
-  //   });
-  // }
 
   Stream<List<CreditCard>> fetchCards() {
     return cardRef.doc(currentUser).snapshots().map((snapshot) {

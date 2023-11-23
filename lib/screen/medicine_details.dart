@@ -884,6 +884,7 @@ class MedicineDetails extends StatelessWidget {
                                         onTap: () {
                                           Get.to(() => AddReviewScreen(
                                                 review: review,
+                                                medicineId: medicineData!.id,
                                               ));
                                         },
                                         height: 35,

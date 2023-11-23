@@ -15,12 +15,18 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 
 class AddReviewScreen extends StatelessWidget {
   String? orderId;
+  String? medicineId;
   Map<String, String>? medicineIdMap;
   ReviewDataModel? review;
 
   CartController controller = Get.put(CartController());
 
-  AddReviewScreen({super.key, this.orderId, this.medicineIdMap, this.review});
+  AddReviewScreen(
+      {super.key,
+      this.orderId,
+      this.medicineIdMap,
+      this.review,
+      this.medicineId});
 
   @override
   Widget build(BuildContext context) {
@@ -67,34 +73,6 @@ class AddReviewScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(
           children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                ConstString.writereview,
-                style: Theme.of(context).textTheme.displayLarge!.copyWith(
-                    fontSize: 21,
-                    letterSpacing: 0,
-                    fontFamily: AppFont.fontBold),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              ConstString.leavereview,
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontSize: 13,
-                    letterSpacing: 0,
-                    fontFamily: AppFont.fontMedium,
-                    color: AppColors.txtGrey,
-                  ),
-            ),
-            const SizedBox(
-              height: 35,
-            ),
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -108,63 +86,96 @@ class AddReviewScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Obx(() => Container(
-                  height: 55,
-                  decoration: BoxDecoration(
-                      color: AppColors.decsGrey,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: DropdownButtonFormField(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall!
-                        .copyWith(fontSize: 13),
-                    hint: Text(
-                      "Select Medicine",
+            StreamBuilder(
+              stream: controller.fetchMedicinefromId(medicineId!),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Align(
+                      alignment: Alignment.centerLeft,
+                      child: CupertinoActivityIndicator());
+                } else if (snapshot.hasData) {
+                  String medicineName = snapshot.data!;
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      medicineName,
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          letterSpacing: 0,
+                          fontFamily: AppFont.fontSemiBold,
+                          color: AppColors.primaryColor),
+                    ),
+                  );
+                } else {
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "No Medicine Selected",
                       style: Theme.of(context)
                           .textTheme
-                          .titleSmall!
-                          .copyWith(fontSize: 14, color: AppColors.txtGrey),
+                          .titleMedium!
+                          .copyWith(fontSize: 14, letterSpacing: 0),
                     ),
-                    decoration: const InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        focusedErrorBorder: InputBorder.none),
-                    icon: Padding(
-                      padding: const EdgeInsets.only(left: 0),
-                      child: SvgPicture.asset(AppIcons.arrowDown),
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                    onChanged: (value) {
-                      if (value != null) {
-                        controller.selectedReviewMedicine(value);
-                        controller.selectedMedicineName.value = value;
-                      }
-                    },
-                    items: controller.medicineName.map((String medicine) {
-                      return DropdownMenuItem<String>(
-                        value: medicine,
-                        child: Text(
-                          medicine,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(fontSize: 13),
-                        ),
-                      );
-                    }).toList(),
-                    value: controller.medicineName
-                            .contains(controller.selectedMedicineName.value)
-                        ? controller.selectedMedicineName.value
-                        : null,
-                  ),
-                )),
+                  );
+                }
+              },
+            ),
+            // Obx(() => Container(
+            //       height: 55,
+            //       decoration: BoxDecoration(
+            //           color: AppColors.decsGrey,
+            //           borderRadius: BorderRadius.circular(10)),
+            //       child: DropdownButtonFormField(
+            //         padding:
+            //             const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            //         style: Theme.of(context)
+            //             .textTheme
+            //             .titleSmall!
+            //             .copyWith(fontSize: 13),
+            //         hint: Text(
+            //           "Select Medicine",
+            //           style: Theme.of(context)
+            //               .textTheme
+            //               .titleSmall!
+            //               .copyWith(fontSize: 14, color: AppColors.txtGrey),
+            //         ),
+            //         decoration: const InputDecoration(
+            //             contentPadding:
+            //                 EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            //             border: InputBorder.none,
+            //             enabledBorder: InputBorder.none,
+            //             focusedBorder: InputBorder.none,
+            //             disabledBorder: InputBorder.none,
+            //             errorBorder: InputBorder.none,
+            //             focusedErrorBorder: InputBorder.none),
+            //         icon: Padding(
+            //           padding: const EdgeInsets.only(left: 0),
+            //           child: SvgPicture.asset(AppIcons.arrowDown),
+            //         ),
+            //         borderRadius: BorderRadius.circular(10),
+            //         onChanged: (value) {
+            //           if (value != null) {
+            //             controller.selectedReviewMedicine(value);
+            //             controller.selectedMedicineName.value = value;
+            //           }
+            //         },
+            //         items: controller.medicineName.map((String medicine) {
+            //           return DropdownMenuItem<String>(
+            //             value: medicine,
+            //             child: Text(
+            //               medicine,
+            //               style: Theme.of(context)
+            //                   .textTheme
+            //                   .titleMedium!
+            //                   .copyWith(fontSize: 13),
+            //             ),
+            //           );
+            //         }).toList(),
+            //         value: controller.medicineName
+            //                 .contains(controller.selectedMedicineName.value)
+            //             ? controller.selectedMedicineName.value
+            //             : null,
+            //       ),
+            //     )),
             const SizedBox(
               height: 20,
             ),
@@ -187,16 +198,16 @@ class AddReviewScreen extends StatelessWidget {
                 child: SmoothStarRating(
                   rating: controller.rating.value,
                   allowHalfRating: true,
-                  defaultIconData: Icons.star_outline_rounded,
-                  filledIconData: Icons.star_rounded,
-                  halfFilledIconData: Icons.star_half_rounded,
+                  defaultIconData: Icons.star,
+                  filledIconData: Icons.star,
+                  halfFilledIconData: Icons.star_half,
                   starCount: 5,
                   onRatingChanged: (rating) {
                     controller.rating.value = rating;
                   },
                   size: 30,
                   color: AppColors.primaryColor,
-                  borderColor: AppColors.primaryColor,
+                  borderColor: AppColors.indGrey,
                 ),
               ),
             ),
@@ -301,7 +312,7 @@ class AddReviewScreen extends StatelessWidget {
                       id: id,
                       rating: controller.rating.value.toPrecision(2),
                       review: controller.reviewText.text,
-                      medicineId: controller.selectedMedicineId.value,
+                      medicineId: medicineId,
                       userId: controller.currentUser,
                       orderId: orderId,
                       createdTime: DateTime.now());
@@ -319,13 +330,14 @@ class AddReviewScreen extends StatelessWidget {
                 }
               },
               style: ElevatedButton.styleFrom(
+
                   elevation: 0,
-                  fixedSize: const Size(170, 55),
-                  backgroundColor: AppColors.darkPrimaryColor,
+                  fixedSize: const Size(200, 50),
+                  backgroundColor: AppColors.primaryColor,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30))),
               child: Text(
-                ConstString.submit,
+                ConstString.sendReview,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                     color: AppColors.white,
                     fontSize: 15,

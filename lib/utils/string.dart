@@ -60,11 +60,13 @@ class ConstString {
   static const String logoutDialogue = "Logout";
   static const String login = "Log in";
   static const String submit = "Submit";
+  static const String sendReview = "Send Review";
   static const String review = "Review";
-  static const String selectMedicine = "Select Medicine";
+  static const String selectMedicine = "Selected Medicine";
   static const String presBy = "Prescribed By";
   static const String presStatus = "Status";
   static const String writereview = "Write a Review";
+  static const String rateThisProduct = "Rate this product";
   static const String rateproduct = "Rate the products";
   static const String leavereview = "Leave a review here";
   static const String pastPres = "Past Prescription from The Medic";
@@ -88,6 +90,7 @@ class ConstString {
       "Your account has been verified successfully ";
 
   static const String medicineCategory = "Medicines Categories";
+  static const String recentSearches = "Recent Searches";
   static const String popularSearches = "Popular Searches";
   static const String viewAll = "View all";
   static const String popularMedicine = "Popular Medicines";

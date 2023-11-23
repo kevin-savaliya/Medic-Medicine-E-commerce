@@ -226,6 +226,65 @@ class CardShimmer extends StatelessWidget {
   }
 }
 
+class OrderDetailShimmer extends StatelessWidget {
+  final int? itemCount;
+  final double? height;
+
+  const OrderDetailShimmer({required this.itemCount, this.height, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: ListView.builder(
+          itemCount: itemCount,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: Column(
+                children: [
+                  Container(
+                    height: 120,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300]!,
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  fixedSize: Size(200, 45),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30))),
+                              onPressed: () {},
+                              child: Text("Medic"))),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  fixedSize: Size(200, 45),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30))),
+                              onPressed: () {},
+                              child: Text("Medic"))),
+                    ],
+                  )
+                ],
+              ),
+            );
+          },
+        ));
+  }
+}
+
 class CartShimmer extends StatelessWidget {
   final int? itemCount;
   final double? height;

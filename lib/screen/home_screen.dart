@@ -64,7 +64,7 @@ class HomeScreen extends StatelessWidget {
           );
         } else if (controller.pageIndex.value == 2) {
           return Scaffold(
-            body: CartScreen(),
+            body: const CartScreen(),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 3) {
@@ -155,13 +155,13 @@ class HomeScreen extends StatelessWidget {
               activeIcon: Icons.close,
               closeDialOnPop: true,
               overlayColor: AppColors.darkPrimaryColor,
-              childrenButtonSize: const Size(60, 65),
+              childrenButtonSize: const Size(55, 63),
               iconTheme: IconThemeData(color: AppColors.white),
               backgroundColor: AppColors.primaryColor,
               children: [
                 SpeedDialChild(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)),
+                        borderRadius: BorderRadius.circular(100)),
                     onTap: () {
                       Get.to(() => ReminderScreen());
                     },
@@ -171,17 +171,31 @@ class HomeScreen extends StatelessWidget {
                     ),
                     backgroundColor: AppColors.white,
                     label: "Add Reminders",
-                    labelStyle: Theme.of(context).textTheme.titleMedium),
+                    labelBackgroundColor: Colors.transparent,
+                    labelShadow: [const BoxShadow(color: Colors.transparent)],
+                    labelStyle: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(
+                            color: AppColors.white,
+                            fontFamily: AppFont.fontMedium)),
                 SpeedDialChild(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)),
+                        borderRadius: BorderRadius.circular(100)),
                     onTap: () {
                       Get.to(() => UploadPrescription());
                     },
                     child: SvgPicture.asset(AppIcons.uploadPres),
                     backgroundColor: AppColors.white,
                     label: "Upload Prescription",
-                    labelStyle: Theme.of(context).textTheme.titleMedium),
+                    labelBackgroundColor: Colors.transparent,
+                    labelShadow: [const BoxShadow(color: Colors.transparent)],
+                    labelStyle: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(
+                            color: AppColors.white,
+                            fontFamily: AppFont.fontMedium)),
               ],
             )
           : const SizedBox(),
@@ -836,7 +850,7 @@ class HomeScreen extends StatelessWidget {
                                                                     .elementAt(
                                                                         index));
                                                             await Get.to(() =>
-                                                                CartScreen());
+                                                                const CartScreen());
                                                           },
                                                           style: ElevatedButton.styleFrom(
                                                               backgroundColor:

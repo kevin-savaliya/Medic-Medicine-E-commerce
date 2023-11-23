@@ -17,6 +17,7 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/shimmer_widget.dart';
 
 class OrderHistory extends StatelessWidget {
   CartController controller = Get.put(CartController());
@@ -97,11 +98,7 @@ class CurrentOrder extends GetWidget<CartController> {
       stream: controller.ordersWithMedicines(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: CupertinoActivityIndicator(
-            color: AppColors.primaryColor,
-            radius: 12,
-          ));
+          return OrderDetailShimmer(itemCount: snapshot.data?.length);
         }
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -112,7 +109,6 @@ class CurrentOrder extends GetWidget<CartController> {
 
         List<OrderWithMedicines> ordersWithMedicines = snapshot.data!;
 
-        // Flatten the list of medicines with their corresponding addresses and order dates
         List<Widget> medicineAddressDateWidgets = [];
         for (var order in ordersWithMedicines) {
           for (var medicine in order.medicines) {
@@ -120,6 +116,8 @@ class CurrentOrder extends GetWidget<CartController> {
               onTap: () {
                 Get.to(() => OrderDetailScreen(
                       orderId: order.orderData.id,
+                      isTrue: true,
+                      medicineId: medicine.id,
                     ));
               },
               child: Padding(
@@ -315,11 +313,7 @@ class PastOrder extends GetWidget<CartController> {
       stream: controller.ordersWithMedicines(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: CupertinoActivityIndicator(
-            color: AppColors.primaryColor,
-            radius: 12,
-          ));
+          return OrderDetailShimmer(itemCount: snapshot.data?.length);
         }
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -338,6 +332,8 @@ class PastOrder extends GetWidget<CartController> {
               onTap: () {
                 Get.to(() => OrderDetailScreen(
                       orderId: order.orderData.id,
+                      isTrue: true,
+                      medicineId: medicine.id,
                     ));
               },
               child: Padding(
@@ -412,7 +408,7 @@ class PastOrder extends GetWidget<CartController> {
                             ),
                           ],
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Row(
                           children: [
                             SvgPicture.asset(

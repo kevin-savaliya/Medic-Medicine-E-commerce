@@ -99,6 +99,7 @@ class OrderPlacement extends StatelessWidget {
                   await cartController.placeOrder();
                   Get.off(() => OrderDetailScreen(
                         orderId: cartController.orderData.value.id,
+                        isTrue: false,
                       ));
                 },
                 style: ElevatedButton.styleFrom(

@@ -222,13 +222,4 @@ class HomeController extends GetxController {
     update();
   }
 
-  List searchList = [
-    "Acetaminophen",
-    "Diphenhydramine",
-    "Loratadine",
-    "Omeprazole",
-    "Amoxicillin",
-    "Lisinopril",
-    "Prednisone"
-  ];
 }

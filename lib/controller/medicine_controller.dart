@@ -78,6 +78,28 @@ class MedicineController extends GetxController {
     AppImages.medicineBox3,
   ];
 
+  List searchCategory = [
+    AppIcons.virus,
+    AppIcons.heartLine,
+    AppIcons.medicineBottle,
+  ];
+
+  List searchList = [
+    "Acetaminophen",
+    "Diphenhydramine",
+    "Loratadine",
+    "Omeprazole",
+    "Amoxicillin",
+    "Lisinopril",
+    "Prednisone"
+  ];
+
+  List recentSearchList = [
+    "Cetirizine",
+    "Cetuximab",
+    "Cetraxal",
+  ];
+
   List paymentMethod = [
     ConstString.creditCard,
     ConstString.orangeMoney,

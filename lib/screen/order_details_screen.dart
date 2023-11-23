@@ -1,7 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +15,15 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
-import 'package:medic/widgets/user/my_name_text_widget.dart';
 
 class OrderDetailScreen extends StatelessWidget {
   CartController controller = Get.put(CartController());
 
   String? orderId;
+  bool? isTrue;
+  String? medicineId;
 
-  OrderDetailScreen({super.key, this.orderId});
+  OrderDetailScreen({super.key, this.orderId, this.isTrue, this.medicineId});
 
   @override
   Widget build(BuildContext context) {
@@ -186,37 +185,7 @@ class OrderDetailScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "1 Item",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                        color: AppColors.darkPrimaryColor,
-                                        fontFamily: AppFont.fontMedium,
-                                        fontSize: 13),
-                              ),
-                            ],
-                          ),
-                          Divider(
-                            height: 10,
-                            color: AppColors.lineGrey,
-                            thickness: 1,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                ConstString.cartValue,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                        color: AppColors.txtGrey,
-                                        fontFamily: AppFont.fontMedium,
-                                        fontSize: 13),
-                              ),
-                              Text(
-                                "SLL 2200",
+                                "${orderData.quantity ?? 1} Item",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -246,7 +215,37 @@ class OrderDetailScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLL 100",
+                                "SLL ${orderData.shippingCharge ?? 100}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.darkPrimaryColor,
+                                        fontFamily: AppFont.fontMedium,
+                                        fontSize: 13),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            height: 10,
+                            color: AppColors.lineGrey,
+                            thickness: 1,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                ConstString.discount,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.txtGrey,
+                                        fontFamily: AppFont.fontMedium,
+                                        fontSize: 13),
+                              ),
+                              Text(
+                                "SLL ${orderData.discountAmount?.toStringAsFixed(1) ?? 0}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -276,7 +275,7 @@ class OrderDetailScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLL 120",
+                                "SLL ${orderData.totalAmount ?? 100}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -384,7 +383,7 @@ class OrderDetailScreen extends StatelessWidget {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CupertinoActivityIndicator();
+                          return const CupertinoActivityIndicator();
                         } else if (snapshot.hasData) {
                           UserModel user = snapshot.data!;
                           String contact =
@@ -430,7 +429,7 @@ class OrderDetailScreen extends StatelessWidget {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return CupertinoActivityIndicator();
+                                    return const CupertinoActivityIndicator();
                                   } else if (snapshot.hasData) {
                                     UserAddress add = snapshot.data!;
                                     String address =
@@ -459,7 +458,7 @@ class OrderDetailScreen extends StatelessWidget {
                                       ],
                                     );
                                   } else {
-                                    return SizedBox();
+                                    return const SizedBox();
                                   }
                                 },
                               ),
@@ -487,7 +486,7 @@ class OrderDetailScreen extends StatelessWidget {
                             ],
                           );
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       },
                     ),
@@ -650,33 +649,39 @@ class OrderDetailScreen extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Expanded(
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Get.to(() => AddReviewScreen(
-                                  orderId: orderData.id,
-                                  medicineIdMap: orderData.medicineId,
-                                ));
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.decsGrey,
-                              fixedSize: const Size(200, 45),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30))),
-                          child: Text(
-                            ConstString.addReview,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                  color: AppColors.txtGrey,
-                                ),
-                          )),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
+                    isTrue!
+                        ? Expanded(
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Get.to(() => AddReviewScreen(
+                                        orderId: orderData.id,
+                                        medicineIdMap: orderData.medicineId,
+                                        medicineId: medicineId,
+                                      ));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.decsGrey,
+                                    fixedSize: const Size(200, 45),
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30))),
+                                child: Text(
+                                  ConstString.addReview,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium!
+                                      .copyWith(
+                                        color: AppColors.txtGrey,
+                                      ),
+                                )),
+                          )
+                        : const SizedBox(),
+                    isTrue!
+                        ? const SizedBox(
+                            width: 15,
+                          )
+                        : const SizedBox(),
                     Expanded(
                       child: ElevatedButton(
                           onPressed: () {},
@@ -705,7 +710,27 @@ class OrderDetailScreen extends StatelessWidget {
             ),
           );
         } else {
-          return const Center(child: Text("No Data Found"));
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noMedicine,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
+              ),
+            ),
+          );
         }
       },
     );

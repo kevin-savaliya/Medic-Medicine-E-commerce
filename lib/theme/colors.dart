@@ -35,6 +35,7 @@ class AppColors {
   static Color phoneGrey = const Color(0xffBFBFBF);
   static Color lineGrey = const Color(0xffE5E5E5);
   static Color indGrey = const Color(0xffd9d9d9);
+  static Color arrGrey = const Color(0xffBABABA);
   static Color splashdetail = const Color(0xFFF2F2F2);
   static Color transparentDetails = const Color(0xFFF7F7F7);
 

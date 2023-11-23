@@ -108,4 +108,7 @@ class AppIcons {
   static const String urinary = 'asset/icons/urinary.svg';
   static const String kidney = 'asset/icons/kidney.svg';
   static const String noPres = 'asset/icons/noData.svg';
+  static const String heartLine = 'asset/icons/heartLine.svg';
+  static const String medicineBottle = 'asset/icons/medicineBottle.svg';
+  static const String virus = 'asset/icons/virus.svg';
 }

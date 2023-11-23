@@ -135,7 +135,7 @@ class AuthController extends GetxController {
             isOtpSent = false.obs;
             update([continueButtonId]);
 
-            log("Verification error${exception.message}");
+            log("Verification error : ${exception.message}");
             isLoading = false;
             update([ControllerIds.verifyButtonKey]);
             authException(exception);

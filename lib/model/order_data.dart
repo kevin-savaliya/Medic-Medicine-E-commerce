@@ -27,24 +27,33 @@ class OrderData {
   DiscountDataModel? discountData;
   CategoryData? categoryData;
   DateTime? orderDate;
+  double? totalAmount;
+  double? shippingCharge;
+  double? discountAmount;
+  int? quantity;
 
-  OrderData(
-      {this.id,
-      this.creatorId,
-      this.addressId,
-      this.reviewId,
-      this.prescriptionId,
-      required this.medicineId,
-      this.discountId,
-      this.categoryId,
-      this.userModel,
-      this.userAddress,
-      this.reviewData,
-      this.prescriptionData,
-      this.medicineData,
-      this.discountData,
-      this.categoryData,
-      this.orderDate});
+  OrderData({
+    this.id,
+    this.creatorId,
+    this.addressId,
+    this.reviewId,
+    this.prescriptionId,
+    required this.medicineId,
+    this.discountId,
+    this.categoryId,
+    this.userModel,
+    this.userAddress,
+    this.reviewData,
+    this.prescriptionData,
+    this.medicineData,
+    this.discountData,
+    this.categoryData,
+    this.orderDate,
+    this.totalAmount,
+    this.shippingCharge,
+    this.discountAmount,
+    this.quantity,
+  });
 
   OrderData copyWith(
       {String? id,
@@ -62,7 +71,11 @@ class OrderData {
       MedicineData? medicineData,
       DiscountDataModel? discountData,
       CategoryData? categoryData,
-      DateTime? orderDate}) {
+      DateTime? orderDate,
+      double? totalAmount,
+      double? shippingCharge,
+      double? discountAmount,
+      int? quantity}) {
     return OrderData(
       id: id ?? this.id,
       creatorId: creatorId ?? this.creatorId,
@@ -82,6 +95,10 @@ class OrderData {
       discountData: discountData ?? this.discountData,
       categoryData: categoryData ?? this.categoryData,
       orderDate: orderDate ?? this.orderDate,
+      totalAmount: totalAmount ?? this.totalAmount,
+      shippingCharge: shippingCharge ?? this.shippingCharge,
+      discountAmount: discountAmount ?? this.discountAmount,
+      quantity: quantity ?? this.quantity,
     );
   }
 
@@ -96,6 +113,10 @@ class OrderData {
       'discountId': discountId,
       'categoryId': categoryId,
       'orderDate': orderDate,
+      'totalAmount': totalAmount,
+      'shippingCharge': shippingCharge,
+      'discountAmount': discountAmount,
+      'quantity': quantity,
     };
   }
 
@@ -119,17 +140,22 @@ class OrderData {
     });
 
     return OrderData(
-        id: map['id'],
-        creatorId: map['creatorId'],
-        addressId: map['addressId'],
-        reviewId: map['reviewId'],
-        prescriptionId: map['prescriptionId'],
-        medicineId: parsedMedicineId,
-        discountId: map['discountId'],
-        categoryId: map['categoryId'],
-        orderDate: map['orderDate'] != null
-            ? FirebaseUtils.timestampToDateTime(map['orderDate'])
-            : null);
+      id: map['id'],
+      creatorId: map['creatorId'],
+      addressId: map['addressId'],
+      reviewId: map['reviewId'],
+      prescriptionId: map['prescriptionId'],
+      medicineId: parsedMedicineId,
+      discountId: map['discountId'],
+      categoryId: map['categoryId'],
+      orderDate: map['orderDate'] != null
+          ? FirebaseUtils.timestampToDateTime(map['orderDate'])
+          : null,
+      totalAmount: map['totalAmount'],
+      shippingCharge: map['shippingCharge'],
+      discountAmount: map['discountAmount'],
+      quantity: map['quantity'],
+    );
   }
 
   String toJson() => json.encode(toMap());
