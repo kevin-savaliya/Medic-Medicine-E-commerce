@@ -31,6 +31,7 @@ class OrderData {
   double? shippingCharge;
   double? discountAmount;
   int? quantity;
+  String? orderStatus;
 
   OrderData({
     this.id,
@@ -53,29 +54,32 @@ class OrderData {
     this.shippingCharge,
     this.discountAmount,
     this.quantity,
+    this.orderStatus,
   });
 
-  OrderData copyWith(
-      {String? id,
-      String? creatorId,
-      String? addressId,
-      String? reviewId,
-      String? prescriptionId,
-      Map<String, String>? medicineId,
-      String? discountId,
-      String? categoryId,
-      UserModel? userModel,
-      UserAddress? userAddress,
-      ReviewData? reviewData,
-      PrescriptionData? prescriptionData,
-      MedicineData? medicineData,
-      DiscountDataModel? discountData,
-      CategoryData? categoryData,
-      DateTime? orderDate,
-      double? totalAmount,
-      double? shippingCharge,
-      double? discountAmount,
-      int? quantity}) {
+  OrderData copyWith({
+    String? id,
+    String? creatorId,
+    String? addressId,
+    String? reviewId,
+    String? prescriptionId,
+    Map<String, String>? medicineId,
+    String? discountId,
+    String? categoryId,
+    UserModel? userModel,
+    UserAddress? userAddress,
+    ReviewData? reviewData,
+    PrescriptionData? prescriptionData,
+    MedicineData? medicineData,
+    DiscountDataModel? discountData,
+    CategoryData? categoryData,
+    DateTime? orderDate,
+    double? totalAmount,
+    double? shippingCharge,
+    double? discountAmount,
+    int? quantity,
+    String? orderStatus,
+  }) {
     return OrderData(
       id: id ?? this.id,
       creatorId: creatorId ?? this.creatorId,
@@ -99,6 +103,7 @@ class OrderData {
       shippingCharge: shippingCharge ?? this.shippingCharge,
       discountAmount: discountAmount ?? this.discountAmount,
       quantity: quantity ?? this.quantity,
+      orderStatus: orderStatus ?? this.orderStatus,
     );
   }
 
@@ -117,6 +122,7 @@ class OrderData {
       'shippingCharge': shippingCharge,
       'discountAmount': discountAmount,
       'quantity': quantity,
+      'orderStatus': orderStatus,
     };
   }
 
@@ -155,6 +161,7 @@ class OrderData {
       shippingCharge: map['shippingCharge'],
       discountAmount: map['discountAmount'],
       quantity: map['quantity'],
+      orderStatus: map['orderStatus'],
     );
   }
 

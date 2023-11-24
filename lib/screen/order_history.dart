@@ -17,6 +17,7 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/widgets/app_dialogue.dart';
 import 'package:medic/widgets/shimmer_widget.dart';
 
 class OrderHistory extends StatelessWidget {
@@ -129,6 +130,7 @@ class CurrentOrder extends GetWidget<CartController> {
                       height: 15,
                     ),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           height: 70,
@@ -190,6 +192,25 @@ class CurrentOrder extends GetWidget<CartController> {
                                       fontSize: 12),
                             ),
                           ],
+                        ),
+                        Spacer(),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                orderCancelDialogue(context, () {
+                                  Get.back();
+                                });
+                              },
+                              child: SvgPicture.asset(
+                                AppIcons.delete,
+                                color: AppColors.red,
+                                height: 18,
+                              ),
+                            ),
+                          ),
                         )
                       ],
                     ),
@@ -241,51 +262,51 @@ class CurrentOrder extends GetWidget<CartController> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.decsGrey,
-                                  fixedSize: const Size(200, 45),
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30))),
-                              child: Text(
-                                ConstString.cancle,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displayMedium!
-                                    .copyWith(
-                                      color: AppColors.txtGrey,
-                                    ),
-                              )),
-                        ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primaryColor,
-                                  fixedSize: const Size(200, 45),
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30))),
-                              child: Text(
-                                ConstString.completed,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displayMedium!
-                                    .copyWith(
-                                      color: Colors.white,
-                                    ),
-                              )),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: ElevatedButton(
+                    //           onPressed: () {},
+                    //           style: ElevatedButton.styleFrom(
+                    //               backgroundColor: AppColors.decsGrey,
+                    //               fixedSize: const Size(200, 45),
+                    //               elevation: 0,
+                    //               shape: RoundedRectangleBorder(
+                    //                   borderRadius: BorderRadius.circular(30))),
+                    //           child: Text(
+                    //             ConstString.cancle,
+                    //             style: Theme.of(context)
+                    //                 .textTheme
+                    //                 .displayMedium!
+                    //                 .copyWith(
+                    //                   color: AppColors.txtGrey,
+                    //                 ),
+                    //           )),
+                    //     ),
+                    //     const SizedBox(
+                    //       width: 15,
+                    //     ),
+                    //     Expanded(
+                    //       child: ElevatedButton(
+                    //           onPressed: () {},
+                    //           style: ElevatedButton.styleFrom(
+                    //               backgroundColor: AppColors.primaryColor,
+                    //               fixedSize: const Size(200, 45),
+                    //               elevation: 0,
+                    //               shape: RoundedRectangleBorder(
+                    //                   borderRadius: BorderRadius.circular(30))),
+                    //           child: Text(
+                    //             ConstString.completed,
+                    //             style: Theme.of(context)
+                    //                 .textTheme
+                    //                 .displayMedium!
+                    //                 .copyWith(
+                    //                   color: Colors.white,
+                    //                 ),
+                    //           )),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),

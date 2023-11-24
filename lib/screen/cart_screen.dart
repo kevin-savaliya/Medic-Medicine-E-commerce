@@ -72,164 +72,196 @@ class CartScreen extends StatelessWidget {
                   return Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    child: Column(
                       children: [
-                        SizedBox(
-                          height: 70,
-                          width: 100,
-                          child: CachedNetworkImage(
-                            imageUrl: medicineList[index].image ?? "",
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) => SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: Center(
-                                  child: LoadingIndicator(
-                                colors: [AppColors.primaryColor],
-                                indicatorType: Indicator.ballScale,
-                                strokeWidth: 1,
-                              )),
-                            ),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Column(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: 170,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${medicineList[index].genericName}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                fontFamily: AppFont.fontBold),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "${medicineList[index].description}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(color: AppColors.txtGrey),
-                                      ),
-                                    ],
-                                  ),
+                            SizedBox(
+                              height: 70,
+                              width: 100,
+                              child: CachedNetworkImage(
+                                imageUrl: medicineList[index].image ?? "",
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) =>
+                                        SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: Center(
+                                      child: LoadingIndicator(
+                                    colors: [AppColors.primaryColor],
+                                    indicatorType: Indicator.ballScale,
+                                    strokeWidth: 1,
+                                  )),
                                 ),
-                                const SizedBox(width: 30),
-                                GestureDetector(
-                                  onTap: () {
-                                    controller.removeFromCart(
-                                        medicineList[index].id!);
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppIcons.delete,
-                                    height: 18,
-                                  ),
-                                )
-                              ],
+                                fit: BoxFit.fill,
+                              ),
                             ),
                             const SizedBox(
-                              height: 20,
+                              width: 10,
                             ),
-                            Row(
-                              // crossAxisAlignment: CrossAxisAlignment.start,
+                            Column(
                               children: [
-                                Text(
-                                  "SLL ${medicineList[index].medicinePrice ?? "100"}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(
-                                          fontFamily: AppFont.fontMedium,
-                                          fontSize: 14),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: 170,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${medicineList[index].genericName}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(
+                                                    fontFamily:
+                                                        AppFont.fontBold),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            "${medicineList[index].description}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleSmall!
+                                                .copyWith(
+                                                    color: AppColors.txtGrey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 30),
+                                    GestureDetector(
+                                      onTap: () {
+                                        controller.removeFromCart(
+                                            medicineList[index].id!);
+                                      },
+                                      child: SvgPicture.asset(
+                                        AppIcons.delete,
+                                        height: 18,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  "(30% Off)",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                          fontSize: 10,
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  // crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "SLL ${medicineList[index].medicinePrice ?? "100"}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              fontFamily: AppFont.fontMedium,
+                                              fontSize: 14),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      "(30% Off)",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall!
+                                          .copyWith(
+                                              fontSize: 10,
+                                              color: AppColors.primaryColor,
+                                              fontFamily: AppFont.fontMedium),
+                                    ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        controller.decrementQuantity(
+                                            medicineList[index].id!);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors.decsGrey,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        height: 28,
+                                        width: 28,
+                                        child: Icon(
+                                          Icons.remove,
+                                          color:
+                                              medicineList[index].quantity == 0
+                                                  ? AppColors.phoneGrey
+                                                  : AppColors.primaryColor,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "${medicineList[index].quantity}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        controller.incrementQuantity(
+                                            medicineList[index].id!);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors.decsGrey,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        height: 28,
+                                        width: 28,
+                                        child: Icon(
+                                          Icons.add,
                                           color: AppColors.primaryColor,
-                                          fontFamily: AppFont.fontMedium),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    controller.decrementQuantity(
-                                        medicineList[index].id!);
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: AppColors.decsGrey,
-                                        borderRadius: BorderRadius.circular(5)),
-                                    height: 28,
-                                    width: 28,
-                                    child: Icon(
-                                      Icons.remove,
-                                      color: medicineList[index].quantity == 0
-                                          ? AppColors.phoneGrey
-                                          : AppColors.primaryColor,
-                                      size: 18,
+                                          size: 18,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "${medicineList[index].quantity}",
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    controller.incrementQuantity(
-                                        medicineList[index].id!);
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: AppColors.decsGrey,
-                                        borderRadius: BorderRadius.circular(5)),
-                                    height: 28,
-                                    width: 28,
-                                    child: Icon(
-                                      Icons.add,
-                                      color: AppColors.primaryColor,
-                                      size: 18,
-                                    ),
-                                  ),
+                                  ],
                                 ),
                               ],
-                            )
+                            ),
                           ],
-                        )
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Obx(() => controller.preRequireList
+                                .contains(medicineList[index].id)
+                            ? Align(
+                                alignment: Alignment.centerRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Text(
+                                    "prescription is required to purchase this medicine",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall!
+                                        .copyWith(color: AppColors.red),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox())
                       ],
                     ),
                   );

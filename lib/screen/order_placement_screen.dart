@@ -59,30 +59,6 @@ class OrderPlacement extends StatelessWidget {
                     .copyWith(fontFamily: AppFont.fontBold)),
             elevation: 1.5,
             shadowColor: AppColors.txtGrey.withOpacity(0.2),
-            actions: [
-              GestureDetector(
-                  onTap: () {
-                    Get.to(() => SearchScreen());
-                  },
-                  child: SvgPicture.asset(
-                    AppIcons.search,
-                    width: 18,
-                  )),
-              const SizedBox(
-                width: 15,
-              ),
-              GestureDetector(
-                  onTap: () {
-                    Get.to(() => const CartScreen());
-                  },
-                  child: SvgPicture.asset(
-                    AppIcons.bag,
-                    width: 22,
-                  )),
-              const SizedBox(
-                width: 15,
-              ),
-            ],
           ),
           body: orderPlaceWidget(context, cartController),
           bottomSheet: Container(

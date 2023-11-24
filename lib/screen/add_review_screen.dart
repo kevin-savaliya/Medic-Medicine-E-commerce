@@ -330,7 +330,6 @@ class AddReviewScreen extends StatelessWidget {
                 }
               },
               style: ElevatedButton.styleFrom(
-
                   elevation: 0,
                   fixedSize: const Size(200, 50),
                   backgroundColor: AppColors.primaryColor,

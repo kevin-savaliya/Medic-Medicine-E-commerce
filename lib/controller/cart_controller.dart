@@ -25,6 +25,8 @@ class CartController extends GetxController {
   RxInt qty = 1.obs;
   RxDouble rating = RxDouble(0);
 
+  RxList<String> preRequireList = <String>[].obs;
+
   TextEditingController expDateController = TextEditingController();
 
   RxString selectedMedicineName = "".obs;
@@ -336,14 +338,16 @@ class CartController extends GetxController {
   }
 
   Future<bool> checkPrescriptionOrder(List<MedicineData> medicineList) async {
+    bool allApproved = true;
     for (MedicineData medicine in medicineList) {
       bool isApproved = await isMedicineInApprovedPrescription(medicine.id!);
 
       if (!isApproved) {
-        return false;
+        allApproved = false;
+        preRequireList.add(medicine.id!);
       }
     }
-    return true;
+    return allApproved;
   }
 
   Future<bool> checkPrescriptionStatus(
@@ -392,7 +396,7 @@ class CartController extends GetxController {
         var data = medicineDoc.data() as Map<String, dynamic>;
         var prescriptionRequired = data['prescriptionRequire'] as bool;
 
-        return prescriptionRequired ?? false;
+        return prescriptionRequired;
       }
       return false;
     } catch (e) {
@@ -420,6 +424,7 @@ class CartController extends GetxController {
     Get.back();
     showInSnackBar("Order Placed Successfully",
         isSuccess: true, title: "The Medic");
+    preRequireList.clear();
   }
 
   Future<void> uploadReview(ReviewDataModel review) async {

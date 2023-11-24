@@ -13,6 +13,7 @@ class ConstString {
   static const String saveDetails = "Save details";
   static const String editDetails = "Edit details";
   static const String completed = "Completed";
+  static const String viewCart = "View Cart";
   static const String reorder = "Reorder";
   static const String cancle = "Cancel";
   static const String delete = "Delete";
@@ -223,4 +224,6 @@ class ConstString {
   static const String loginToViewFav = "Login to view your favourites";
   static const String deleteAccountDialogue =
       "Do you wish to delete your account?";
+  static const String cancelOrderDialogue =
+      "Do you want to cancel your order?";
 }

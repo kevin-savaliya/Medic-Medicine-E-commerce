@@ -313,6 +313,113 @@ Future deleteDialogue(BuildContext context, Function() callback) {
   );
 }
 
+Future orderCancelDialogue(BuildContext context, Function() callback) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 25),
+        backgroundColor: AppColors.white,
+        shape: const OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        alignment: Alignment.center,
+        title: Column(
+          children: [
+            const Icon(
+              CupertinoIcons.delete,
+              size: 40,
+              color: Colors.red,
+            ),
+            const SizedBox(height: 25),
+            Text(
+              ConstString.cancelOrderDialogue,
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    color: AppColors.darkPrimaryColor,
+                    fontFamily: AppFont.fontSemiBold,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: TextWidget(
+                "Your order has been successfully cancelled. No further action is required on your part.",
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                    fontSize: 14,
+                    color: AppColors.txtGrey,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: AppFont.fontRegular,
+                    height: 1.5,
+                    letterSpacing: 0),
+              ),
+            ),
+            const SizedBox(height: 25),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      callback();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(20, 50),
+                        backgroundColor: AppColors.red,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        elevation: 0),
+                    child: Text(
+                      "Yes",
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayMedium!
+                          .copyWith(
+                              color: AppColors.white,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: AppFont.fontMedium,
+                              fontSize: 15),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: const Size(20, 50),
+                        backgroundColor: AppColors.splashdetail,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        elevation: 0),
+                    child: TextWidget(
+                      "NO",
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayMedium!
+                          .copyWith(
+                              color: AppColors.dark,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: AppFont.fontMedium,
+                              fontSize: 15),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 FirebaseFirestore instance() => FirebaseFirestore.instance;
 
 Future<void> deleteUserFirestoreData() async {

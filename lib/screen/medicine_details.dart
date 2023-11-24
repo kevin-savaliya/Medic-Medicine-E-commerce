@@ -42,50 +42,103 @@ class MedicineDetails extends StatelessWidget {
       init: CartController(),
       builder: (cartController) {
         return Scaffold(
-          backgroundColor: AppColors.white,
-          appBar: AppBar(
             backgroundColor: AppColors.white,
-            leading: GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: SvgPicture.asset(
-                  AppIcons.back,
+            appBar: AppBar(
+              backgroundColor: AppColors.white,
+              leading: GestureDetector(
+                onTap: () {
+                  Get.back();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SvgPicture.asset(
+                    AppIcons.back,
+                  ),
                 ),
               ),
+              titleSpacing: 0,
+              elevation: 1.5,
+              shadowColor: AppColors.txtGrey.withOpacity(0.2),
+              actions: [
+                GestureDetector(
+                    onTap: () {
+                      Get.to(() => SearchScreen());
+                    },
+                    child: SvgPicture.asset(
+                      AppIcons.search,
+                      width: 18,
+                    )),
+                const SizedBox(
+                  width: 15,
+                ),
+                GestureDetector(
+                    onTap: () {
+                      Get.to(() => CartScreen());
+                    },
+                    child: SvgPicture.asset(
+                      AppIcons.bag,
+                      width: 22,
+                    )),
+                const SizedBox(
+                  width: 15,
+                ),
+              ],
             ),
-            titleSpacing: 0,
-            elevation: 1.5,
-            shadowColor: AppColors.txtGrey.withOpacity(0.2),
-            actions: [
-              GestureDetector(
-                  onTap: () {
-                    Get.to(() => SearchScreen());
-                  },
-                  child: SvgPicture.asset(
-                    AppIcons.search,
-                    width: 18,
-                  )),
-              const SizedBox(
-                width: 15,
-              ),
-              GestureDetector(
-                  onTap: () {
-                    Get.to(() => CartScreen());
-                  },
-                  child: SvgPicture.asset(
-                    AppIcons.bag,
-                    width: 22,
-                  )),
-              const SizedBox(
-                width: 15,
-              ),
-            ],
-          ),
-          body: medicineDetailWidget(context),
-        );
+            body: medicineDetailWidget(context),
+            bottomSheet: Obx(
+                () => (cartController.checkMedicineInCart(medicineData!.id!))
+                    ? Container(
+                        height: 70,
+                        color: AppColors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      "${cartController.cartQty} item in cart",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium!
+                                          .copyWith(
+                                            color: AppColors.primaryColor,
+                                          ),
+                                    )),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      Get.to(() => CartScreen());
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primaryColor,
+                                        fixedSize: const Size(200, 45),
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30))),
+                                    child: Text(
+                                      ConstString.viewCart,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium!
+                                          .copyWith(
+                                            color: Colors.white,
+                                          ),
+                                    )),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    : SizedBox()));
       },
     );
   }
@@ -1339,6 +1392,12 @@ class MedicineDetails extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         onSelected: (int value) {
           cartController.cartQty.value = value;
+          var updatedMedicines = List<MedicineData>.from(
+              cartController.orderData.value.medicineData ?? []);
+          var medicine =
+              updatedMedicines.firstWhere((m) => m.id == medicineData!.id);
+          medicine.quantity = value;
+          cartController.orderData.value.medicineData = updatedMedicines;
         },
         itemBuilder: (BuildContext context) {
           return List.generate(5, (index) {
