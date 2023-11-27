@@ -200,8 +200,10 @@ class CurrentOrder extends GetWidget<CartController> {
                             padding: const EdgeInsets.all(10.0),
                             child: GestureDetector(
                               onTap: () {
-                                orderCancelDialogue(context, () {
+                                orderCancelDialogue(context, () async {
                                   Get.back();
+                                  await controller
+                                      .cancelOrder(order.orderData.id!);
                                 });
                               },
                               child: SvgPicture.asset(
@@ -331,7 +333,7 @@ class PastOrder extends GetWidget<CartController> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<OrderWithMedicines>>(
-      stream: controller.ordersWithMedicines(),
+      stream: controller.pastOrdersWithMedicines(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return OrderDetailShimmer(itemCount: snapshot.data?.length);
@@ -434,16 +436,26 @@ class PastOrder extends GetWidget<CartController> {
                           children: [
                             SvgPicture.asset(
                               AppIcons.checkFill,
-                              color: AppColors.green,
+                              color: order.orderData.orderStatus == "Cancelled"
+                                  ? AppColors.red
+                                  : AppColors.green,
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              ConstString.completed,
+                              order.orderData.orderStatus ?? "Placed",
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall!
                                   .copyWith(
-                                    color: AppColors.green,
+                                    color:
+                                        order.orderData.orderStatus ==
+                                                    "Cancelled" ||
+                                                order.orderData.orderStatus ==
+                                                    "Rejected" ||
+                                                order.orderData.orderStatus ==
+                                                    "Inactive"
+                                            ? AppColors.red
+                                            : AppColors.green,
                                   ),
                             )
                           ],
@@ -524,7 +536,10 @@ class PastOrder extends GetWidget<CartController> {
                         ),
                         Expanded(
                           child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                showProgressDialogue(context);
+                                controller.reorder(order.orderData);
+                              },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primaryColor,
                                   fixedSize: const Size(200, 45),

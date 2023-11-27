@@ -594,6 +594,50 @@ class CartController extends GetxController {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     return firestore
         .collection('orders')
+        // .where('orderStatus', isNotEqualTo: "Cancelled")
+        .where('creatorId', isEqualTo: currentUser)
+        .orderBy('orderDate', descending: true)
+        .snapshots()
+        .asyncMap((querySnapshot) async {
+      List<OrderWithMedicines> ordersWithMedicines = [];
+
+      for (var orderDoc in querySnapshot.docs) {
+        OrderData orderData = OrderData.fromDocumentSnapshot(orderDoc);
+
+        UserAddress? address;
+
+        if (orderData.addressId != null) {
+          address = await fetchAddressById(orderData.addressId!)?.first;
+        }
+
+        List<MedicineData> medicines = [];
+        for (String medicineId in orderData.medicineId.values) {
+          DocumentSnapshot medicineSnapshot =
+              await firestore.collection('medicines').doc(medicineId).get();
+          if (medicineSnapshot.exists) {
+            medicines.add(MedicineData.fromMap(
+                medicineSnapshot.data() as Map<String, dynamic>));
+          }
+        }
+
+        if (orderData.orderStatus != "Cancelled") {
+          ordersWithMedicines.add(OrderWithMedicines(
+            orderData: orderData,
+            medicines: medicines,
+            address: address,
+          ));
+        }
+      }
+
+      return ordersWithMedicines;
+    });
+  }
+
+  Stream<List<OrderWithMedicines>> pastOrdersWithMedicines() {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    return firestore
+        .collection('orders')
+        // .where('orderStatus', isNotEqualTo: "Cancelled")
         .where('creatorId', isEqualTo: currentUser)
         .orderBy('orderDate', descending: true)
         .snapshots()
@@ -628,6 +672,44 @@ class CartController extends GetxController {
 
       return ordersWithMedicines;
     });
+  }
+
+  Future<void> cancelOrder(String orderId) async {
+    await FirebaseFirestore.instance.collection('orders').doc(orderId).update({
+      'orderStatus': 'Cancelled',
+    });
+  }
+
+  Future<void> reorder(OrderData pastOrder) async {
+    try {
+      String id = orderRef.doc().id;
+      Map<String, dynamic> newOrderData = {
+        'id': id,
+        'creatorId': pastOrder.creatorId,
+        'addressId': pastOrder.addressId,
+        'medicineId': pastOrder.medicineId,
+        'discountId': pastOrder.discountId,
+        'orderDate': FieldValue.serverTimestamp(),
+        'totalAmount': pastOrder.totalAmount ?? 0.0,
+        'shippingCharge': pastOrder.shippingCharge ?? 0.0,
+        'discountAmount': pastOrder.discountAmount ?? 0.0,
+        'prescriptionId': pastOrder.prescriptionId,
+        'quantity': pastOrder.quantity ?? 1,
+        'orderStatus': 'Placed',
+      };
+
+      await FirebaseFirestore.instance
+          .collection('orders')
+          .doc(id)
+          .set(newOrderData)
+          .then((value) {
+        Get.back();
+        showInSnackBar("Reorder Successfull",
+            isSuccess: true, title: "The Medic");
+      });
+    } catch (e) {
+      print("Error in reordering: $e");
+    }
   }
 
   CreditCardValidator cardValidator = CreditCardValidator();

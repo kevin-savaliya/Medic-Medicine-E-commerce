@@ -346,7 +346,7 @@ Future orderCancelDialogue(BuildContext context, Function() callback) {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: TextWidget(
-                "Your order has been successfully cancelled. No further action is required on your part.",
+                "Your order will be cancelled and it can't be undone.",
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                     fontSize: 14,
