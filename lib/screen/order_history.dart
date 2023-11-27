@@ -102,10 +102,30 @@ class CurrentOrder extends GetWidget<CartController> {
           return OrderDetailShimmer(itemCount: snapshot.data?.length);
         }
         if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Text('No orders found');
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noOrder,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
+              ),
+            ),
+          );
         }
 
         List<OrderWithMedicines> ordersWithMedicines = snapshot.data!;
@@ -183,7 +203,7 @@ class CurrentOrder extends GetWidget<CartController> {
                               height: 5,
                             ),
                             Text(
-                              "SLL ${medicine.medicinePrice}",
+                              "LE ${medicine.medicinePrice}",
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!
@@ -339,10 +359,30 @@ class PastOrder extends GetWidget<CartController> {
           return OrderDetailShimmer(itemCount: snapshot.data?.length);
         }
         if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Text('No orders found');
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noOrder,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
+              ),
+            ),
+          );
         }
 
         List<OrderWithMedicines> ordersWithMedicines = snapshot.data!;
@@ -421,7 +461,7 @@ class PastOrder extends GetWidget<CartController> {
                               height: 5,
                             ),
                             Text(
-                              "SLL ${medicine.medicinePrice}",
+                              "LE ${medicine.medicinePrice}",
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium!

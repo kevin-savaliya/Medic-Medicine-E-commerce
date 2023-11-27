@@ -24,6 +24,6 @@ class IntroController extends GetxController {
 
   Future<void> redirectToLogin() async {
     appStorage.write(StorageKey.kIsBoardWatched, true);
-    Get.offAll(() =>  PhoneLoginScreen());
+    Get.offAll(() => PhoneLoginScreen());
   }
 }

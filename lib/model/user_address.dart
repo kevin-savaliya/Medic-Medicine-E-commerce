@@ -6,6 +6,8 @@ class UserAddress {
   String? address;
   String? area;
   String? landmark;
+  String? name;
+  String? mobileNo;
   bool? isActive;
 
   UserAddress({
@@ -14,6 +16,8 @@ class UserAddress {
     this.address,
     this.area,
     this.landmark,
+    this.name,
+    this.mobileNo,
     this.isActive,
   });
 
@@ -23,6 +27,8 @@ class UserAddress {
     String? address,
     String? area,
     String? landmark,
+    String? name,
+    String? mobileNo,
     bool? isActive,
   }) {
     return UserAddress(
@@ -31,6 +37,8 @@ class UserAddress {
       address: address ?? this.address,
       area: area ?? this.area,
       landmark: landmark ?? this.landmark,
+      name: name ?? this.name,
+      mobileNo: mobileNo ?? this.mobileNo,
       isActive: isActive ?? this.isActive,
     );
   }
@@ -42,6 +50,8 @@ class UserAddress {
       'address': address,
       'area': area,
       'landmark': landmark,
+      'name': name,
+      'mobileNo': mobileNo,
       'isActive': isActive,
     };
   }
@@ -53,6 +63,8 @@ class UserAddress {
       address: map['address'],
       area: map['area'],
       landmark: map['landmark'],
+      name: map['name'],
+      mobileNo: map['mobileNo'],
       isActive: map['isActive'],
     );
   }

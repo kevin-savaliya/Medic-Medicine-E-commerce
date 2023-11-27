@@ -16,6 +16,7 @@ import 'package:medic/model/category_data.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/add_review_screen.dart';
 import 'package:medic/screen/cart_screen.dart';
+import 'package:medic/screen/categorywise_medicine.dart';
 import 'package:medic/screen/favourite_screen.dart';
 import 'package:medic/screen/medicine_category.dart';
 import 'package:medic/screen/medicine_details.dart';
@@ -90,6 +91,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppColors.white,
+        titleSpacing: 10,
         toolbarHeight: 70,
         leading: Padding(
           padding: const EdgeInsets.only(left: 15),
@@ -98,31 +100,7 @@ class HomeScreen extends StatelessWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                controller.firebaseUser != null
-                    ? SvgPicture.asset(AppIcons.fillpin)
-                    : BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-                        child: SvgPicture.asset(AppIcons.fillpin),
-                      ), // TODO: change icon when user is not logged In
-                const SizedBox(
-                  width: 3,
-                ),
-                Text(
-                  // TODO: add condition for location
-                  "Santa, Illinois 85486",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .copyWith(color: AppColors.primaryColor),
-                ),
-              ],
-            ),
             if (controller.firebaseUser != null) ...[
-              const SizedBox(
-                height: 5,
-              ),
               MyNameTextWidget(
                 textStyle: Theme.of(context)
                     .textTheme
@@ -321,53 +299,63 @@ class HomeScreen extends StatelessWidget {
                               scrollDirection: Axis.horizontal,
                               itemCount: 6,
                               itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        clipBehavior:
-                                            Clip.antiAliasWithSaveLayer,
-                                        child: SvgPicture.network(
-                                            categoryList[index].image!,
-                                            height: 50),
-                                        // child: CachedNetworkImage(
-                                        //   height: 60,
-                                        //   width: 60,
-                                        //   imageUrl: categoryList[index].image!,
-                                        //   errorWidget: (context, url, error) =>
-                                        //       const Icon(Icons.error),
-                                        //   progressIndicatorBuilder: (context,
-                                        //           url, downloadProgress) =>
-                                        //       SizedBox(
-                                        //     width: 30,
-                                        //     height: 30,
-                                        //     child: Center(
-                                        //         child: LoadingIndicator(
-                                        //       colors: [AppColors.primaryColor],
-                                        //       indicatorType:
-                                        //           Indicator.ballScale,
-                                        //       strokeWidth: 1,
-                                        //     )),
-                                        //   ),
-                                        //   fit: BoxFit.cover,
-                                        // ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "${categoryList[index].name}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall!
-                                            .copyWith(
-                                                color: AppColors.txtGrey,
-                                                fontFamily: AppFont.fontMedium),
-                                      )
-                                    ],
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => CategoryWiseMedicine(
+                                        categoryData:
+                                            categoryList.elementAt(index)));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          clipBehavior:
+                                              Clip.antiAliasWithSaveLayer,
+                                          child: SvgPicture.network(
+                                              categoryList[index].image!,
+                                              height: 50),
+                                          // child: CachedNetworkImage(
+                                          //   height: 60,
+                                          //   width: 60,
+                                          //   imageUrl: categoryList[index].image!,
+                                          //   errorWidget: (context, url, error) =>
+                                          //       const Icon(Icons.error),
+                                          //   progressIndicatorBuilder: (context,
+                                          //           url, downloadProgress) =>
+                                          //       SizedBox(
+                                          //     width: 30,
+                                          //     height: 30,
+                                          //     child: Center(
+                                          //         child: LoadingIndicator(
+                                          //       colors: [AppColors.primaryColor],
+                                          //       indicatorType:
+                                          //           Indicator.ballScale,
+                                          //       strokeWidth: 1,
+                                          //     )),
+                                          //   ),
+                                          //   fit: BoxFit.cover,
+                                          // ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          "${categoryList[index].name}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall!
+                                              .copyWith(
+                                                  color: AppColors.txtGrey,
+                                                  fontFamily:
+                                                      AppFont.fontMedium),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
@@ -807,7 +795,7 @@ class HomeScreen extends StatelessWidget {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          "SLL ${medicineList[index].medicinePrice ?? "100"}",
+                                                          "LE ${medicineList[index].medicinePrice ?? "100"}",
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme
@@ -823,7 +811,7 @@ class HomeScreen extends StatelessWidget {
                                                           height: 5,
                                                         ),
                                                         Text(
-                                                          "30% Off",
+                                                          "${cartController.discountPercentage.floor()}% Off",
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme
@@ -941,7 +929,7 @@ class HomeScreen extends StatelessWidget {
               "Ready to Get Started? \nConfirm with 'Yes' and Login Your Account.",
           onPressed: () {
             Get.back();
-            Get.to(() => const PhoneLoginScreen());
+            Get.to(() => PhoneLoginScreen());
           });
       return;
     }

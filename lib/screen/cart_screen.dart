@@ -158,7 +158,7 @@ class CartScreen extends StatelessWidget {
                                   // crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "SLL ${medicineList[index].medicinePrice ?? "100"}",
+                                      "LE ${medicineList[index].medicinePrice ?? "100"}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium!
@@ -168,7 +168,7 @@ class CartScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 5),
                                     Text(
-                                      "(30% Off)",
+                                      "(${controller.discountPercentage.floor()}% Off)",
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleSmall!
@@ -595,7 +595,7 @@ class CartScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLL ${controller.shippingFee}",
+                                "LE ${controller.shippingFee}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -620,7 +620,7 @@ class CartScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Obx(() => Text(
-                                    "SLL ${controller.discountAmount.toStringAsFixed(1)}",
+                                    "LE ${controller.discountAmount.toStringAsFixed(1)}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleSmall!
@@ -650,7 +650,7 @@ class CartScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLL ${controller.getTotalPrice(controller.discountPercentage.value, controller.isDiscountValid)}",
+                                "LE ${controller.getTotalPrice(controller.discountPercentage.value, controller.isDiscountValid)}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!

@@ -73,7 +73,7 @@ class MedicineDetails extends StatelessWidget {
                 ),
                 GestureDetector(
                     onTap: () {
-                      Get.to(() => CartScreen());
+                      Get.to(() => const CartScreen());
                     },
                     child: SvgPicture.asset(
                       AppIcons.bag,
@@ -108,14 +108,14 @@ class MedicineDetails extends StatelessWidget {
                                           ),
                                     )),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Expanded(
                                 flex: 3,
                                 child: ElevatedButton(
                                     onPressed: () {
-                                      Get.to(() => CartScreen());
+                                      Get.to(() => const CartScreen());
                                     },
                                     style: ElevatedButton.styleFrom(
                                         backgroundColor: AppColors.primaryColor,
@@ -138,7 +138,7 @@ class MedicineDetails extends StatelessWidget {
                           ),
                         ),
                       )
-                    : SizedBox()));
+                    : const SizedBox()));
       },
     );
   }
@@ -331,7 +331,7 @@ class MedicineDetails extends StatelessWidget {
                     //   crossAxisAlignment: CrossAxisAlignment.end,
                     //   children: [
                     //     Text(
-                    //       "SLE",
+                    //       "LE",
                     //       style: Theme.of(context)
                     //           .textTheme
                     //           .displayMedium!
@@ -363,7 +363,7 @@ class MedicineDetails extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "SLL ${medicineData!.medicinePrice ?? "100"}",
+                      "LE ${medicineData!.medicinePrice ?? "100"}",
                       style: Theme.of(context)
                           .textTheme
                           .displayMedium!
@@ -375,7 +375,7 @@ class MedicineDetails extends StatelessWidget {
                       width: 8,
                     ),
                     Text(
-                      "30% Off",
+                      "${cartController.discountPercentage.floor()}% Off",
                       style: Theme.of(context).textTheme.titleSmall!.copyWith(
                           fontSize: 11,
                           color: AppColors.primaryColor,
@@ -1140,7 +1140,7 @@ class MedicineDetails extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 20,
+            height: 50,
           )
         ],
       ),
@@ -1311,7 +1311,7 @@ class MedicineDetails extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "SLL ${medicineList[index].medicinePrice ?? "100"}",
+                                    "LE ${medicineList[index].medicinePrice ?? "100"}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayMedium!
@@ -1323,7 +1323,7 @@ class MedicineDetails extends StatelessWidget {
                                     height: 5,
                                   ),
                                   Text(
-                                    "30% Off",
+                                    "${cartController.discountPercentage.floor()}% Off",
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleSmall!

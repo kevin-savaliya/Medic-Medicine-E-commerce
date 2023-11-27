@@ -59,7 +59,10 @@ class HomeController extends GetxController {
         if (snapshot.exists) {
           UserModel userModel =
               UserModel.fromMap(snapshot.data() as Map<String, dynamic>);
-          if (userModel.name == null || userModel.name!.isEmpty) {
+          if (userModel.name == null ||
+              userModel.name!.isEmpty ||
+              userModel.name == " ") {
+            log("Checked");
             showDialog(
               barrierDismissible: false,
               context: Get.context!,
@@ -69,7 +72,7 @@ class HomeController extends GetxController {
                       borderRadius: BorderRadius.circular(15)),
                   insetPadding: EdgeInsets.zero,
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
@@ -84,7 +87,7 @@ class HomeController extends GetxController {
                                 fontSize: 20),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
@@ -128,7 +131,7 @@ class HomeController extends GetxController {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     SizedBox(
@@ -221,5 +224,4 @@ class HomeController extends GetxController {
     pageIndex.value = index;
     update();
   }
-
 }

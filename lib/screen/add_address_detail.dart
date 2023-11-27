@@ -33,6 +33,8 @@ class AddAddressDetail extends StatelessWidget {
       addressController.addController.text = address?.address ?? "";
       addressController.areaController.text = address?.area ?? "";
       addressController.landmarkController.text = address?.landmark ?? "";
+      addressController.nameController.text = address?.name ?? "";
+      addressController.mobileNoController.text = address?.mobileNo ?? "";
     }
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -117,7 +119,7 @@ class AddAddressDetail extends StatelessWidget {
                                   SvgPicture.asset(
                                     controller.addressImgList[index],
                                     color: controller.selectAdd ==
-                                            controller.addressList[index]
+                                            controller.addressList[index  ]
                                         ? AppColors.white
                                         : AppColors.txtGrey,
                                   ),
@@ -191,6 +193,63 @@ class AddAddressDetail extends StatelessWidget {
                     ),
                   )
                 : const SizedBox()),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                ConstString.enterName,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    color: AppColors.txtGrey,
+                    fontFamily: AppFont.fontMedium,
+                    fontSize: 13),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: SizedBox(
+                height: 60,
+                child: TextFormField(
+                  textCapitalization: TextCapitalization.words,
+                  controller: controller.nameController,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium!
+                      .copyWith(color: AppColors.txtGrey, fontSize: 14),
+                  cursorColor: AppColors.txtGrey,
+                  decoration: InputDecoration(
+                      hintText: "Enter Name",
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(
+                              fontFamily: AppFont.fontMedium,
+                              color: AppColors.phoneGrey,
+                              fontSize: 13.5),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40),
+                          borderSide: BorderSide(color: AppColors.decsGrey)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: AppColors.decsGrey, width: 1),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: AppColors.decsGrey, width: 1),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: AppColors.decsGrey, width: 1),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 20)),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -359,13 +418,67 @@ class AddAddressDetail extends StatelessWidget {
                 ),
               ),
             ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                ConstString.mobileNumber,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    color: AppColors.txtGrey,
+                    fontFamily: AppFont.fontMedium,
+                    fontSize: 13),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: SizedBox(
+                height: 60,
+                child: TextFormField(
+                  textCapitalization: TextCapitalization.words,
+                  controller: controller.mobileNoController,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium!
+                      .copyWith(color: AppColors.txtGrey, fontSize: 14),
+                  cursorColor: AppColors.txtGrey,
+                  decoration: InputDecoration(
+                      hintText: "Enter Mobile Number",
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(
+                              fontFamily: AppFont.fontMedium,
+                              color: AppColors.phoneGrey,
+                              fontSize: 13.5),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40),
+                          borderSide: BorderSide(color: AppColors.decsGrey)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: AppColors.decsGrey, width: 1),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: AppColors.decsGrey, width: 1),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: AppColors.decsGrey, width: 1),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 20)),
+                ),
+              ),
+            ),
             const SizedBox(
-              height: 180,
+              height: 50,
             ),
             ElevatedButton(
                 onPressed: () {
-                  showProgressDialogue(context);
                   if (controller.validateData()) {
+                    showProgressDialogue(context);
                     String id = controller.addRef.doc().id;
 
                     if (address == null) {
@@ -377,6 +490,8 @@ class AddAddressDetail extends StatelessWidget {
                           address: controller.addController.text.trim(),
                           area: controller.areaController.text.trim(),
                           landmark: controller.landmarkController.text.trim(),
+                          name: controller.nameController.text.trim(),
+                          mobileNo: controller.mobileNoController.text.trim(),
                           isActive: true);
                       controller.addAddress(addAddress);
                     } else {
@@ -388,6 +503,8 @@ class AddAddressDetail extends StatelessWidget {
                           address: controller.addController.text.trim(),
                           area: controller.areaController.text.trim(),
                           landmark: controller.landmarkController.text.trim(),
+                          name: controller.nameController.text.trim(),
+                          mobileNo: controller.mobileNoController.text.trim(),
                           isActive: true);
                       controller.editAddress(editAddress);
                     }

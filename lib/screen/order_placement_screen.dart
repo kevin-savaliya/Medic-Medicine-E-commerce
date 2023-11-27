@@ -203,7 +203,7 @@ class OrderPlacement extends StatelessWidget {
                               // crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "SLL ${medicineList[index].medicinePrice ?? "100"}",
+                                  "LE ${medicineList[index].medicinePrice ?? "100"}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium!
@@ -436,7 +436,7 @@ class OrderPlacement extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLL ${cartController.shippingFee}",
+                                "LE ${cartController.shippingFee}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -461,7 +461,7 @@ class OrderPlacement extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLL ${cartController.discountAmount.toStringAsFixed(1)}",
+                                "LE ${cartController.discountAmount.toStringAsFixed(1)}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -491,7 +491,7 @@ class OrderPlacement extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLL ${cartController.getTotalPrice(cartController.discountPercentage.value, cartController.isDiscountValid)}",
+                                "LE ${cartController.getTotalPrice(cartController.discountPercentage.value, cartController.isDiscountValid)}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!

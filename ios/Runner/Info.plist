@@ -14,6 +14,10 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Medic</string>
+	<key>NSCameraUsageDescription</key>
+    <string>Pick prescription image</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Pick prescription image for medicine</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

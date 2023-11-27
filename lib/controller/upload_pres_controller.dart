@@ -26,44 +26,6 @@ class UploadPresController extends GetxController {
 
   final String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-  // pickImageFromCamera() async {
-  //   final XFile? image = await picker.pickImage(
-  //       source: ImageSource.camera,
-  //       imageQuality: 80,
-  //       maxHeight: 480,
-  //       maxWidth: 640);
-  //
-  //   if (image != null) {
-  //     File imageFile = File(image.path);
-  //     croppedProfileFile = await ImageCropper().cropImage(
-  //       sourcePath: imageFile.path,
-  //       uiSettings: [
-  //         AndroidUiSettings(
-  //           toolbarColor: AppColors.white,
-  //           toolbarTitle: 'Crop Image',
-  //         ),
-  //         IOSUiSettings(
-  //           title: 'Crop Image',
-  //         )
-  //       ],
-  //       aspectRatioPresets: [
-  //         CropAspectRatioPreset.square,
-  //         CropAspectRatioPreset.ratio3x2,
-  //         CropAspectRatioPreset.original,
-  //         CropAspectRatioPreset.ratio4x3,
-  //         CropAspectRatioPreset.ratio16x9,
-  //         CropAspectRatioPreset.ratio5x4,
-  //         CropAspectRatioPreset.ratio5x3,
-  //         CropAspectRatioPreset.ratio7x5,
-  //       ],
-  //     );
-  //
-  //     selectedImages.add(croppedProfileFile!.path.obs);
-  //     print("Image Picked From Camera");
-  //   }
-  //   Get.back();
-  // }
-
   pickImageFromCamera() async {
     try {
       final XFile? image = await picker.pickImage(
@@ -76,7 +38,6 @@ class UploadPresController extends GetxController {
       if (image != null) {
         File imageFile = File(image.path);
 
-        // Cropping the image
         croppedProfileFile = await ImageCropper().cropImage(
           sourcePath: imageFile.path,
           uiSettings: [
@@ -263,5 +224,48 @@ class UploadPresController extends GetxController {
       }).toList();
     });
     return data;
+  }
+
+  // Future<void> deletePrescription(String userId, String prescriptionId) async {
+  //   var userDocRef = FirebaseFirestore.instance.collection('prescription').doc(userId);
+  //
+  //   try {
+  //     // Get the current list of prescriptions
+  //     var doc = await userDocRef.get();
+  //     if (doc.exists) {
+  //       List<dynamic> prescriptions = doc.data()['prescriptions'] as List<dynamic>;
+  //
+  //       // Remove the prescription from the list
+  //       prescriptions.removeWhere((prescription) => prescription['id'] == prescriptionId);
+  //
+  //       // Update the document with the new list
+  //       await userDocRef.update({'prescriptions': prescriptions});
+  //     }
+  //   } catch (e) {
+  //     // Handle errors here
+  //   }
+  // }
+
+  Future<void> deletePrecription(String prescriptionId) async {
+    var userDocRef = presRef.doc(currentUserId);
+    try {
+      var doc = await userDocRef.get();
+      if (doc.exists) {
+        List<dynamic> prescriptions = (doc.data()
+                as Map<String, dynamic>)['prescriptions'] as List<dynamic>? ??
+            [];
+
+        prescriptions.removeWhere(
+            (prescription) => prescription['id'] == prescriptionId);
+
+        await userDocRef.update({'prescriptions': prescriptions}).then((value) {
+          Get.back();
+          showInSnackBar("Prescription Deleted Successfully",
+              title: "The Medic", isSuccess: false);
+        });
+      }
+    } catch (e) {
+      print("Error Deleting Document : $e");
+    }
   }
 }

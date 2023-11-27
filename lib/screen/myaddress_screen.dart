@@ -111,13 +111,13 @@ class MyAddressScreen extends StatelessWidget {
                   return ListView.builder(
                     itemCount: addressList.length,
                     itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          controller.updateAddressStatus(
-                              reverseList[index].id, true);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: GestureDetector(
+                          onTap: () {
+                            controller.updateAddressStatus(
+                                reverseList[index].id, true);
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -127,103 +127,96 @@ class MyAddressScreen extends StatelessWidget {
                                         : AppColors.decsGrey,
                                     width: 1.5),
                                 color: AppColors.decsGrey),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                leading: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child:
-                                      SvgPicture.asset(AppIcons.fillpinround),
-                                ),
-                                title: Text(
-                                  "${reverseList[index].title}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                          fontFamily: AppFont.fontMedium,
-                                          color: AppColors.txtGrey
-                                              .withOpacity(0.7)),
-                                ),
-                                subtitle: Text(
-                                  "${reverseList[index].address}, ${reverseList[index].area}, ${reverseList[index].landmark}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(
-                                          color: AppColors.txtGrey,
-                                          fontSize: 13,
-                                          fontFamily: AppFont.fontMedium),
-                                ),
-                                trailing: PopupMenuButton(
-                                  elevation: 3,
-                                  shadowColor:
-                                      AppColors.txtGrey.withOpacity(0.1),
-                                  icon: SvgPicture.asset(AppIcons.more),
-                                  onSelected: (value) async {},
-                                  padding: EdgeInsets.zero,
-                                  itemBuilder: (context) => <PopupMenuEntry>[
-                                    PopupMenuItem(
-                                      onTap: () {
-                                        Get.to(() => AddAddressDetail(
-                                              address: reverseList[index],
-                                            ));
-                                      },
-                                      height: 35,
-                                      value: "Edit",
-                                      child: Row(
-                                        children: [
-                                          SvgPicture.asset(AppIcons.edit),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            "Edit",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall!
-                                                .copyWith(
-                                                    fontFamily:
-                                                        AppFont.fontMedium,
-                                                    fontSize: 14,
-                                                    color: AppColors.txtGrey),
-                                          ),
-                                        ],
-                                      ),
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              leading: SvgPicture.asset(AppIcons.fillpinround),
+                              title: Text(
+                                "${reverseList[index].title}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        fontFamily: AppFont.fontMedium,
+                                        color:
+                                            AppColors.txtGrey.withOpacity(0.7)),
+                              ),
+                              subtitle: Text(
+                                "${reverseList[index].address}, ${reverseList[index].area}, ${reverseList[index].landmark}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                        color: AppColors.txtGrey,
+                                        fontSize: 13,
+                                        fontFamily: AppFont.fontMedium),
+                              ),
+                              trailing: PopupMenuButton(
+                                elevation: 3,
+                                shadowColor: AppColors.txtGrey.withOpacity(0.1),
+                                icon: SvgPicture.asset(AppIcons.more),
+                                onSelected: (value) async {},
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context) => <PopupMenuEntry>[
+                                  PopupMenuItem(
+                                    onTap: () {
+                                      Get.to(() => AddAddressDetail(
+                                            address: reverseList[index],
+                                          ));
+                                    },
+                                    height: 35,
+                                    value: "Edit",
+                                    child: Row(
+                                      children: [
+                                        SvgPicture.asset(AppIcons.edit),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          "Edit",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall!
+                                              .copyWith(
+                                                  fontFamily:
+                                                      AppFont.fontMedium,
+                                                  fontSize: 14,
+                                                  color: AppColors.txtGrey),
+                                        ),
+                                      ],
                                     ),
-                                    PopupMenuItem(
-                                      onTap: () {
-                                        controller.deleteAddress(
-                                            reverseList[index].id!);
-                                      },
-                                      height: 35,
-                                      value: "Delete",
-                                      child: Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppIcons.delete,
-                                            height: 14,
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            "Delete",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall!
-                                                .copyWith(
-                                                    fontFamily:
-                                                        AppFont.fontMedium,
-                                                    fontSize: 14,
-                                                    color: AppColors.txtGrey),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                  ),
+                                  PopupMenuItem(
+                                    onTap: () {
+                                      controller.deleteAddress(
+                                          reverseList[index].id!);
+                                    },
+                                    height: 35,
+                                    value: "Delete",
+                                    child: Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppIcons.delete,
+                                          height: 14,
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          "Delete",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall!
+                                              .copyWith(
+                                                  fontFamily:
+                                                      AppFont.fontMedium,
+                                                  fontSize: 14,
+                                                  color: AppColors.txtGrey),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                           ),

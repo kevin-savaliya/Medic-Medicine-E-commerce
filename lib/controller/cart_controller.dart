@@ -309,7 +309,7 @@ class CartController extends GetxController {
     });
   }
 
-  Future<bool> isMedicineInApprovedPrescription(String medicineId) async {
+  Future<bool> isMedicineInApprovedPrescription(MedicineData medicine) async {
     try {
       DocumentSnapshot prescriptionDoc =
           await prescriptionRef.doc(currentUser).get();
@@ -323,7 +323,7 @@ class CartController extends GetxController {
               PrescriptionData.fromMap(prescriptionMap as Map<String, dynamic>);
 
           if (prescription.isApproved == true &&
-              prescription.medicineList?.contains(medicineId) == true) {
+              prescription.medicineList?.contains(medicine.id) == true) {
             prescriptionId = prescription.id!;
             orderData.value.prescriptionId = prescription.id!;
             return true;
@@ -340,7 +340,7 @@ class CartController extends GetxController {
   Future<bool> checkPrescriptionOrder(List<MedicineData> medicineList) async {
     bool allApproved = true;
     for (MedicineData medicine in medicineList) {
-      bool isApproved = await isMedicineInApprovedPrescription(medicine.id!);
+      bool isApproved = await isMedicineInApprovedPrescription(medicine);
 
       if (!isApproved) {
         allApproved = false;

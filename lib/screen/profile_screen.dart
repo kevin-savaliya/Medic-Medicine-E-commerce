@@ -109,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                         onPressed: () async {
-                          Get.to(() => const PhoneLoginScreen());
+                          Get.to(() => PhoneLoginScreen());
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primaryColor,
@@ -374,7 +374,7 @@ class ProfileScreen extends StatelessWidget {
 
                       await deleteUserFirestoreData();
                       Get.back();
-                      Get.offAll(() => const PhoneLoginScreen());
+                      Get.offAll(() => PhoneLoginScreen());
                       return;
                     });
                     /*

@@ -77,6 +77,7 @@ class ConstString {
   static const String dontgetOTP = "Don’t get OTP? ";
   static const String mobileNumber = "Mobile Number";
   static const String userName = "Your Name";
+  static const String enterName = "Enter Name";
   static const String OTP = "Enter OTP";
   static const String enterMobile = "Enter Mobile Number";
   static const String enterFirstName = "Enter First name";
@@ -125,6 +126,7 @@ class ConstString {
   static const String pres = "Prescription : ";
   static const String area = "Area, Sector, Locality*";
   static const String landmark = "Landmark";
+  static const String MobileNo = "Mobile No.";
   static const String noCategory = "No Category Found!";
   static const String noCard = "No Card Found!";
   static const String noReminder = "No Reminder Found!";

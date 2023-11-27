@@ -21,6 +21,8 @@ class AddressController extends GetxController {
   TextEditingController addController = TextEditingController();
   TextEditingController areaController = TextEditingController();
   TextEditingController landmarkController = TextEditingController();
+  TextEditingController mobileNoController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
   Rx<UserAddress?> currentEditing = Rx<UserAddress?>(null);
 

@@ -154,7 +154,7 @@ class PhoneSignUpScreen extends GetWidget<AuthController> {
                 Expanded(
                     child: CountryCodePicker(
                   onChanged: (CountryCode? countryData) {
-                    controller.countryData = countryData;
+                    // controller.countryData = countryData;
                   },
                   initialSelection: 'SL',
                   showFlag: false,

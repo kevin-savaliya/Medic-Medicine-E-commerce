@@ -215,7 +215,7 @@ class OrderDetailScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLL ${orderData.shippingCharge ?? 100}",
+                                "LE ${orderData.shippingCharge ?? 100}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -245,7 +245,7 @@ class OrderDetailScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLL ${orderData.discountAmount?.toStringAsFixed(1) ?? 0}",
+                                "LE ${orderData.discountAmount?.toStringAsFixed(1) ?? 0}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -275,7 +275,7 @@ class OrderDetailScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "SLL ${orderData.totalAmount ?? 100}",
+                                "LE ${orderData.totalAmount ?? 100}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -341,7 +341,7 @@ class OrderDetailScreen extends StatelessWidget {
                         ),
                         const Spacer(),
                         Text(
-                          "SLL 120",
+                          "LE 120",
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall!

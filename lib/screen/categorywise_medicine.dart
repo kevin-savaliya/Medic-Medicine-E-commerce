@@ -166,7 +166,7 @@ class CategoryWiseMedicine extends StatelessWidget {
                                                     onPressed: () {
                                                       Get.back();
                                                       Get.to(() =>
-                                                          const PhoneLoginScreen());
+                                                          PhoneLoginScreen());
                                                     });
                                                 return;
                                               } else {
@@ -263,7 +263,7 @@ class CategoryWiseMedicine extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "SLL ${medicineList[index].medicinePrice ?? "100"}",
+                                          "LE ${medicineList[index].medicinePrice ?? "100"}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .displayMedium!

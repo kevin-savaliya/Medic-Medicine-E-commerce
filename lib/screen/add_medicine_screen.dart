@@ -331,11 +331,10 @@ class AddMedicineScreen extends StatelessWidget {
                                   );
                                 }).toList()
                               : null,
-                          // Handle an empty list scenario
                           value: controller.frequencyList
                                   .contains(controller.frequencyValue.value)
                               ? controller.frequencyValue.value
-                              : null, // Handle a value not in list scenario
+                              : null,
                         ),
                       ),
                     )

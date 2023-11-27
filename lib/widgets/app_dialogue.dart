@@ -147,7 +147,7 @@ Future deleteAccountDialogue(
 
                     await deleteUserFirestoreData();
                     Get.back();
-                    Get.offAll(() => const PhoneLoginScreen());
+                    Get.offAll(() => PhoneLoginScreen());
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.red,

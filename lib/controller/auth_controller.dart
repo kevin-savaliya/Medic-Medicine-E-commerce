@@ -25,6 +25,8 @@ class AuthController extends GetxController {
   RxString verificationId = "".obs;
   RxString otp = ''.obs;
 
+  TextEditingController otpController = TextEditingController();
+
   RxString verificationid = "".obs;
   bool isLoading = false;
 
@@ -50,14 +52,15 @@ class AuthController extends GetxController {
 
   var isLoggedIn = false.obs;
 
-  CountryCode? countryData;
+  // CountryCode? countryData;
+  RxString countryCode = "+232".obs;
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
   void onInit() {
     super.onInit();
-    countryData = CountryCode.fromCountryCode('SL');
+    // countryData = CountryCode.fromCountryCode('SL');
   }
 
   @override
@@ -116,58 +119,55 @@ class AuthController extends GetxController {
 
   Future<void> verifyPhoneNumber(
       {bool second = false, bool isLogin = false}) async {
-    bool isValid = validateData(isLogin: isLogin);
-    if (isValid) {
-      isOtpSent = true.obs;
-      update([continueButtonId]);
-      try {
-        await _auth.verifyPhoneNumber(
-          phoneNumber: '+${getPhoneNumber()}',
-          verificationCompleted: (PhoneAuthCredential credential) async {
-            isOtpSent = false.obs;
-            update([continueButtonId]);
-            _auth.signInWithCredential(credential).then((value) {
-              showInSnackBar(ConstString.successLogin, isSuccess: true);
-              return;
-            });
-          },
-          verificationFailed: (FirebaseAuthException exception) {
-            isOtpSent = false.obs;
-            update([continueButtonId]);
+    isOtpSent = true.obs;
+    update([continueButtonId]);
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: '+${getPhoneNumber()}',
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          isOtpSent = false.obs;
+          update([continueButtonId]);
+          _auth.signInWithCredential(credential).then((value) {
+            showInSnackBar(ConstString.successLogin, isSuccess: true);
+            return;
+          });
+        },
+        verificationFailed: (FirebaseAuthException exception) {
+          isOtpSent = false.obs;
+          update([continueButtonId]);
 
-            log("Verification error : ${exception.message}");
-            isLoading = false;
-            update([ControllerIds.verifyButtonKey]);
-            authException(exception);
-          },
-          codeSent:
-              (String currentVerificationId, int? forceResendingToken) async {
-            verificationId.value = currentVerificationId;
-            isOtpSent = false.obs;
-            update([continueButtonId]);
-            log("$verificationId otp is sent ");
+          log("Verification error : ${exception.message}");
+          isLoading = false;
+          update([ControllerIds.verifyButtonKey]);
+          authException(exception);
+        },
+        codeSent:
+            (String currentVerificationId, int? forceResendingToken) async {
+          verificationId.value = currentVerificationId;
+          isOtpSent = false.obs;
+          update([continueButtonId]);
+          log("$verificationId otp is sent ");
 
-            showInSnackBar(ConstString.otpSent, isSuccess: true);
+          showInSnackBar(ConstString.otpSent, isSuccess: true);
 
-            start.value = 30;
-            if (timer?.isActive != true) {
-              startTimer();
-            }
+          start.value = 30;
+          if (timer?.isActive != true) {
+            startTimer();
+          }
 
-            if (!second) {
-              Get.off(() => VerifyOtpScreen(phoneNumber: getPhoneNumber()));
-            }
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {
-            isOtpSent = false.obs;
-            update([continueButtonId]);
+          if (!second) {
+            Get.off(() => VerifyOtpScreen(phoneNumber: getPhoneNumber()));
+          }
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          isOtpSent = false.obs;
+          update([continueButtonId]);
 
-            verificationid = verificationId.obs;
-          },
-        );
-      } catch (e) {
-        log("------verify number with otp sent-----$e");
-      }
+          verificationid = verificationId.obs;
+        },
+      );
+    } catch (e) {
+      log("------verify number with otp sent-----$e");
     }
   }
 
@@ -181,7 +181,7 @@ class AuthController extends GetxController {
     Get.put(AuthController(), permanent: true);
     Get.back();
     await FirebaseAuth.instance.signOut();
-    await Get.offAll(() => const PhoneLoginScreen());
+    await Get.offAll(() => PhoneLoginScreen());
   }
 
   bool validateData({bool isLogin = false}) {
@@ -211,11 +211,11 @@ class AuthController extends GetxController {
   }
 
   String getPhoneNumber() {
-    if (countryData?.dialCode == null) {
+    if (countryCode.isEmpty) {
       return '';
     }
     String mPhoneNumber = phoneNumberController.text.trim();
-    return (countryData!.dialCode! + mPhoneNumber).replaceAll('+', '');
+    return (countryCode + mPhoneNumber).replaceAll('+', '');
   }
 
   void authException(FirebaseAuthException e) {
@@ -256,7 +256,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> verifyOtp(BuildContext context, User? user) async {
-    if (otp.value.isEmpty) {
+    if (otpController.text.isEmpty) {
       showInSnackBar(
         ConstString.enterOtp,
         title: ConstString.enterOtpMessage,
@@ -269,7 +269,8 @@ class AuthController extends GetxController {
       showProgressDialogue(context);
       final UserCredential result;
       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-          verificationId: verificationId.value, smsCode: otp.value);
+          verificationId: verificationId.value,
+          smsCode: otpController.text.trim());
 
       if (user != null) {
         if (user.phoneNumber == null) {
@@ -338,7 +339,8 @@ class AuthController extends GetxController {
         name: (displayName ?? ('${name.first} ${name[1]}')),
         profilePicture: credentials.user?.photoURL,
         fcmToken: fcmToken,
-        countryCode: int.parse(countryData!.dialCode!.replaceAll('+', '')),
+        countryCode: int.parse(countryCode.replaceAll('+', '')),
+        // countryCode: int.parse(countryData!.dialCode!.replaceAll('+', '')),
         mobileNo: phoneNumberController.text.trim().replaceAll('+', ''),
         enablePushNotification: true,
         gender: selectedGender.value.name,

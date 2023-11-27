@@ -1,10 +1,10 @@
+import 'package:country_calling_code_picker/picker.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/auth_controller.dart';
 import 'package:medic/screen/home_screen.dart';
-import 'package:medic/screen/phone_signup_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -71,20 +71,32 @@ class PhoneLoginScreen extends GetWidget<AuthController> {
             Row(
               children: [
                 Expanded(
-                    child: CountryCodePicker(
-                  onChanged: (CountryCode? countryData) {
-                    controller.countryData = countryData;
-                  },
-                  initialSelection: 'SL',
-                  showFlag: false,
-                  showFlagDialog: true,
-                  dialogTextStyle: TextStyle(fontFamily: AppFont.fontRegular),
-                  searchStyle: TextStyle(fontFamily: AppFont.fontRegular),
-                  // showDropDownButton: true,
-                  textStyle: TextStyle(fontFamily: AppFont.fontMedium),
-                  alignLeft: true,
-                  enabled: true,
-                )),
+                    child: Obx(
+                  () => TextButton(
+                      onPressed: () {
+                        _showCountryPicker(context);
+                      },
+                      child: Text(
+                        controller.countryCode.value,
+                        style: TextStyle(
+                            fontFamily: AppFont.fontMedium, fontSize: 15),
+                      )),
+                )
+                    //     child: CountryCodePicker(
+                    //   onChanged: (CountryCode? countryData) {
+                    //     controller.countryData = countryData;
+                    //   },
+                    //   initialSelection: 'SL',
+                    //   showFlag: false,
+                    //   showFlagDialog: true,
+                    //   dialogTextStyle: TextStyle(fontFamily: AppFont.fontRegular),
+                    //   searchStyle: TextStyle(fontFamily: AppFont.fontRegular),
+                    //   // showDropDownButton: true,
+                    //   textStyle: TextStyle(fontFamily: AppFont.fontMedium),
+                    //   alignLeft: true,
+                    //   enabled: true,
+                    // )
+                    ),
                 Expanded(
                     flex: 3,
                     child: TextField(
@@ -135,6 +147,20 @@ class PhoneLoginScreen extends GetWidget<AuthController> {
     );
   }
 
+  void _showCountryPicker(BuildContext context) async {
+    final country = await showCountryPickerDialog(context,
+        cornerRadius: 10,
+        focusSearchBox: false,
+        title: Text(
+          "Select Country",
+          style: Theme.of(context).textTheme.labelLarge!.copyWith(
+              color: AppColors.primaryColor,
+              fontFamily: AppFont.fontBold,
+              fontSize: 20),
+        ));
+    controller.countryCode.value = country!.callingCode;
+  }
+
   GetBuilder<AuthController> continueButton(BuildContext context) {
     return GetBuilder<AuthController>(
       id: AuthController.continueButtonId,
@@ -154,9 +180,9 @@ class PhoneLoginScreen extends GetWidget<AuthController> {
               onPressed: controller.isLoading
                   ? null
                   : () async {
-                      if (controller.validateData(isLogin: true)) {
-                        await controller.actionVerifyPhone(isLogin: true);
-                      }
+                      // if (controller.validateData(isLogin: true)) {
+                      await controller.actionVerifyPhone(isLogin: true);
+                      // }
                     },
               style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,

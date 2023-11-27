@@ -69,7 +69,8 @@ class ReminderScreen extends StatelessWidget {
                   letterSpacing: 0.3,
                   fontFamily: AppFont.fontMedium),
               unselectedLabelColor: AppColors.txtGrey,
-              indicatorSize: TabBarIndicatorSize.tab,indicatorColor: AppColors.primaryColor,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorColor: AppColors.primaryColor,
               unselectedLabelStyle: Theme.of(context)
                   .textTheme
                   .titleSmall!
@@ -149,7 +150,9 @@ class ReminderScreen extends StatelessWidget {
               children: [weekWidget(), monthWidget(), const yearWidget()]),
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 65),
-            child: FloatingActionButton(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+            child: FloatingActionButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
                 backgroundColor: AppColors.primaryColor,
                 onPressed: () {
                   Get.to(() => AddMedicineScreen());
@@ -345,26 +348,25 @@ class weekWidget extends StatelessWidget {
             ),
           );
         } else {
-          return Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: AppColors.tilePrimaryColor),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(AppIcons.noData, height: 60),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  ConstString.noReminder,
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.primaryColor,
-                      fontSize: 16,
-                      fontFamily: AppFont.fontMedium),
-                ),
-              ],
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noReminder,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
+              ),
             ),
           );
         }
@@ -573,26 +575,25 @@ class monthWidget extends GetWidget<ReminderController> {
             ),
           );
         } else {
-          return Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: AppColors.tilePrimaryColor),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(AppIcons.noData, height: 60),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  ConstString.noReminder,
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.primaryColor,
-                      fontSize: 16,
-                      fontFamily: AppFont.fontMedium),
-                ),
-              ],
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noReminder,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
+              ),
             ),
           );
         }
@@ -824,26 +825,25 @@ class yearWidget extends GetWidget<ReminderController> {
             ),
           );
         } else {
-          return Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: AppColors.tilePrimaryColor),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(AppIcons.noData, height: 60),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  ConstString.noReminder,
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: AppColors.primaryColor,
-                      fontSize: 16,
-                      fontFamily: AppFont.fontMedium),
-                ),
-              ],
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppImages.emptyBin),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    ConstString.noReminder,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(fontSize: 15, color: AppColors.skipGrey),
+                  )
+                ],
+              ),
             ),
           );
         }
