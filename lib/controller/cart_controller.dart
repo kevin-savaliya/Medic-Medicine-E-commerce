@@ -314,7 +314,9 @@ class CartController extends GetxController {
       DocumentSnapshot prescriptionDoc =
           await prescriptionRef.doc(currentUser).get();
 
-      if (prescriptionDoc.exists && prescriptionDoc.data() != null) {
+      if (medicine.prescriptionRequire == false) {
+        return true;
+      } else if (prescriptionDoc.exists) {
         var data = prescriptionDoc.data() as Map<String, dynamic>;
         var prescriptionsList = data['prescriptions'] as List<dynamic>;
 
@@ -341,6 +343,7 @@ class CartController extends GetxController {
     bool allApproved = true;
     for (MedicineData medicine in medicineList) {
       bool isApproved = await isMedicineInApprovedPrescription(medicine);
+      debugPrint("IsApproved : $isApproved");
 
       if (!isApproved) {
         allApproved = false;
@@ -475,13 +478,19 @@ class CartController extends GetxController {
       if (snapshot.exists && snapshot.data() != null) {
         return OrderData.fromMap(snapshot.data() as Map<String, dynamic>);
       } else {
-        showInSnackBar("Document Doesn't Exist");
+        print("Document Doesn't Exist");
         return null;
       }
     } catch (e) {
       print("Error Fetching Data : $e");
       return null;
     }
+  }
+
+  double countDiscount(int originalPrice, double disPercentage) {
+    final discountedPrice =
+        originalPrice - (originalPrice * disPercentage / 100);
+    return discountedPrice;
   }
 
   Stream<UserModel?> fetchUserById(String userid) {

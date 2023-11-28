@@ -40,8 +40,6 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 class HomeScreen extends StatelessWidget {
   HomeController controller = Get.put(HomeController());
 
-  final AuthController _authController = Get.find();
-
   HomeScreen({super.key});
 
   @override
@@ -55,12 +53,13 @@ class HomeScreen extends StatelessWidget {
         }
         if (controller.pageIndex.value == 0) {
           return Scaffold(
-            body: homeWidget(context, controller, cartController),
+            body: homeWidget(context, controller, cartController,
+                controller.pageUpdateOnHomeScreen),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 1) {
           return Scaffold(
-            body: const Center(child: Text("Explore")),
+            body: ReminderScreen(),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 2) {
@@ -70,7 +69,7 @@ class HomeScreen extends StatelessWidget {
           );
         } else if (controller.pageIndex.value == 3) {
           return Scaffold(
-            body: FavouriteScreen(),
+            body: FavouriteScreen(controller.pageUpdateOnHomeScreen),
             bottomNavigationBar: bottomNavigationBar(context),
           );
         } else if (controller.pageIndex.value == 4) {
@@ -84,8 +83,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget homeWidget(BuildContext context, HomeController controller,
-      CartController cartController) {
+  Widget homeWidget(
+      BuildContext context,
+      HomeController controller,
+      CartController cartController,
+      Function(int index, [String? userId]) switchTab) {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -105,7 +107,7 @@ class HomeScreen extends StatelessWidget {
                 textStyle: Theme.of(context)
                     .textTheme
                     .titleMedium!
-                    .copyWith(fontFamily: AppFont.fontMedium),
+                    .copyWith(fontFamily: AppFont.fontBold),
               )
             ] else
               Container(),
@@ -137,26 +139,26 @@ class HomeScreen extends StatelessWidget {
               iconTheme: IconThemeData(color: AppColors.white),
               backgroundColor: AppColors.primaryColor,
               children: [
-                SpeedDialChild(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100)),
-                    onTap: () {
-                      Get.to(() => ReminderScreen());
-                    },
-                    child: SvgPicture.asset(
-                      AppIcons.addReminder,
-                      color: AppColors.primaryColor,
-                    ),
-                    backgroundColor: AppColors.white,
-                    label: "Add Reminders",
-                    labelBackgroundColor: Colors.transparent,
-                    labelShadow: [const BoxShadow(color: Colors.transparent)],
-                    labelStyle: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(
-                            color: AppColors.white,
-                            fontFamily: AppFont.fontMedium)),
+                // SpeedDialChild(
+                //     shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(100)),
+                //     onTap: () {
+                //
+                //     },
+                //     child: SvgPicture.asset(
+                //       AppIcons.addReminder,
+                //       color: AppColors.primaryColor,
+                //     ),
+                //     backgroundColor: AppColors.white,
+                //     label: "Add Reminders",
+                //     labelBackgroundColor: Colors.transparent,
+                //     labelShadow: [const BoxShadow(color: Colors.transparent)],
+                //     labelStyle: Theme.of(context)
+                //         .textTheme
+                //         .titleMedium!
+                //         .copyWith(
+                //             color: AppColors.white,
+                //             fontFamily: AppFont.fontMedium)),
                 SpeedDialChild(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100)),
@@ -178,12 +180,12 @@ class HomeScreen extends StatelessWidget {
             )
           : const SizedBox(),
       body: SingleChildScrollView(
-        child: Padding(
-          padding:
-              const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 30),
-          child: Column(
-            children: [
-              TextFormField(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: TextFormField(
                 readOnly: true,
                 onTap: () async {
                   await Get.to(() => SearchScreen());
@@ -231,17 +233,20 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     ConstString.medicineCategory,
                     style: Theme.of(context).textTheme.displayMedium!.copyWith(
                           color: AppColors.darkPrimaryColor,
-                          fontFamily: AppFont.fontMedium,
+                          fontFamily: AppFont.fontSemiBold,
                           fontSize: 15.5,
                         ),
                   ),
@@ -258,154 +263,157 @@ class HomeScreen extends StatelessWidget {
                       ))
                 ],
               ),
-              GetBuilder<MedicineController>(
-                init: MedicineController(),
-                builder: (controller) {
-                  return SizedBox(
-                      height: 100,
-                      child: StreamBuilder<List<CategoryData>>(
-                        stream: controller.fetchCategory(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                              child: CategoryShimmer(
-                                itemCount: snapshot.data?.length,
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Container(
-                              alignment: Alignment.center,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: AppColors.tilePrimaryColor),
-                              child: Text(
-                                "Error : ${snapshot.error}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                        color: AppColors.primaryColor,
-                                        fontSize: 13,
-                                        fontFamily: AppFont.fontMedium),
-                              ),
-                            );
-                          } else if (snapshot.hasData &&
-                              snapshot.data!.isNotEmpty) {
-                            List<CategoryData>? categoryList = snapshot.data!;
+            ),
+            GetBuilder<MedicineController>(
+              init: MedicineController(),
+              builder: (controller) {
+                return SizedBox(
+                    height: 100,
+                    child: StreamBuilder<List<CategoryData>>(
+                      stream: controller.fetchCategory(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CategoryShimmer(
+                              itemCount: snapshot.data?.length,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Container(
+                            alignment: Alignment.center,
+                            height: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: AppColors.tilePrimaryColor),
+                            child: Text(
+                              "Error : ${snapshot.error}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                      color: AppColors.primaryColor,
+                                      fontSize: 13,
+                                      fontFamily: AppFont.fontMedium),
+                            ),
+                          );
+                        } else if (snapshot.hasData &&
+                            snapshot.data!.isNotEmpty) {
+                          List<CategoryData>? categoryList = snapshot.data!;
 
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 6,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => CategoryWiseMedicine(
-                                        categoryData:
-                                            categoryList.elementAt(index)));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          clipBehavior:
-                                              Clip.antiAliasWithSaveLayer,
-                                          child: SvgPicture.network(
-                                              categoryList[index].image!,
-                                              height: 50),
-                                          // child: CachedNetworkImage(
-                                          //   height: 60,
-                                          //   width: 60,
-                                          //   imageUrl: categoryList[index].image!,
-                                          //   errorWidget: (context, url, error) =>
-                                          //       const Icon(Icons.error),
-                                          //   progressIndicatorBuilder: (context,
-                                          //           url, downloadProgress) =>
-                                          //       SizedBox(
-                                          //     width: 30,
-                                          //     height: 30,
-                                          //     child: Center(
-                                          //         child: LoadingIndicator(
-                                          //       colors: [AppColors.primaryColor],
-                                          //       indicatorType:
-                                          //           Indicator.ballScale,
-                                          //       strokeWidth: 1,
-                                          //     )),
-                                          //   ),
-                                          //   fit: BoxFit.cover,
-                                          // ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          "${categoryList[index].name}",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .copyWith(
-                                                  color: AppColors.txtGrey,
-                                                  fontFamily:
-                                                      AppFont.fontMedium),
-                                        )
-                                      ],
-                                    ),
+                          return ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 6,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(() => CategoryWiseMedicine(
+                                      categoryData:
+                                          categoryList.elementAt(index)));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15, top: 8, bottom: 8),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                        child: SvgPicture.network(
+                                            categoryList[index].image!,
+                                            height: 50),
+                                        // child: CachedNetworkImage(
+                                        //   height: 60,
+                                        //   width: 60,
+                                        //   imageUrl: categoryList[index].image!,
+                                        //   errorWidget: (context, url, error) =>
+                                        //       const Icon(Icons.error),
+                                        //   progressIndicatorBuilder: (context,
+                                        //           url, downloadProgress) =>
+                                        //       SizedBox(
+                                        //     width: 30,
+                                        //     height: 30,
+                                        //     child: Center(
+                                        //         child: LoadingIndicator(
+                                        //       colors: [AppColors.primaryColor],
+                                        //       indicatorType:
+                                        //           Indicator.ballScale,
+                                        //       strokeWidth: 1,
+                                        //     )),
+                                        //   ),
+                                        //   fit: BoxFit.cover,
+                                        // ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "${categoryList[index].name}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall!
+                                            .copyWith(
+                                                color: AppColors.txtGrey,
+                                                fontFamily: AppFont.fontMedium),
+                                      )
+                                    ],
                                   ),
-                                );
-                              },
-                            );
-                          } else {
-                            return Container(
-                              alignment: Alignment.center,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: AppColors.tilePrimaryColor),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(AppIcons.noData, height: 40),
-                                  Text(
-                                    ConstString.noCategory,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall!
-                                        .copyWith(
-                                            color: AppColors.primaryColor,
-                                            fontSize: 14,
-                                            fontFamily: AppFont.fontMedium),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        },
-                      ));
-                },
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return Container(
+                            alignment: Alignment.center,
+                            height: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: AppColors.tilePrimaryColor),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(AppIcons.noData, height: 40),
+                                Text(
+                                  ConstString.noCategory,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                          color: AppColors.primaryColor,
+                                          fontSize: 14,
+                                          fontFamily: AppFont.fontMedium),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                    ));
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     ConstString.popularMedicine,
                     style: Theme.of(context).textTheme.displayMedium!.copyWith(
                           color: AppColors.darkPrimaryColor,
-                          fontFamily: AppFont.fontMedium,
+                          fontFamily: AppFont.fontSemiBold,
                           fontSize: 15.5,
                         ),
                   ),
                   TextButton(
                       onPressed: () {
-                        Get.to(() => PopularMedicine());
+                        Get.to(() =>
+                            PopularMedicine(controller.pageUpdateOnHomeScreen));
                       },
                       child: Text(
                         ConstString.viewAll,
@@ -416,143 +424,151 @@ class HomeScreen extends StatelessWidget {
                       ))
                 ],
               ),
-              GetBuilder<MedicineController>(
-                init: MedicineController(),
-                builder: (controller) {
-                  return SizedBox(
-                    height: 130,
-                    child: StreamBuilder(
-                      stream: controller.fetchPopularMedicines(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return PopularMedicineShimmer(
-                              itemCount: snapshot.data?.length);
-                        } else if (snapshot.hasError) {
-                          return Container(
-                            alignment: Alignment.center,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: AppColors.tilePrimaryColor),
-                            child: Text(
-                              "Error : ${snapshot.error}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontSize: 13,
-                                      fontFamily: AppFont.fontMedium),
-                            ),
-                          );
-                        } else if (snapshot.hasData &&
-                            snapshot.data!.isNotEmpty) {
-                          List<MedicineData> medicinelist = snapshot.data!;
-                          return SizedBox(
-                            height: 130,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: medicinelist.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => MedicineDetails(
-                                          medicineData: medicinelist[index],
-                                        ));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 120,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: controller.popularColorList[
-                                            index %
-                                                (controller
-                                                    .popularColorList.length)],
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          SvgPicture.asset(
-                                              AppImages.designVector),
-                                          Positioned(
-                                              top: 20,
-                                              left: 15,
-                                              child: Text(
-                                                medicinelist[index]
-                                                        .genericName ??
-                                                    "",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium!
-                                                    .copyWith(
-                                                        color: AppColors.white),
-                                              )),
-                                          Positioned(
-                                              bottom: 0,
-                                              right: 0,
-                                              child: Image.asset(
-                                                controller.medicineImageList[
-                                                    index %
-                                                        (controller
-                                                            .medicineImageList
-                                                            .length)],
-                                                height: 60,
-                                              ))
-                                        ],
-                                      ),
+            ),
+            GetBuilder<MedicineController>(
+              init: MedicineController(),
+              builder: (controller) {
+                HomeController homeController = Get.put(HomeController());
+                return Container(
+                  height: 130,
+                  child: StreamBuilder(
+                    stream: controller.fetchPopularMedicines(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return PopularMedicineShimmer(
+                            itemCount: snapshot.data?.length);
+                      } else if (snapshot.hasError) {
+                        return Container(
+                          alignment: Alignment.center,
+                          height: 100,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: AppColors.tilePrimaryColor),
+                          child: Text(
+                            "Error : ${snapshot.error}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    color: AppColors.primaryColor,
+                                    fontSize: 13,
+                                    fontFamily: AppFont.fontMedium),
+                          ),
+                        );
+                      } else if (snapshot.hasData &&
+                          snapshot.data!.isNotEmpty) {
+                        List<MedicineData> medicinelist = snapshot.data!;
+                        return SizedBox(
+                          height: 130,
+                          child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: medicinelist.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(() => MedicineDetails(
+                                        medicineData: medicinelist[index],
+                                        switchTab: homeController
+                                            .pageUpdateOnHomeScreen,
+                                      ));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 15, top: 8, bottom: 8),
+                                  child: Container(
+                                    width: 120,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: controller.popularColorList[index %
+                                          (controller.popularColorList.length)],
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        SvgPicture.asset(
+                                            AppImages.designVector),
+                                        Positioned(
+                                            top: 15,
+                                            left: 15,
+                                            child: Text(
+                                              medicinelist[index].genericName ??
+                                                  "",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium!
+                                                  .copyWith(
+                                                      color: AppColors.white),
+                                            )),
+                                        Positioned(
+                                            bottom: 0,
+                                            right: 0,
+                                            child: Image.asset(
+                                              controller.medicineImageList[
+                                                  index %
+                                                      (controller
+                                                          .medicineImageList
+                                                          .length)],
+                                              height: 60,
+                                            ))
+                                      ],
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-                          );
-                        } else {
-                          return Container(
-                            alignment: Alignment.center,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: AppColors.tilePrimaryColor),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(AppIcons.noData, height: 40),
-                                Text(
-                                  ConstString.noMedicine,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                          color: AppColors.primaryColor,
-                                          fontSize: 14,
-                                          fontFamily: AppFont.fontMedium),
                                 ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-              Row(
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return Container(
+                          alignment: Alignment.center,
+                          height: 100,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: AppColors.tilePrimaryColor),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(AppIcons.noData, height: 40),
+                              Text(
+                                ConstString.noMedicine,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.primaryColor,
+                                        fontSize: 14,
+                                        fontFamily: AppFont.fontMedium),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                );
+              },
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     ConstString.recommended,
                     style: Theme.of(context).textTheme.displayMedium!.copyWith(
                           color: AppColors.darkPrimaryColor,
-                          fontFamily: AppFont.fontMedium,
+                          fontFamily: AppFont.fontSemiBold,
                           fontSize: 15.5,
                         ),
                   ),
                   TextButton(
                       onPressed: () {
-                        Get.to(() => MedicineScreen());
+                        Get.to(() =>
+                            MedicineScreen(controller.pageUpdateOnHomeScreen));
                       },
                       child: Text(
                         ConstString.viewAll,
@@ -563,357 +579,350 @@ class HomeScreen extends StatelessWidget {
                       ))
                 ],
               ),
-              GetBuilder<MedicineController>(
-                init: MedicineController(),
-                builder: (controller) {
-                  return SizedBox(
-                    height: 260,
-                    child: StreamBuilder(
-                      stream: controller.fetchMedicines(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return MedicineShimmer(
-                              itemCount: snapshot.data?.length);
-                        } else if (snapshot.hasError) {
-                          return Container(
-                            alignment: Alignment.center,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: AppColors.tilePrimaryColor),
-                            child: Text(
-                              "Error : ${snapshot.error}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontSize: 13,
-                                      fontFamily: AppFont.fontMedium),
-                            ),
-                          );
-                        } else if (snapshot.hasData &&
-                            snapshot.data!.isNotEmpty) {
-                          List<MedicineData> medicineList = snapshot.data!;
-                          return SizedBox(
-                            height: 260,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 4,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => MedicineDetails(
-                                        medicineData: medicineList[index]));
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 5),
-                                    width: 200,
-                                    decoration: BoxDecoration(
-                                        color: AppColors.white,
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                            color: AppColors.decsGrey)),
-                                    child: Column(
-                                      children: [
-                                        Expanded(
-                                            flex: 5,
-                                            child: SizedBox(
-                                              width: double.infinity,
-                                              child: Center(
-                                                child: Stack(
-                                                  fit: StackFit.expand,
-                                                  children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .only(
-                                                              topLeft: Radius
-                                                                  .circular(10),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      10)),
-                                                      child: CachedNetworkImage(
-                                                        height: 30,
-                                                        width: 30,
-                                                        imageUrl:
-                                                            medicineList[index]
-                                                                    .image ??
-                                                                "",
-                                                        errorWidget: (context,
-                                                                url, error) =>
-                                                            const Icon(
-                                                                Icons.error),
-                                                        progressIndicatorBuilder:
-                                                            (context, url,
-                                                                    downloadProgress) =>
-                                                                SizedBox(
-                                                          width: 30,
-                                                          height: 30,
-                                                          child: Center(
-                                                              child:
-                                                                  LoadingIndicator(
-                                                            colors: [
-                                                              AppColors
-                                                                  .primaryColor
-                                                            ],
-                                                            indicatorType:
-                                                                Indicator
-                                                                    .ballScale,
-                                                            strokeWidth: 1,
-                                                          )),
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                    Obx(() {
-                                                      String medicineId =
-                                                          medicineList[index]
-                                                              .id!;
-                                                      bool isFav = controller
-                                                          .isFavourite(
-                                                              medicineId);
-                                                      return Positioned(
-                                                          top: 10,
-                                                          right: 10,
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () async {
-                                                              await markFavourite(
-                                                                  controller,
-                                                                  context,
-                                                                  isFav,
-                                                                  medicineId);
-                                                            },
-                                                            child: isFav
-                                                                ? SvgPicture
-                                                                    .asset(
-                                                                    AppIcons
-                                                                        .favFillRed,
-                                                                    height: 22,
-                                                                  )
-                                                                : SvgPicture
-                                                                    .asset(
-                                                                    AppIcons
-                                                                        .like,
-                                                                    height: 22,
-                                                                  ),
-                                                          ));
-                                                    })
-                                                  ],
-                                                ),
-                                              ),
-                                            )),
-                                        Expanded(
-                                          flex: 6,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(10),
+            ),
+            GetBuilder<MedicineController>(
+              init: MedicineController(),
+              builder: (controller) {
+                HomeController homeController = Get.put(HomeController());
+                return SizedBox(
+                  height: 260,
+                  child: StreamBuilder(
+                    stream: controller.fetchMedicines(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return MedicineShimmer(
+                            itemCount: snapshot.data?.length);
+                      } else if (snapshot.hasError) {
+                        return Container(
+                          alignment: Alignment.center,
+                          height: 100,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: AppColors.tilePrimaryColor),
+                          child: Text(
+                            "Error : ${snapshot.error}",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    color: AppColors.primaryColor,
+                                    fontSize: 13,
+                                    fontFamily: AppFont.fontMedium),
+                          ),
+                        );
+                      } else if (snapshot.hasData &&
+                          snapshot.data!.isNotEmpty) {
+                        List<MedicineData> medicineList = snapshot.data!;
+                        return SizedBox(
+                          height: 260,
+                          child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 4,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(() => MedicineDetails(
+                                      medicineData: medicineList[index],
+                                      switchTab: homeController
+                                          .pageUpdateOnHomeScreen));
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 15, top: 5, bottom: 5),
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                          color: AppColors.decsGrey)),
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                          flex: 5,
+                                          child: SizedBox(
                                             width: double.infinity,
-                                            decoration: BoxDecoration(
-                                                color: AppColors.white,
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                        bottomLeft:
-                                                            Radius.circular(12),
-                                                        bottomRight:
-                                                            Radius.circular(
-                                                                12))),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  medicineList[index]
-                                                      .genericName!,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall!
-                                                      .copyWith(
-                                                          fontFamily: AppFont
-                                                              .fontMedium,
-                                                          color: AppColors
-                                                              .darkPrimaryColor,
-                                                          fontSize: 13.5),
-                                                ),
-                                                const SizedBox(
-                                                  height: 3,
-                                                ),
-                                                Text(
-                                                  medicineList[index]
-                                                          .brandName ??
-                                                      "",
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall!
-                                                      .copyWith(
-                                                          fontFamily: AppFont
-                                                              .fontRegular,
-                                                          color:
-                                                              AppColors.txtGrey,
-                                                          fontSize: 12),
-                                                ),
-                                                const SizedBox(
-                                                  height: 3,
-                                                ),
-                                                SmoothStarRating(
-                                                  rating: double.parse(
-                                                      medicineList[index]
-                                                                  .ratings ==
-                                                              ""
-                                                          ? "5"
-                                                          : medicineList[index]
-                                                              .ratings!),
-                                                  allowHalfRating: true,
-                                                  defaultIconData: Icons.star,
-                                                  filledIconData: Icons.star,
-                                                  halfFilledIconData:
-                                                      Icons.star_half,
-                                                  starCount: 5,
-                                                  spacing: 2,
-                                                  onRatingChanged: (rating) {},
-                                                  size: 15,
-                                                  color:
-                                                      AppColors.secondaryColor,
-                                                  borderColor:
-                                                      AppColors.indGrey,
-                                                ),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "LE ${medicineList[index].medicinePrice ?? "100"}",
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .displayMedium!
-                                                              .copyWith(
-                                                                  color: AppColors
-                                                                      .darkPrimaryColor,
-                                                                  fontFamily:
-                                                                      AppFont
-                                                                          .fontMedium),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Text(
-                                                          "${cartController.discountPercentage.floor()}% Off",
+                                            child: Center(
+                                              child: Stack(
+                                                fit: StackFit.expand,
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    10),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    10)),
+                                                    child: CachedNetworkImage(
+                                                      height: 30,
+                                                      width: 30,
+                                                      imageUrl:
+                                                          medicineList[index]
+                                                                  .image ??
+                                                              "",
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          const Icon(
+                                                              Icons.error),
+                                                      progressIndicatorBuilder:
+                                                          (context, url,
+                                                                  downloadProgress) =>
+                                                              SizedBox(
+                                                        width: 30,
+                                                        height: 30,
+                                                        child: Center(
+                                                            child:
+                                                                LoadingIndicator(
+                                                          colors: [
+                                                            AppColors
+                                                                .primaryColor
+                                                          ],
+                                                          indicatorType:
+                                                              Indicator
+                                                                  .ballScale,
+                                                          strokeWidth: 1,
+                                                        )),
+                                                      ),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                  Obx(() {
+                                                    String medicineId =
+                                                        medicineList[index].id!;
+                                                    bool isFav =
+                                                        controller.isFavourite(
+                                                            medicineId);
+                                                    return Positioned(
+                                                        top: 10,
+                                                        right: 10,
+                                                        child: GestureDetector(
+                                                          onTap: () async {
+                                                            await markFavourite(
+                                                                controller,
+                                                                context,
+                                                                isFav,
+                                                                medicineId);
+                                                          },
+                                                          child: isFav
+                                                              ? SvgPicture
+                                                                  .asset(
+                                                                  AppIcons
+                                                                      .favFillRed,
+                                                                  height: 22,
+                                                                )
+                                                              : SvgPicture
+                                                                  .asset(
+                                                                  AppIcons.like,
+                                                                  height: 22,
+                                                                ),
+                                                        ));
+                                                  })
+                                                ],
+                                              ),
+                                            ),
+                                          )),
+                                      Expanded(
+                                        flex: 6,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                              color: AppColors.white,
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                      bottomLeft:
+                                                          Radius.circular(12),
+                                                      bottomRight:
+                                                          Radius.circular(12))),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                medicineList[index]
+                                                    .genericName!,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleSmall!
+                                                    .copyWith(
+                                                        fontFamily:
+                                                            AppFont.fontMedium,
+                                                        color: AppColors
+                                                            .darkPrimaryColor,
+                                                        fontSize: 13.5),
+                                              ),
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              Text(
+                                                medicineList[index].brandName ??
+                                                    "",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleSmall!
+                                                    .copyWith(
+                                                        fontFamily:
+                                                            AppFont.fontRegular,
+                                                        color:
+                                                            AppColors.txtGrey,
+                                                        fontSize: 12),
+                                              ),
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              SmoothStarRating(
+                                                rating: double.parse(
+                                                    medicineList[index]
+                                                                .ratings ==
+                                                            ""
+                                                        ? "5"
+                                                        : medicineList[index]
+                                                            .ratings!),
+                                                allowHalfRating: true,
+                                                defaultIconData: Icons.star,
+                                                filledIconData: Icons.star,
+                                                halfFilledIconData:
+                                                    Icons.star_half,
+                                                starCount: 5,
+                                                spacing: 2,
+                                                onRatingChanged: (rating) {},
+                                                size: 15,
+                                                color: AppColors.secondaryColor,
+                                                borderColor: AppColors.indGrey,
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "LE ${medicineList[index].medicinePrice ?? "100"}",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .displayMedium!
+                                                            .copyWith(
+                                                                color: AppColors
+                                                                    .darkPrimaryColor,
+                                                                fontFamily: AppFont
+                                                                    .fontMedium),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        "${cartController.discountPercentage.floor()}% Off",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .titleSmall!
+                                                            .copyWith(
+                                                                fontSize: 10,
+                                                                color: AppColors
+                                                                    .primaryColor,
+                                                                fontFamily: AppFont
+                                                                    .fontMedium),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    child: ElevatedButton(
+                                                        onPressed: () async {
+                                                          await _addToCart(
+                                                              cartController,
+                                                              medicineList
+                                                                  .elementAt(
+                                                                      index));
+                                                          await switchTab(2);
+                                                          // await Get.to(() =>
+                                                          //     const CartScreen());
+                                                        },
+                                                        style: ElevatedButton.styleFrom(
+                                                            backgroundColor:
+                                                                AppColors
+                                                                    .tilePrimaryColor,
+                                                            fixedSize:
+                                                                const Size(
+                                                                    110, 20),
+                                                            elevation: 0,
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            30))),
+                                                        child: Text(
+                                                          "Add to cart",
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme
                                                               .titleSmall!
                                                               .copyWith(
-                                                                  fontSize: 10,
+                                                                  fontSize:
+                                                                      11.5,
                                                                   color: AppColors
                                                                       .primaryColor,
                                                                   fontFamily:
                                                                       AppFont
                                                                           .fontMedium),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Expanded(
-                                                      child: ElevatedButton(
-                                                          onPressed: () async {
-                                                            await _addToCart(
-                                                                cartController,
-                                                                medicineList
-                                                                    .elementAt(
-                                                                        index));
-                                                            await Get.to(() =>
-                                                                const CartScreen());
-                                                          },
-                                                          style: ElevatedButton.styleFrom(
-                                                              backgroundColor:
-                                                                  AppColors
-                                                                      .tilePrimaryColor,
-                                                              fixedSize:
-                                                                  const Size(
-                                                                      110, 20),
-                                                              elevation: 0,
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              30))),
-                                                          child: Text(
-                                                            "Add to cart",
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .titleSmall!
-                                                                .copyWith(
-                                                                    fontSize:
-                                                                        11.5,
-                                                                    color: AppColors
-                                                                        .primaryColor,
-                                                                    fontFamily:
-                                                                        AppFont
-                                                                            .fontMedium),
-                                                          )),
-                                                    )
-                                                  ],
-                                                )
-                                              ],
-                                            ),
+                                                        )),
+                                                  )
+                                                ],
+                                              )
+                                            ],
                                           ),
-                                        )
-                                      ],
-                                    ),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                );
-                              },
-                            ),
-                          );
-                        } else {
-                          return Container(
-                            alignment: Alignment.center,
-                            height: 100,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: AppColors.tilePrimaryColor),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(AppIcons.noData, height: 40),
-                                Text(
-                                  ConstString.noMedicine,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall!
-                                      .copyWith(
-                                          color: AppColors.primaryColor,
-                                          fontSize: 14,
-                                          fontFamily: AppFont.fontMedium),
                                 ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        return Container(
+                          alignment: Alignment.center,
+                          height: 100,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: AppColors.tilePrimaryColor),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(AppIcons.noData, height: 40),
+                              Text(
+                                ConstString.noMedicine,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.primaryColor,
+                                        fontSize: 14,
+                                        fontFamily: AppFont.fontMedium),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -953,11 +962,6 @@ class HomeScreen extends StatelessWidget {
           // alignment: Alignment.topCenter,
           height: 80,
           child: BottomNavigationBar(
-              // backgroundColor: _authController.appStorage.getUserData() == null
-              //     ? controller.pageIndex.value == 4
-              //         ? AppColors.darkPrimaryColor.withOpacity(0.78)
-              //         : AppColors.white
-              //     : AppColors.white,
               currentIndex: controller.pageIndex.value,
               type: BottomNavigationBarType.fixed,
               showSelectedLabels: true,
@@ -993,14 +997,14 @@ class HomeScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: SvgPicture.asset(
                         controller.pageIndex.value == 1
-                            ? AppIcons.exploreFill
-                            : AppIcons.explore,
+                            ? AppIcons.reminderIcon
+                            : AppIcons.reminderIcon,
                         color: controller.pageIndex.value == 1
                             ? AppColors.primaryColor
                             : AppColors.txtGrey,
                       ),
                     ),
-                    label: "Explore"),
+                    label: "Reminder"),
                 BottomNavigationBarItem(
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 3),

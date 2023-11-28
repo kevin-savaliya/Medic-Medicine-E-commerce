@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:medic/controller/home_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/medicine_data.dart';
 import 'package:medic/screen/cart_screen.dart';
@@ -16,8 +17,11 @@ import 'package:medic/widgets/shimmer_widget.dart';
 
 class PopularMedicine extends StatelessWidget {
   MedicineController controller = Get.put(MedicineController());
+  HomeController homeController = Get.put(HomeController());
 
-  PopularMedicine({super.key});
+  final Function(int, [String]) switchTab;
+
+  PopularMedicine(this.switchTab, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,9 @@ class PopularMedicine extends StatelessWidget {
           ),
           GestureDetector(
               onTap: () {
-                Get.to(() => CartScreen());
+                Get.back();
+                switchTab(2);
+                // Get.to(() => CartScreen());
               },
               child: SvgPicture.asset(
                 AppIcons.bag,
@@ -98,6 +104,7 @@ class PopularMedicine extends StatelessWidget {
                   onTap: () {
                     Get.to(() => MedicineDetails(
                           medicineData: medicineList[index],
+                          switchTab: homeController.pageUpdateOnHomeScreen,
                         ));
                   },
                   child: Container(

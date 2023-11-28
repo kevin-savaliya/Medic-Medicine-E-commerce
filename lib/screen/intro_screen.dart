@@ -38,6 +38,9 @@ class IntroScreen extends StatelessWidget {
                               return Column(
                                 // mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  SizedBox(
+                                    height: 50,
+                                  ),
                                   Expanded(
                                     flex: 3,
                                     child: Container(

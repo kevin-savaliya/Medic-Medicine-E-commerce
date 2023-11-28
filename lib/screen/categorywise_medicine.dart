@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:medic/_dart/_init.dart';
 import 'package:medic/controller/cart_controller.dart';
+import 'package:medic/controller/home_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/category_data.dart';
 import 'package:medic/model/medicine_data.dart';
@@ -24,6 +25,7 @@ class CategoryWiseMedicine extends StatelessWidget {
 
   MedicineController controller = Get.put(MedicineController());
   CartController cartController = Get.put(CartController());
+  HomeController homeController = Get.put(HomeController());
 
   CategoryWiseMedicine({super.key, this.categoryData});
 
@@ -99,6 +101,7 @@ class CategoryWiseMedicine extends StatelessWidget {
                   onTap: () {
                     Get.to(() => MedicineDetails(
                           medicineData: medicineList[index],
+                      switchTab: homeController.pageUpdateOnHomeScreen,
                         ));
                   },
                   child: Container(

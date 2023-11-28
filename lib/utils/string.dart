@@ -8,6 +8,7 @@ class ConstString {
   static const String pay = "Pay";
   static const String addCard = "Add Card";
   static const String saveName = "Save Name";
+  static const String selectchoice = "Select Your Choice";
   static const String save = "Save";
   static const String resendOTP = "Resend OTP";
   static const String saveDetails = "Save details";
@@ -78,6 +79,8 @@ class ConstString {
   static const String mobileNumber = "Mobile Number";
   static const String userName = "Your Name";
   static const String enterName = "Enter Name";
+  static const String enterUrName = "Enter Your Name";
+  static const String enterUrEmail = "Enter Your Email";
   static const String OTP = "Enter OTP";
   static const String enterMobile = "Enter Mobile Number";
   static const String enterFirstName = "Enter First name";
@@ -111,6 +114,7 @@ class ConstString {
   static const String recommended = "Recommended For You";
   static const String uploadPres = "Upload Prescription";
   static const String myAddress = "My Address";
+  static const String editProfile = "Edit Profile";
   static const String enterAddressDetail = "Enter Address Details";
   static const String orderHistory = "Order History";
   static const String orderDetails = "Order Details";

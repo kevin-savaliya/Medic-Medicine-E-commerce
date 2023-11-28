@@ -2,8 +2,12 @@
 
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medic/_dart/_init.dart';
+import 'package:medic/model/user_model.dart';
+import 'package:medic/screen/edit_profile.dart';
 import 'package:medic/screen/myaddress_screen.dart';
 import 'package:medic/screen/notification_screen.dart';
 import 'package:medic/screen/order_history.dart';
@@ -21,6 +25,8 @@ class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
   final AuthController _authController = Get.find();
+
+  UserController controller = Get.put(UserController());
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +115,7 @@ class ProfileScreen extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                         onPressed: () async {
-                          Get.to(() => PhoneLoginScreen());
+                          Get.to(() => const PhoneLoginScreen());
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primaryColor,
@@ -139,245 +145,314 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget profileWidget(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            ClipOval(
-                child: Container(
-                    height: 90,
-                    width: 90,
-                    color: AppColors.primaryColor,
-                    child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SvgPicture.asset(AppImages.medic_white_text)))),
-            const SizedBox(height: 10),
-            MyNameTextWidget(
-                textStyle: Theme.of(context)
-                    .textTheme
-                    .titleMedium!
-                    .copyWith(fontFamily: AppFont.fontBold)),
-            const SizedBox(height: 5),
-            MyNumberTextWidget(
-                textStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: AppColors.txtGrey.withOpacity(0.8),
-                    fontFamily: AppFont.fontMedium)),
-            const SizedBox(height: 25),
-            ListTile(
-              onTap: () {
-                bool isUserLoggedIn =
-                    _authController.appStorage.getUserData() != null;
-                if (isUserLoggedIn) {
-                  Get.to(() => MyAddressScreen());
-                }
-              },
-              horizontalTitleGap: 5,
-              leading: SvgPicture.asset(AppIcons.pin, height: 22),
-              trailing: Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 15,
-                color: AppColors.txtGrey,
-              ),
-              title: Text(
-                ConstString.myAddress,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Container(
-                height: 1,
-                width: double.infinity,
-                color: AppColors.lineGrey,
-              ),
-            ),
-            ListTile(
-              onTap: () {
-                bool isUserLoggedIn =
-                    _authController.appStorage.getUserData() != null;
-                if (isUserLoggedIn) {
-                  Get.to(() => OrderHistory());
-                }
-              },
-              horizontalTitleGap: 5,
-              leading: SvgPicture.asset(AppIcons.timer, height: 22),
-              trailing: Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 15,
-                color: AppColors.txtGrey,
-              ),
-              title: Text(
-                ConstString.orderHistory,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Container(
-                height: 1,
-                width: double.infinity,
-                color: AppColors.lineGrey,
-              ),
-            ),
-            ListTile(
-              onTap: () {
-                bool isUserLoggedIn =
-                    _authController.appStorage.getUserData() != null;
-                if (isUserLoggedIn) {
-                  Get.to(() => ReminderScreen());
-                }
-              },
-              horizontalTitleGap: 5,
-              leading: SvgPicture.asset(
-                AppIcons.reminder,
-                height: 21,
-              ),
-              trailing: Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 15,
-                color: AppColors.txtGrey,
-              ),
-              title: Text(
-                ConstString.reminder,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Container(
-                height: 1,
-                width: double.infinity,
-                color: AppColors.lineGrey,
-              ),
-            ),
-            ListTile(
-              onTap: () {
-                bool isUserLoggedIn =
-                    _authController.appStorage.getUserData() != null;
-                if (isUserLoggedIn) {
-                  Get.to(() => PrescriptionList());
-                }
-              },
-              horizontalTitleGap: 5,
-              leading: SvgPicture.asset(
-                AppIcons.file,
-                color: AppColors.txtGrey,
-                height: 21,
-              ),
-              trailing: Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 15,
-                color: AppColors.txtGrey,
-              ),
-              title: Text(
-                ConstString.prescription,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Container(
-                height: 1,
-                width: double.infinity,
-                color: AppColors.lineGrey,
-              ),
-            ),
-            ListTile(
-              onTap: () {
-                bool isUserLoggedIn =
-                    _authController.appStorage.getUserData() != null;
-                if (isUserLoggedIn) {
-                  Get.to(() => const NotificationScreen());
-                }
-              },
-              horizontalTitleGap: 5,
-              leading: SvgPicture.asset(
-                AppIcons.notification,
-                height: 21,
-              ),
-              trailing: Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 15,
-                color: AppColors.txtGrey,
-              ),
-              title: Text(
-                ConstString.notification,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontFamily: AppFont.fontBold, color: AppColors.txtGrey),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Container(
-                height: 1,
-                width: double.infinity,
-                color: AppColors.lineGrey,
-              ),
-            ),
-            Visibility(
-              visible: _authController.appStorage.getUserData() != null,
-              child: ListTile(
-                onTap: () async {
-                  bool isUserLoggedIn =
-                      _authController.appStorage.getUserData() != null;
-                  if (isUserLoggedIn) {
-                    await logoutDialogue(context, _authController);
-                  }
-                },
-                horizontalTitleGap: 5,
-                leading: SvgPicture.asset(
-                  AppIcons.logout,
-                  height: 21,
-                ),
-                title: Text(
-                  ConstString.logout,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontFamily: AppFont.fontBold, color: AppColors.red),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: _authController.appStorage.getUserData() != null,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Container(
-                  height: 1,
-                  width: double.infinity,
-                  color: AppColors.lineGrey,
-                ),
-              ),
-            ),
-            Visibility(
-              visible: _authController.appStorage.getUserData() != null,
-              child: ListTile(
-                onTap: () async {
-                  bool isUserLoggedIn =
-                      _authController.appStorage.getUserData() != null;
-                  if (isUserLoggedIn) {
-                    deleteDialogue(context, () async {
-                      Get.back();
-                      progressDialogue(title: "Delete Account");
-                      bool hasInternet = await Utils.hasInternetConnection();
-                      if (!hasInternet) {
-                        showInSnackBar(ConstString.noConnection);
-                        return;
+    return StreamBuilder(
+      stream: controller.streamUser(controller.uId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+              child: CupertinoActivityIndicator(
+            color: AppColors.primaryColor,
+            radius: 12,
+          ));
+        } else if (snapshot.hasData) {
+          UserModel user = snapshot.data!;
+          return Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Stack(
+                    children: [
+                      user.profilePicture!.isNotEmpty &&
+                              user.profilePicture != ""
+                          ? ClipOval(
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                height: 110,
+                                width: 110,
+                                imageUrl: user.profilePicture!,
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) =>
+                                        SizedBox(
+                                  width: 120,
+                                  child: Center(
+                                    child: CupertinoActivityIndicator(
+                                      color: AppColors.primaryColor,
+                                      animating: true,
+                                      radius: 14,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : ClipOval(
+                              child: Container(
+                                  height: 110,
+                                  width: 110,
+                                  color: AppColors.primaryColor,
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SvgPicture.asset(
+                                          AppImages.medic_white_text)))),
+                      Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: GestureDetector(
+                              onTap: () {
+                                Get.to(() => EditProfile(user));
+                              },
+                              child: SvgPicture.asset(
+                                AppIcons.editProfile,
+                                height: 35,
+                              )))
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  MyNameTextWidget(
+                      textStyle: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
+                          .copyWith(fontFamily: AppFont.fontBold)),
+                  const SizedBox(height: 5),
+                  MyNumberTextWidget(
+                      textStyle: Theme.of(context)
+                          .textTheme
+                          .titleSmall!
+                          .copyWith(
+                              color: AppColors.txtGrey.withOpacity(0.8),
+                              fontFamily: AppFont.fontMedium)),
+                  const SizedBox(height: 25),
+                  ListTile(
+                    onTap: () {
+                      bool isUserLoggedIn =
+                          _authController.appStorage.getUserData() != null;
+                      if (isUserLoggedIn) {
+                        Get.to(() => MyAddressScreen());
                       }
+                    },
+                    horizontalTitleGap: 5,
+                    leading: SvgPicture.asset(AppIcons.pin, height: 22),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 15,
+                      color: AppColors.txtGrey,
+                    ),
+                    title: Text(
+                      ConstString.myAddress,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontFamily: AppFont.fontBold,
+                          color: AppColors.txtGrey),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: AppColors.lineGrey,
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      bool isUserLoggedIn =
+                          _authController.appStorage.getUserData() != null;
+                      if (isUserLoggedIn) {
+                        Get.to(() => OrderHistory());
+                      }
+                    },
+                    horizontalTitleGap: 5,
+                    leading: SvgPicture.asset(AppIcons.timer, height: 22),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 15,
+                      color: AppColors.txtGrey,
+                    ),
+                    title: Text(
+                      ConstString.orderHistory,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontFamily: AppFont.fontBold,
+                          color: AppColors.txtGrey),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: AppColors.lineGrey,
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      bool isUserLoggedIn =
+                          _authController.appStorage.getUserData() != null;
+                      if (isUserLoggedIn) {
+                        Get.to(() => ReminderScreen());
+                      }
+                    },
+                    horizontalTitleGap: 5,
+                    leading: SvgPicture.asset(
+                      AppIcons.reminder,
+                      height: 21,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 15,
+                      color: AppColors.txtGrey,
+                    ),
+                    title: Text(
+                      ConstString.reminder,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontFamily: AppFont.fontBold,
+                          color: AppColors.txtGrey),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: AppColors.lineGrey,
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      bool isUserLoggedIn =
+                          _authController.appStorage.getUserData() != null;
+                      if (isUserLoggedIn) {
+                        Get.to(() => PrescriptionList());
+                      }
+                    },
+                    horizontalTitleGap: 5,
+                    leading: SvgPicture.asset(
+                      AppIcons.file,
+                      color: AppColors.txtGrey,
+                      height: 21,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 15,
+                      color: AppColors.txtGrey,
+                    ),
+                    title: Text(
+                      ConstString.prescription,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontFamily: AppFont.fontBold,
+                          color: AppColors.txtGrey),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: AppColors.lineGrey,
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      bool isUserLoggedIn =
+                          _authController.appStorage.getUserData() != null;
+                      if (isUserLoggedIn) {
+                        Get.to(() => const NotificationScreen());
+                      }
+                    },
+                    horizontalTitleGap: 5,
+                    leading: SvgPicture.asset(
+                      AppIcons.notification,
+                      height: 21,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 15,
+                      color: AppColors.txtGrey,
+                    ),
+                    title: Text(
+                      ConstString.notification,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontFamily: AppFont.fontBold,
+                          color: AppColors.txtGrey),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: AppColors.lineGrey,
+                    ),
+                  ),
+                  Visibility(
+                    visible: _authController.appStorage.getUserData() != null,
+                    child: ListTile(
+                      onTap: () async {
+                        bool isUserLoggedIn =
+                            _authController.appStorage.getUserData() != null;
+                        if (isUserLoggedIn) {
+                          await logoutDialogue(context, _authController);
+                        }
+                      },
+                      horizontalTitleGap: 5,
+                      leading: SvgPicture.asset(
+                        AppIcons.logout,
+                        height: 21,
+                      ),
+                      title: Text(
+                        ConstString.logout,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                fontFamily: AppFont.fontBold,
+                                color: AppColors.red),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: _authController.appStorage.getUserData() != null,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      child: Container(
+                        height: 1,
+                        width: double.infinity,
+                        color: AppColors.lineGrey,
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: _authController.appStorage.getUserData() != null,
+                    child: ListTile(
+                      onTap: () async {
+                        bool isUserLoggedIn =
+                            _authController.appStorage.getUserData() != null;
+                        if (isUserLoggedIn) {
+                          deleteDialogue(context, () async {
+                            Get.back();
+                            progressDialogue(title: "Delete Account");
+                            bool hasInternet =
+                                await Utils.hasInternetConnection();
+                            if (!hasInternet) {
+                              showInSnackBar(ConstString.noConnection);
+                              return;
+                            }
 
-                      await deleteUserFirestoreData();
-                      Get.back();
-                      Get.offAll(() => PhoneLoginScreen());
-                      return;
-                    });
-                    /*
+                            await deleteUserFirestoreData();
+                            Get.back();
+                            Get.offAll(() => const PhoneLoginScreen());
+                            return;
+                          });
+                          /*
                     await deleteAccountDialogue(context, _authController, (bool value) async {
                       if (value) {
                         showProgressDialogue(context);
@@ -385,24 +460,33 @@ class ProfileScreen extends StatelessWidget {
                         Get.offAll(() => const PhoneLoginScreen());
                       }
                     });*/
-                  }
-                },
-                horizontalTitleGap: 5,
-                leading: SvgPicture.asset(
-                  AppIcons.delete,
-                  height: 21,
-                  color: AppColors.red,
-                ),
-                title: Text(
-                  ConstString.deleteAccount,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontFamily: AppFont.fontBold, color: AppColors.red),
-                ),
+                        }
+                      },
+                      horizontalTitleGap: 5,
+                      leading: SvgPicture.asset(
+                        AppIcons.delete,
+                        height: 21,
+                        color: AppColors.red,
+                      ),
+                      title: Text(
+                        ConstString.deleteAccount,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(
+                                fontFamily: AppFont.fontBold,
+                                color: AppColors.red),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
+          );
+        } else {
+          return SizedBox();
+        }
+      },
     );
   }
 }

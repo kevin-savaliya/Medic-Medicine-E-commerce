@@ -25,6 +25,8 @@ class HomeController extends GetxController {
   // current logged in user detail from users collection from firestore database
   Rx<UserModel?> loggedInUser = UserModel.newUser().obs;
 
+  String? userId;
+
   // Rx<UserModel?> loggedInUser = Rx<UserModel?>(null);
 
   @override
@@ -220,8 +222,20 @@ class HomeController extends GetxController {
     });
   }
 
-  pageUpdateOnHomeScreen(int index) {
+  pageUpdateOnHomeScreen(int index, [String? userId]) {
     pageIndex.value = index;
+
+    if (index == 3 && userId != null) {
+      this.userId = userId;
+    }
+
+    update(['PageUpdate']);
     update();
   }
+
+// pageUpdateOnHomeScreen(int index) {
+//   pageIndex.value = index;
+//
+//   update();
+// }
 }

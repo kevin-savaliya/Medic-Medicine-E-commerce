@@ -11,6 +11,7 @@ import 'package:medic/model/prescription_model.dart';
 import 'package:medic/model/user_address.dart';
 import 'package:medic/model/user_model.dart';
 import 'package:medic/screen/add_review_screen.dart';
+import 'package:medic/screen/home_screen.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
@@ -27,31 +28,37 @@ class OrderDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
+    return WillPopScope(
+      child: Scaffold(
         backgroundColor: AppColors.white,
-        leading: GestureDetector(
-          onTap: () {
-            Get.back();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: SvgPicture.asset(
-              AppIcons.back,
+        appBar: AppBar(
+          backgroundColor: AppColors.white,
+          leading: GestureDetector(
+            onTap: () {
+              Get.offAll(() => HomeScreen());
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: SvgPicture.asset(
+                AppIcons.back,
+              ),
             ),
           ),
+          titleSpacing: 0,
+          title: Text(ConstString.orderDetails,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(fontFamily: AppFont.fontBold)),
+          elevation: 1.5,
+          shadowColor: AppColors.txtGrey.withOpacity(0.2),
         ),
-        titleSpacing: 0,
-        title: Text(ConstString.orderDetails,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(fontFamily: AppFont.fontBold)),
-        elevation: 1.5,
-        shadowColor: AppColors.txtGrey.withOpacity(0.2),
+        body: orderDetailWidget(context),
       ),
-      body: orderDetailWidget(context),
+      onWillPop: () async {
+        Get.offAll(() => HomeScreen());
+        return true;
+      },
     );
   }
 
@@ -589,61 +596,69 @@ class OrderDetailScreen extends StatelessWidget {
                 const SizedBox(
                   height: 15,
                 ),
-                StreamBuilder(
-                  stream: controller
-                      .fetchPrescriptionById(orderData.prescriptionId!),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CupertinoActivityIndicator());
-                    } else if (snapshot.hasData) {
-                      PrescriptionData prescription = snapshot.data!;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: CachedNetworkImage(
-                              height: 120,
-                              width: 120,
-                              imageUrl: prescription.images?[0] ?? '',
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) => SizedBox(
-                                width: 120,
-                                child: Center(
-                                  child: CupertinoActivityIndicator(
-                                    color: AppColors.primaryColor,
-                                    animating: true,
-                                    radius: 14,
+                orderData.prescriptionId != null &&
+                        orderData.prescriptionId!.isNotEmpty &&
+                        orderData.prescriptionId == ""
+                    ? StreamBuilder(
+                        stream: controller
+                            .fetchPrescriptionById(orderData.prescriptionId!),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CupertinoActivityIndicator());
+                          } else if (snapshot.hasData) {
+                            PrescriptionData prescription = snapshot.data!;
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: CachedNetworkImage(
+                                    height: 120,
+                                    width: 120,
+                                    imageUrl: prescription.images?[0] ?? '',
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                    progressIndicatorBuilder:
+                                        (context, url, downloadProgress) =>
+                                            SizedBox(
+                                      width: 120,
+                                      child: Center(
+                                        child: CupertinoActivityIndicator(
+                                          color: AppColors.primaryColor,
+                                          animating: true,
+                                          radius: 14,
+                                        ),
+                                      ),
+                                    ),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          height: 100,
-                          width: 100,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: AppColors.lineGrey,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Icon(
-                            Icons.error_outline,
-                            color: AppColors.txtGrey,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                ),
+                            );
+                          } else {
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                height: 100,
+                                width: 100,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color: AppColors.lineGrey,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Icon(
+                                  Icons.error_outline,
+                                  color: AppColors.txtGrey,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      )
+                    : SizedBox(),
                 const SizedBox(
                   height: 20,
                 ),

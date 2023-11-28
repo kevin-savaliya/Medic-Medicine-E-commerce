@@ -1,8 +1,11 @@
 //Responsive
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medic/_dart/_init.dart';
 import 'package:medic/controller/home_controller.dart';
+import 'package:medic/model/user_model.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/widgets/circular_profile_avatar.dart';
@@ -11,21 +14,33 @@ import 'package:medic/widgets/custom_widget.dart';
 class MyNameTextWidget extends StatelessWidget {
   final TextStyle? textStyle;
 
-  HomeController controller = Get.put(HomeController());
+  UserController userController = Get.put(UserController());
 
-  MyNameTextWidget({this.textStyle});
+  MyNameTextWidget({super.key, this.textStyle});
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => TextWidget(
-          controller.loggedInUser.value?.name ?? "Medic User",
-          style: textStyle ??
-              Theme.of(context).textTheme.labelLarge!.copyWith(
-                  fontFamily: AppFont.fontSemiBold,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.3,
-                  fontSize: 15),
-        ));
+    return StreamBuilder(
+      stream: userController.streamUser(userController.uId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CupertinoActivityIndicator());
+        } else if (snapshot.hasData) {
+          UserModel user = snapshot.data!;
+          return TextWidget(
+            user.name ?? "Medic User",
+            style: textStyle ??
+                Theme.of(context).textTheme.labelLarge!.copyWith(
+                    fontFamily: AppFont.fontSemiBold,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.3,
+                    fontSize: 15),
+          );
+        } else {
+          return SizedBox();
+        }
+      },
+    );
   }
 }
 
@@ -34,30 +49,44 @@ class MyNameTextWidget extends StatelessWidget {
 class MyNumberTextWidget extends StatelessWidget {
   final TextStyle? textStyle;
 
-  HomeController controller = Get.put(HomeController());
+  UserController userController = Get.put(UserController());
 
-  MyNumberTextWidget({this.textStyle});
+  MyNumberTextWidget({super.key, this.textStyle});
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => TextWidget(
-          getMobileNo(),
-          style: textStyle ??
-              Theme.of(context).textTheme.labelLarge!.copyWith(
-                  fontFamily: AppFont.fontSemiBold,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.3,
-                  fontSize: 15),
-        ));
+    return StreamBuilder(
+      stream: userController.streamUser(userController.uId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CupertinoActivityIndicator());
+        } else if (snapshot.hasData) {
+          UserModel user = snapshot.data!;
+          return TextWidget(
+            getMobileNo(user),
+            style: textStyle ??
+                Theme.of(context).textTheme.labelLarge!.copyWith(
+                    fontFamily: AppFont.fontSemiBold,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.3,
+                    fontSize: 15),
+          );
+        } else {
+          return SizedBox();
+        }
+      },
+    );
   }
 
-  String getMobileNo() {
-    if (controller.loggedInUser.value?.mobileNo == null) {
+  String getMobileNo(UserModel user) {
+    if (user.mobileNo == null) {
       return '';
     }
 
-    int? countryCode = controller.loggedInUser.value?.countryCode;
-    String? mobileNo = controller.loggedInUser.value?.mobileNo ?? '';
+    int? countryCode = user.countryCode;
+    // int? countryCode = controller.loggedInUser.value?.countryCode;
+    String? mobileNo = user.mobileNo ?? '';
+    // String? mobileNo = controller.loggedInUser.value?.mobileNo ?? '';
     return '+${countryCode ?? ''} $mobileNo';
   }
 }

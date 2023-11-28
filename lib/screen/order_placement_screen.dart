@@ -14,6 +14,7 @@ import 'package:medic/model/user_address.dart';
 import 'package:medic/screen/card_details.dart';
 import 'package:medic/screen/cards_screen.dart';
 import 'package:medic/screen/cart_screen.dart';
+import 'package:medic/screen/home_screen.dart';
 import 'package:medic/screen/myaddress_screen.dart';
 import 'package:medic/screen/order_details_screen.dart';
 import 'package:medic/screen/search_screen.dart';
@@ -36,61 +37,68 @@ class OrderPlacement extends StatelessWidget {
     return GetBuilder(
       init: CartController(),
       builder: (cartController) {
-        return Scaffold(
-          backgroundColor: AppColors.white,
-          appBar: AppBar(
+        return WillPopScope(
+          child: Scaffold(
             backgroundColor: AppColors.white,
-            leading: GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: SvgPicture.asset(
-                  AppIcons.back,
+            appBar: AppBar(
+              backgroundColor: AppColors.white,
+              leading: GestureDetector(
+                onTap: () {
+                  // Get.back();
+                  Get.offAll(() => HomeScreen());
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: SvgPicture.asset(
+                    AppIcons.back,
+                  ),
                 ),
               ),
+              titleSpacing: 0,
+              title: Text(ConstString.orderPlacement,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(fontFamily: AppFont.fontBold)),
+              elevation: 1.5,
+              shadowColor: AppColors.txtGrey.withOpacity(0.2),
             ),
-            titleSpacing: 0,
-            title: Text(ConstString.orderPlacement,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge!
-                    .copyWith(fontFamily: AppFont.fontBold)),
-            elevation: 1.5,
-            shadowColor: AppColors.txtGrey.withOpacity(0.2),
+            body: orderPlaceWidget(context, cartController),
+            bottomSheet: Container(
+              width: double.infinity,
+              color: AppColors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    if (cartController.orderData.value.addressId == null) {
+                      showInSnackBar("Please Enter Delivery Address");
+                      return;
+                    }
+                    // showProgressDialogue(context);
+                    // await cartController.placeOrder();
+                    Get.off(() => OrderDetailScreen(
+                          orderId: cartController.orderData.value.id,
+                          isTrue: false,
+                        ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      fixedSize: const Size(80, 45),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30))),
+                  child: Text(
+                    ConstString.placeOrder,
+                    style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                          color: AppColors.white,
+                        ),
+                  )),
+            ),
           ),
-          body: orderPlaceWidget(context, cartController),
-          bottomSheet: Container(
-            width: double.infinity,
-            color: AppColors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
-            child: ElevatedButton(
-                onPressed: () async {
-                  if (cartController.orderData.value.addressId == null) {
-                    showInSnackBar("Please Enter Delivery Address");
-                    return;
-                  }
-                  showProgressDialogue(context);
-                  await cartController.placeOrder();
-                  Get.off(() => OrderDetailScreen(
-                        orderId: cartController.orderData.value.id,
-                        isTrue: false,
-                      ));
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    fixedSize: const Size(80, 45),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30))),
-                child: Text(
-                  ConstString.placeOrder,
-                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                        color: AppColors.white,
-                      ),
-                )),
-          ),
+          onWillPop: () async {
+            Get.offAll(() => HomeScreen());
+            return true;
+          },
         );
       },
     );

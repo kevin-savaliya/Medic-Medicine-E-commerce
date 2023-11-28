@@ -270,233 +270,208 @@ class CartScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        ConstString.discount,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(
-                                color: AppColors.darkPrimaryColor,
-                                fontFamily: AppFont.fontBold),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Obx(
-                () => controller.selectedDiscount.value != null
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Container(
-                          width: double.infinity,
-                          // height: 80,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
-                                  colors: [
-                                    AppColors.listColor4dark,
-                                    AppColors.listColor4
-                                  ])),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "${controller.discountPercentage.floor()}%",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium!
-                                                .copyWith(
-                                                    fontSize: 22,
-                                                    color: AppColors.white,
-                                                    fontFamily:
-                                                        AppFont.fontBold),
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            "OFF",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium!
-                                                .copyWith(
-                                                    color: AppColors.white,
-                                                    fontFamily:
-                                                        AppFont.fontBold),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        "${controller.discountName}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                color: AppColors.white,
-                                                fontFamily: AppFont.fontBold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        "Code",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                color:
-                                                    AppColors.darkPrimaryColor,
-                                                fontFamily: AppFont.fontBold),
-                                      ),
-                                      const SizedBox(
-                                        height: 14,
-                                      ),
-                                      Text(
-                                        "${controller.discountCode}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                color:
-                                                    AppColors.darkPrimaryColor,
-                                                fontSize: 14,
-                                                fontFamily: AppFont.fontBold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  child: Text(
-                    ConstString.applyDiscount,
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: AppColors.black, fontFamily: AppFont.fontBold),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: TextFormField(
-                  controller: controller.disCodeController,
-                  style: Theme.of(context).textTheme.titleMedium,
-                  decoration: InputDecoration(
-                    filled: true,
-                    enabled: true,
-                    suffixIcon: TextButton(
-                        onPressed: () {
-                          controller.applyDiscount(
-                              controller.disCodeController.text.trim());
-                        },
-                        child: Text(
-                          ConstString.apply,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                  fontSize: 14,
-                                  color: AppColors.primaryColor,
-                                  fontFamily: AppFont.fontBold),
-                        )),
-                    fillColor: AppColors.transparentDetails,
-                    hintText: "Discount Code...",
-                    hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        fontFamily: AppFont.fontMedium,
-                        fontSize: 14,
-                        color: AppColors.skipGrey),
-                    border: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.transparent, width: 0.5),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.transparent, width: 0.5),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.transparent, width: 0.5),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Colors.transparent, width: 0.5),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 17,
-                    ),
-                  ),
-                ),
-              ),
-              // Obx(() => Align(
-              //       alignment: Alignment.centerLeft,
-              //       child: Padding(
-              //         padding: const EdgeInsets.symmetric(horizontal: 15),
-              //         child: Text(
-              //           controller.isDiscountValid.value
-              //               ? "Discount Applied!"
-              //               : "Invalid Discount Code",
-              //           style: Theme.of(context)
-              //               .textTheme
-              //               .titleMedium!
-              //               .copyWith(
-              //                   fontSize: 14,
-              //                   fontFamily: AppFont.fontMedium,
-              //                   color: controller.isDiscountValid.value
-              //                       ? AppColors.green
-              //                       : AppColors.red),
-              //         ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 15),
+              //   child: Align(
+              //     alignment: Alignment.centerLeft,
+              //     child: Text(
+              //       ConstString.discount,
+              //       style: Theme.of(context)
+              //           .textTheme
+              //           .titleMedium!
+              //           .copyWith(
+              //               color: AppColors.darkPrimaryColor,
+              //               fontFamily: AppFont.fontBold),
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // Obx(
+              //   () => controller.selectedDiscount.value != null
+              //       ? Padding(
+              //           padding: const EdgeInsets.symmetric(horizontal: 15),
+              //           child: Container(
+              //             width: double.infinity,
+              //             // height: 80,
+              //             alignment: Alignment.center,
+              //             decoration: BoxDecoration(
+              //                 borderRadius: BorderRadius.circular(10),
+              //                 gradient: LinearGradient(
+              //                     begin: Alignment.bottomCenter,
+              //                     end: Alignment.topCenter,
+              //                     colors: [
+              //                       AppColors.listColor4dark,
+              //                       AppColors.listColor4
+              //                     ])),
+              //             child: Padding(
+              //               padding: const EdgeInsets.symmetric(
+              //                   horizontal: 15, vertical: 15),
+              //               child: Row(
+              //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                 children: [
+              //                   Expanded(
+              //                     child: Column(
+              //                       crossAxisAlignment:
+              //                           CrossAxisAlignment.start,
+              //                       mainAxisAlignment: MainAxisAlignment.center,
+              //                       children: [
+              //                         Row(
+              //                           children: [
+              //                             Text(
+              //                               "${controller.discountPercentage.floor()}%",
+              //                               style: Theme.of(context)
+              //                                   .textTheme
+              //                                   .titleMedium!
+              //                                   .copyWith(
+              //                                       fontSize: 22,
+              //                                       color: AppColors.white,
+              //                                       fontFamily:
+              //                                           AppFont.fontBold),
+              //                             ),
+              //                             const SizedBox(
+              //                               width: 5,
+              //                             ),
+              //                             Text(
+              //                               "OFF",
+              //                               style: Theme.of(context)
+              //                                   .textTheme
+              //                                   .titleMedium!
+              //                                   .copyWith(
+              //                                       color: AppColors.white,
+              //                                       fontFamily:
+              //                                           AppFont.fontBold),
+              //                             ),
+              //                           ],
+              //                         ),
+              //                         const SizedBox(
+              //                           height: 5,
+              //                         ),
+              //                         Text(
+              //                           "${controller.discountName}",
+              //                           style: Theme.of(context)
+              //                               .textTheme
+              //                               .titleMedium!
+              //                               .copyWith(
+              //                                   color: AppColors.white,
+              //                                   fontFamily: AppFont.fontBold),
+              //                         ),
+              //                       ],
+              //                     ),
+              //                   ),
+              //                   Expanded(
+              //                     child: Column(
+              //                       mainAxisAlignment:
+              //                           MainAxisAlignment.spaceEvenly,
+              //                       crossAxisAlignment: CrossAxisAlignment.end,
+              //                       children: [
+              //                         Text(
+              //                           "Code",
+              //                           style: Theme.of(context)
+              //                               .textTheme
+              //                               .titleMedium!
+              //                               .copyWith(
+              //                                   color:
+              //                                       AppColors.darkPrimaryColor,
+              //                                   fontFamily: AppFont.fontBold),
+              //                         ),
+              //                         const SizedBox(
+              //                           height: 14,
+              //                         ),
+              //                         Text(
+              //                           "${controller.discountCode}",
+              //                           style: Theme.of(context)
+              //                               .textTheme
+              //                               .titleMedium!
+              //                               .copyWith(
+              //                                   color:
+              //                                       AppColors.darkPrimaryColor,
+              //                                   fontSize: 14,
+              //                                   fontFamily: AppFont.fontBold),
+              //                         ),
+              //                       ],
+              //                     ),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //         )
+              //       : const SizedBox(),
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Padding(
+              //     padding:
+              //         const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              //     child: Text(
+              //       ConstString.applyDiscount,
+              //       style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              //           color: AppColors.black, fontFamily: AppFont.fontBold),
+              //     ),
+              //   ),
+              // ),
+              // Padding(
+              //   padding:
+              //       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              //   child: TextFormField(
+              //     controller: controller.disCodeController,
+              //     style: Theme.of(context).textTheme.titleMedium,
+              //     decoration: InputDecoration(
+              //       filled: true,
+              //       enabled: true,
+              //       suffixIcon: TextButton(
+              //           onPressed: () {
+              //             controller.applyDiscount(
+              //                 controller.disCodeController.text.trim());
+              //           },
+              //           child: Text(
+              //             ConstString.apply,
+              //             style: Theme.of(context)
+              //                 .textTheme
+              //                 .titleMedium!
+              //                 .copyWith(
+              //                     fontSize: 14,
+              //                     color: AppColors.primaryColor,
+              //                     fontFamily: AppFont.fontBold),
+              //           )),
+              //       fillColor: AppColors.transparentDetails,
+              //       hintText: "Discount Code...",
+              //       hintStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+              //           fontFamily: AppFont.fontMedium,
+              //           fontSize: 14,
+              //           color: AppColors.skipGrey),
+              //       border: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //             color: Colors.transparent, width: 0.5),
+              //         borderRadius: BorderRadius.circular(5),
               //       ),
-              //     )),
+              //       focusedBorder: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //             color: Colors.transparent, width: 0.5),
+              //         borderRadius: BorderRadius.circular(5),
+              //       ),
+              //       disabledBorder: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //             color: Colors.transparent, width: 0.5),
+              //         borderRadius: BorderRadius.circular(5),
+              //       ),
+              //       enabledBorder: OutlineInputBorder(
+              //         borderSide: const BorderSide(
+              //             color: Colors.transparent, width: 0.5),
+              //         borderRadius: BorderRadius.circular(5),
+              //       ),
+              //       contentPadding: const EdgeInsets.symmetric(
+              //         horizontal: 10,
+              //         vertical: 17,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               const SizedBox(
                 height: 20,
               ),

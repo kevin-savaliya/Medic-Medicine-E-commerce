@@ -4,17 +4,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medic/model/prescription_model.dart';
 import 'package:medic/theme/colors.dart';
+import 'package:medic/utils/app_font.dart';
+import 'package:medic/utils/assets.dart';
+import 'package:medic/utils/string.dart';
 import 'package:medic/utils/utils.dart';
+import 'package:sizer/sizer.dart';
 
 class UploadPresController extends GetxController {
   final ImagePicker picker = ImagePicker();
 
   final selectedImages = <RxString>[].obs;
+
+  var _selectedProfileImage = "".obs;
+
+  String get selectedProfileImage => _selectedProfileImage.value;
+
+  set selectedProfileImage(String value) {
+    _selectedProfileImage.value = value;
+  }
 
   TextEditingController titleController = TextEditingController();
 
@@ -31,9 +44,7 @@ class UploadPresController extends GetxController {
       final XFile? image = await picker.pickImage(
           source: ImageSource.camera,
           preferredCameraDevice: CameraDevice.front,
-          imageQuality: 80,
-          maxHeight: 480,
-          maxWidth: 640);
+          imageQuality: 50);
 
       if (image != null) {
         File imageFile = File(image.path);
@@ -51,7 +62,6 @@ class UploadPresController extends GetxController {
           ],
           aspectRatioPresets: [
             CropAspectRatioPreset.square,
-            CropAspectRatioPreset.square,
             CropAspectRatioPreset.ratio3x2,
             CropAspectRatioPreset.original,
             CropAspectRatioPreset.ratio4x3,
@@ -64,7 +74,7 @@ class UploadPresController extends GetxController {
 
         if (croppedProfileFile != null) {
           selectedImages.add(croppedProfileFile!.path.obs);
-          print("Image Picked and Cropped from Camera : ${selectedImages}");
+          print("Image Picked and Cropped from Camera : $selectedImages");
         } else {
           print("Cropping cancelled");
         }
@@ -110,6 +120,179 @@ class UploadPresController extends GetxController {
       print("Image Picked From Gallery");
     }
     Get.back();
+  }
+
+  Future<void> pickImage(context) {
+    return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 170,
+          margin: EdgeInsets.symmetric(horizontal: 5),
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(15), topLeft: Radius.circular(15)),
+            color: AppColors.white,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 25,
+              ),
+              Text(
+                ConstString.selectchoice,
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    fontSize: 16,
+                    color: AppColors.black,
+                    fontFamily: AppFont.fontSemiBold),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                margin: EdgeInsets.all(5),
+                height: 1,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: AppColors.splashdetail,
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        final XFile? image = await picker.pickImage(
+                            source: ImageSource.camera, imageQuality: 40);
+
+                        if (image != null) {
+                          // _selectedImage.value = image.path;
+
+                          File imageFile = File(image.path);
+                          croppedProfileFile = await ImageCropper().cropImage(
+                            sourcePath: imageFile.path,
+                            uiSettings: [
+                              AndroidUiSettings(
+                                toolbarColor: AppColors.white,
+                                toolbarTitle: 'Crop Image',
+                              ),
+                              IOSUiSettings(
+                                title: 'Crop Image',
+                              )
+                            ],
+                            aspectRatioPresets: [
+                              CropAspectRatioPreset.square,
+                              CropAspectRatioPreset.ratio3x2,
+                              CropAspectRatioPreset.original,
+                              CropAspectRatioPreset.ratio4x3,
+                              CropAspectRatioPreset.ratio16x9,
+                              CropAspectRatioPreset.ratio5x4,
+                              CropAspectRatioPreset.ratio5x3,
+                              CropAspectRatioPreset.ratio7x5,
+                            ],
+                          );
+
+                          _selectedProfileImage.value =
+                              croppedProfileFile!.path;
+
+                          print("Image Picked From Camera");
+                        }
+                        Get.back();
+                      },
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Image.asset(AppIcons.camerapng, height: 45),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              ConstString.camera,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(
+                                      fontSize: 14.5, color: AppColors.black),
+                            )
+                          ],
+                        ),
+                        // height: Responsive.height(8, context),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: GestureDetector(
+                    onTap: () async {
+                      final XFile? image = await picker.pickImage(
+                          source: ImageSource.gallery, imageQuality: 50);
+
+                      if (image != null) {
+                        // _selectedImage.value = image.path;
+
+                        File imageFile = File(image.path);
+                        croppedProfileFile = await ImageCropper().cropImage(
+                          sourcePath: imageFile.path,
+                          uiSettings: [
+                            AndroidUiSettings(
+                              toolbarColor: AppColors.white,
+                              toolbarTitle: 'Crop Image',
+                            ),
+                            IOSUiSettings(
+                              title: 'Crop Image',
+                            )
+                          ],
+                          aspectRatioPresets: [
+                            CropAspectRatioPreset.square,
+                            CropAspectRatioPreset.ratio3x2,
+                            CropAspectRatioPreset.original,
+                            CropAspectRatioPreset.ratio4x3,
+                            CropAspectRatioPreset.ratio16x9,
+                            CropAspectRatioPreset.ratio5x4,
+                            CropAspectRatioPreset.ratio5x3,
+                            CropAspectRatioPreset.ratio7x5,
+                          ],
+                        );
+
+                        _selectedProfileImage.value = croppedProfileFile!.path;
+
+                        print("Image Picked From Gallery");
+                      }
+                      Get.back();
+                    },
+                    child: Container(
+                      // height: Responsive.height(8, context),
+                      child: Column(
+                        children: [
+                          Image.asset(AppIcons.gallerypng, height: 45),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            ConstString.gallery,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(
+                                    fontSize: 14.5, color: AppColors.black),
+                          )
+                        ],
+                      ),
+                    ),
+                  )),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   bool isValidate() {
@@ -225,26 +408,6 @@ class UploadPresController extends GetxController {
     });
     return data;
   }
-
-  // Future<void> deletePrescription(String userId, String prescriptionId) async {
-  //   var userDocRef = FirebaseFirestore.instance.collection('prescription').doc(userId);
-  //
-  //   try {
-  //     // Get the current list of prescriptions
-  //     var doc = await userDocRef.get();
-  //     if (doc.exists) {
-  //       List<dynamic> prescriptions = doc.data()['prescriptions'] as List<dynamic>;
-  //
-  //       // Remove the prescription from the list
-  //       prescriptions.removeWhere((prescription) => prescription['id'] == prescriptionId);
-  //
-  //       // Update the document with the new list
-  //       await userDocRef.update({'prescriptions': prescriptions});
-  //     }
-  //   } catch (e) {
-  //     // Handle errors here
-  //   }
-  // }
 
   Future<void> deletePrecription(String prescriptionId) async {
     var userDocRef = presRef.doc(currentUserId);

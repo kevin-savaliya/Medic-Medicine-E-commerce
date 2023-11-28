@@ -141,15 +141,39 @@ class MyAddressScreen extends StatelessWidget {
                                         color:
                                             AppColors.txtGrey.withOpacity(0.7)),
                               ),
-                              subtitle: Text(
-                                "${reverseList[index].address}, ${reverseList[index].area}, ${reverseList[index].landmark}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(
-                                        color: AppColors.txtGrey,
-                                        fontSize: 13,
-                                        fontFamily: AppFont.fontMedium),
+                              subtitle: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${reverseList[index].address}, ${reverseList[index].area}, ${reverseList[index].landmark}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              color: AppColors.txtGrey,
+                                              fontSize: 13,
+                                              fontFamily: AppFont.fontMedium),
+                                    ),
+                                    SizedBox(
+                                      height: 3,
+                                    ),
+                                    Text(
+                                      reverseList[index].mobileNo ??
+                                          "No Contact Found",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              color: AppColors.txtGrey
+                                                  .withOpacity(0.8),
+                                              fontSize: 12,
+                                              fontFamily: AppFont.fontMedium),
+                                    ),
+                                  ],
+                                ),
                               ),
                               trailing: PopupMenuButton(
                                 elevation: 3,
@@ -225,29 +249,27 @@ class MyAddressScreen extends StatelessWidget {
                     },
                   );
                 } else {
-                  return Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: AppColors.tilePrimaryColor),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(AppIcons.noData, height: 50),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          ConstString.noAddress,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                                  color: AppColors.primaryColor,
-                                  fontSize: 15,
-                                  fontFamily: AppFont.fontMedium),
-                        ),
-                      ],
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(AppImages.emptyBin),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            ConstString.noAddress,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    fontSize: 15, color: AppColors.skipGrey),
+                          )
+                        ],
+                      ),
                     ),
                   );
                 }

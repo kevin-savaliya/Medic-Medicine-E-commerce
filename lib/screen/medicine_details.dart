@@ -30,8 +30,9 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 
 class MedicineDetails extends StatelessWidget {
   final MedicineData? medicineData;
+  final Function(int, [String]) switchTab;
 
-  MedicineDetails({super.key, this.medicineData});
+  MedicineDetails({super.key, this.medicineData, required this.switchTab});
 
   final MedicineController controller = Get.put(MedicineController());
   final CartController cartController = Get.put(CartController());
@@ -73,7 +74,9 @@ class MedicineDetails extends StatelessWidget {
                 ),
                 GestureDetector(
                     onTap: () {
-                      Get.to(() => const CartScreen());
+                      Get.back();
+                      switchTab(2);
+                      // Get.to(() => const CartScreen());
                     },
                     child: SvgPicture.asset(
                       AppIcons.bag,
@@ -115,7 +118,9 @@ class MedicineDetails extends StatelessWidget {
                                 flex: 3,
                                 child: ElevatedButton(
                                     onPressed: () {
-                                      Get.to(() => const CartScreen());
+                                      Get.back();
+                                      switchTab(2);
+                                      // Get.to(() => const CartScreen());
                                     },
                                     style: ElevatedButton.styleFrom(
                                         backgroundColor: AppColors.primaryColor,
@@ -196,42 +201,39 @@ class MedicineDetails extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: SizedBox(
-              width: double.infinity,
-              child: Stack(
-                children: [
-                  Center(
-                    child: CachedNetworkImage(
-                      height: 160,
-                      width: double.infinity,
-                      imageUrl: medicineData?.image ?? "",
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) => SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: Center(
-                            child: LoadingIndicator(
-                          colors: [AppColors.primaryColor],
-                          indicatorType: Indicator.ballScale,
-                          strokeWidth: 1,
-                        )),
-                      ),
-                      fit: BoxFit.cover,
+          SizedBox(
+            width: double.infinity,
+            child: Stack(
+              children: [
+                Center(
+                  child: CachedNetworkImage(
+                    height: 180,
+                    width: double.infinity,
+                    imageUrl: medicineData?.image ?? "",
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: Center(
+                          child: LoadingIndicator(
+                        colors: [AppColors.primaryColor],
+                        indicatorType: Indicator.ballScale,
+                        strokeWidth: 1,
+                      )),
                     ),
+                    fit: BoxFit.cover,
                   ),
-                  Obx(() {
-                    String medicineId = medicineData!.id!;
-                    bool isFav = controller.isFavourite(medicineId);
-                    return Positioned(
-                        top: 5,
-                        right: 5,
+                ),
+                Obx(() {
+                  String medicineId = medicineData!.id!;
+                  bool isFav = controller.isFavourite(medicineId);
+                  return Positioned(
+                      top: 5,
+                      right: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 1),
                         child: GestureDetector(
                           onTap: () async {
                             if (controller.firebaseuser == null) {
@@ -261,10 +263,10 @@ class MedicineDetails extends StatelessWidget {
                                   AppIcons.like,
                                   height: 25,
                                 ),
-                        ));
-                  })
-                ],
-              ),
+                        ),
+                      ));
+                })
+              ],
             ),
           ),
           const SizedBox(
@@ -364,13 +366,23 @@ class MedicineDetails extends StatelessWidget {
                   children: [
                     Text(
                       "LE ${medicineData!.medicinePrice ?? "100"}",
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(
+                      style:
+                          Theme.of(context).textTheme.displayMedium!.copyWith(
+                              // decoration: TextDecoration.lineThrough,
                               color: AppColors.darkPrimaryColor,
+                              // AppColors.darkPrimaryColor.withOpacity(0.7),
                               fontFamily: AppFont.fontMedium),
                     ),
+                    // SizedBox(width: 8),
+                    // Text(
+                    //   "LE ${cartController.countDiscount(medicineData!.medicinePrice!, cartController.discountPercentage.value)}",
+                    //   style: Theme.of(context)
+                    //       .textTheme
+                    //       .displayMedium!
+                    //       .copyWith(
+                    //           color: AppColors.darkPrimaryColor,
+                    //           fontFamily: AppFont.fontMedium),
+                    // ),
                     const SizedBox(
                       width: 8,
                     ),
@@ -1049,35 +1061,35 @@ class MedicineDetails extends StatelessWidget {
               width: double.infinity,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: SizedBox(
-              height: 320,
-              child: StreamBuilder(
-                stream: controller.fetchMedicines(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return MedicineShimmer(itemCount: snapshot.data?.length);
-                  } else if (snapshot.hasError) {
-                    return Container(
-                      alignment: Alignment.center,
-                      height: 100,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: AppColors.tilePrimaryColor),
-                      child: Text(
-                        "Error : ${snapshot.error}",
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: AppColors.primaryColor,
-                            fontSize: 13,
-                            fontFamily: AppFont.fontMedium),
-                      ),
-                    );
-                  } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                    List<MedicineData> medicineList = snapshot.data!;
-                    return Column(
-                      children: [
-                        Row(
+          SizedBox(
+            height: 320,
+            child: StreamBuilder(
+              stream: controller.fetchMedicines(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return MedicineShimmer(itemCount: snapshot.data?.length);
+                } else if (snapshot.hasError) {
+                  return Container(
+                    alignment: Alignment.center,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: AppColors.tilePrimaryColor),
+                    child: Text(
+                      "Error : ${snapshot.error}",
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: AppColors.primaryColor,
+                          fontSize: 13,
+                          fontFamily: AppFont.fontMedium),
+                    ),
+                  );
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  List<MedicineData> medicineList = snapshot.data!;
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -1087,14 +1099,12 @@ class MedicineDetails extends StatelessWidget {
                                   .displayMedium!
                                   .copyWith(
                                     color: AppColors.darkPrimaryColor,
-                                    fontFamily: AppFont.fontMedium,
+                                    fontFamily: AppFont.fontSemiBold,
                                     fontSize: 15.5,
                                   ),
                             ),
                             TextButton(
-                                onPressed: () {
-                                  Get.to(() => MedicineScreen());
-                                },
+                                onPressed: () {},
                                 child: Text(
                                   ConstString.viewAll,
                                   style: Theme.of(context)
@@ -1107,36 +1117,36 @@ class MedicineDetails extends StatelessWidget {
                                 ))
                           ],
                         ),
-                        recommendedMedicineList(medicineList),
-                      ],
-                    );
-                  } else {
-                    return Container(
-                      alignment: Alignment.center,
-                      height: 150,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: AppColors.tilePrimaryColor),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(AppIcons.noData, height: 40),
-                          Text(
-                            ConstString.noMedicine,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    color: AppColors.primaryColor,
-                                    fontSize: 14,
-                                    fontFamily: AppFont.fontMedium),
-                          ),
-                        ],
                       ),
-                    );
-                  }
-                },
-              ),
+                      recommendedMedicineList(medicineList),
+                    ],
+                  );
+                } else {
+                  return Container(
+                    alignment: Alignment.center,
+                    height: 150,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: AppColors.tilePrimaryColor),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(AppIcons.noData, height: 40),
+                        Text(
+                          ConstString.noMedicine,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontSize: 14,
+                                  fontFamily: AppFont.fontMedium),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
             ),
           ),
           const SizedBox(
@@ -1156,7 +1166,7 @@ class MedicineDetails extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Get.to(() => MedicineDetails(medicineData: medicineList[index]));
+              // Get.to(() => MedicineDetails(medicineData: medicineList[index]));
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
@@ -1343,7 +1353,9 @@ class MedicineDetails extends StatelessWidget {
                                       await cartController.addToCart(
                                           medicineList[index],
                                           qty: cartController.qty.value);
-                                      Get.to(() => const CartScreen());
+                                      Get.back();
+                                      switchTab(2);
+                                      // Get.to(() => const CartScreen());
                                     },
                                     style: ElevatedButton.styleFrom(
                                         backgroundColor:

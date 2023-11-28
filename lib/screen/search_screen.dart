@@ -56,7 +56,7 @@ class SearchScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 0),
                   child: TextFormField(
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(fontFamily: AppFont.fontRegular),
                     decoration: InputDecoration(
                       filled: true,
                       enabled: true,
@@ -80,7 +80,7 @@ class SearchScreen extends StatelessWidget {
                           .textTheme
                           .titleSmall!
                           .copyWith(
-                              fontFamily: AppFont.fontMedium,
+                              fontFamily: AppFont.fontRegular,
                               fontSize: 14,
                               color: AppColors.skipGrey),
                       border: OutlineInputBorder(

@@ -148,20 +148,19 @@ class ReminderScreen extends StatelessWidget {
           body: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
               children: [weekWidget(), monthWidget(), const yearWidget()]),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 65),
-            child: FloatingActionButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)),
-                backgroundColor: AppColors.primaryColor,
-                onPressed: () {
-                  Get.to(() => AddMedicineScreen());
-                },
-                child: Icon(
-                  Icons.add,
-                  color: AppColors.white,
-                )),
-          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniEndFloat,
+          floatingActionButton: FloatingActionButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
+              backgroundColor: AppColors.primaryColor,
+              onPressed: () {
+                Get.to(() => AddMedicineScreen());
+              },
+              child: Icon(
+                Icons.add,
+                color: AppColors.white,
+              )),
         ));
   }
 }

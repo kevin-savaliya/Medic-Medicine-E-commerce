@@ -36,6 +36,8 @@ class AppImages {
 
 class AppIcons {
   static const String back_icon = 'asset/icons/arrow_left.svg';
+  static const String gallerypng = 'asset/icons/gallery.png';
+  static const String camerapng = 'asset/icons/camera.png';
   static const String verify = 'asset/icons/verify.svg';
   static const String info = 'asset/icons/Info.svg';
   static const String homeIcon = 'asset/icons/home.svg';
@@ -59,6 +61,7 @@ class AppIcons {
   static const String more = 'asset/icons/moreMedic.svg';
   static const String explore = 'asset/icons/explore.svg';
   static const String add = 'asset/icons/addIcon.svg';
+  static const String editProfile = 'asset/icons/editProfile.svg';
   static const String gallery = 'asset/icons/gallery.svg';
   static const String camera = 'asset/icons/camera.svg';
   static const String file = 'asset/icons/fileIcon.svg';
