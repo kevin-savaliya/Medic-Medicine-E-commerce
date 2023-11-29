@@ -74,8 +74,8 @@ class OrderPlacement extends StatelessWidget {
                       showInSnackBar("Please Enter Delivery Address");
                       return;
                     }
-                    // showProgressDialogue(context);
-                    // await cartController.placeOrder();
+                    showProgressDialogue(context);
+                    await cartController.placeOrder();
                     Get.off(() => OrderDetailScreen(
                           orderId: cartController.orderData.value.id,
                           isTrue: false,
@@ -419,7 +419,7 @@ class OrderPlacement extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "${cartController.getTotalQuantity()}",
+                                "LE ${cartController.getSubTotal()}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -551,6 +551,11 @@ class OrderPlacement extends StatelessWidget {
                             child: Container(
                               height: 70,
                               decoration: BoxDecoration(
+                                  color:
+                                      controller.selectedPaymentMethod.value ==
+                                              controller.paymentMethod[index]
+                                          ? AppColors.tilePrimaryColor
+                                          : AppColors.white,
                                   border: Border.all(color: AppColors.lineGrey),
                                   borderRadius: BorderRadius.circular(10)),
                               child: Padding(
@@ -562,6 +567,7 @@ class OrderPlacement extends StatelessWidget {
                                       height: 40,
                                       width: 40,
                                       decoration: BoxDecoration(
+                                          color: AppColors.white,
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           border: Border.all(
@@ -582,9 +588,27 @@ class OrderPlacement extends StatelessWidget {
                                           .textTheme
                                           .titleSmall!
                                           .copyWith(
-                                              color: AppColors.darkPrimaryColor,
-                                              fontFamily: AppFont.fontMedium,
-                                              fontSize: 13),
+                                              color: controller
+                                                          .selectedPaymentMethod
+                                                          .value ==
+                                                      controller
+                                                          .paymentMethod[index]
+                                                  ? AppColors.primaryColor
+                                                  : AppColors.darkPrimaryColor,
+                                              fontFamily: controller
+                                                          .selectedPaymentMethod
+                                                          .value ==
+                                                      controller
+                                                          .paymentMethod[index]
+                                                  ? AppFont.fontSemiBold
+                                                  : AppFont.fontMedium,
+                                              fontSize: controller
+                                                          .selectedPaymentMethod
+                                                          .value ==
+                                                      controller
+                                                          .paymentMethod[index]
+                                                  ? 14
+                                                  : 13),
                                     ),
                                     const Spacer(),
                                     SvgPicture.asset(
@@ -654,7 +678,26 @@ class OrderPlacement extends StatelessWidget {
                       ),
                     );
                   } else {
-                    return const Text("No Prescription Found!");
+                    return Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          Image.asset(AppIcons.noData, height: 50),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "No Prescription Found!",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    fontFamily: AppFont.fontSemiBold,
+                                    color: AppColors.primaryColor),
+                          ),
+                        ],
+                      ),
+                    );
                   }
                 },
               ),

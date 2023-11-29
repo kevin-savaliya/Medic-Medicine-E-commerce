@@ -35,7 +35,7 @@ class OrderDetailScreen extends StatelessWidget {
           backgroundColor: AppColors.white,
           leading: GestureDetector(
             onTap: () {
-              Get.offAll(() => HomeScreen());
+              isTrue! ? Get.back() : Get.offAll(() => HomeScreen());
             },
             child: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -56,7 +56,7 @@ class OrderDetailScreen extends StatelessWidget {
         body: orderDetailWidget(context),
       ),
       onWillPop: () async {
-        Get.offAll(() => HomeScreen());
+        isTrue! ? Get.back() : Get.offAll(() => HomeScreen());
         return true;
       },
     );
@@ -168,7 +168,7 @@ class OrderDetailScreen extends StatelessWidget {
                   height: 15,
                 ),
                 Container(
-                  height: 200,
+                  height: 250,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: AppColors.lineGrey)),
@@ -193,6 +193,36 @@ class OrderDetailScreen extends StatelessWidget {
                               ),
                               Text(
                                 "${orderData.quantity ?? 1} Item",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.darkPrimaryColor,
+                                        fontFamily: AppFont.fontMedium,
+                                        fontSize: 13),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            height: 10,
+                            color: AppColors.lineGrey,
+                            thickness: 1,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                ConstString.cartValue,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall!
+                                    .copyWith(
+                                        color: AppColors.txtGrey,
+                                        fontFamily: AppFont.fontMedium,
+                                        fontSize: 13),
+                              ),
+                              Text(
+                                "LE ${orderData.subTotal ?? 0}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!

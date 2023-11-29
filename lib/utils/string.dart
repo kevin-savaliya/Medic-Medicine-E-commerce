@@ -63,6 +63,7 @@ class ConstString {
   static const String login = "Log in";
   static const String submit = "Submit";
   static const String sendReview = "Send Review";
+  static const String editReview = "Edit Review";
   static const String review = "Review";
   static const String selectMedicine = "Selected Medicine";
   static const String presBy = "Prescribed By";
@@ -123,6 +124,7 @@ class ConstString {
   static const String prescriptions = "Prescriptions";
   static const String preBy = "Prescribed By";
   static const String notification = "Notifications";
+  static const String payment = "Payment Method";
   static const String addAddress = "Add Address";
   static const String savedAddress = "Saved Address";
   static const String saveAddAs = "Save Address as*";
@@ -230,6 +232,5 @@ class ConstString {
   static const String loginToViewFav = "Login to view your favourites";
   static const String deleteAccountDialogue =
       "Do you wish to delete your account?";
-  static const String cancelOrderDialogue =
-      "Do you want to cancel your order?";
+  static const String cancelOrderDialogue = "Do you want to cancel your order?";
 }

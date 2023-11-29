@@ -15,6 +15,7 @@ import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
 import 'package:medic/utils/assets.dart';
 import 'package:medic/utils/string.dart';
+import 'package:medic/utils/utils.dart';
 import 'package:medic/widgets/shimmer_widget.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
@@ -111,7 +112,7 @@ class FavouriteScreen extends StatelessWidget {
                   onTap: () {
                     Get.to(() => MedicineDetails(
                           medicineData: medicineList[index],
-                      switchTab: homeController.pageUpdateOnHomeScreen,
+                          switchTab: homeController.pageUpdateOnHomeScreen,
                         ));
                   },
                   child: Container(
@@ -294,10 +295,19 @@ class FavouriteScreen extends StatelessWidget {
                                     Expanded(
                                       child: ElevatedButton(
                                           onPressed: () async {
-                                            await cartController
-                                                .addToCart(medicineList[index]);
-                                            switchTab(2);
-                                            // Get.to(() => CartScreen());
+                                            if (!cartController
+                                                .checkMedicineInCart(
+                                                    medicineList[index].id!)) {
+                                              await cartController.addToCart(
+                                                  medicineList[index]);
+                                              switchTab(2);
+                                              // Get.to(() => CartScreen());
+                                            } else {
+                                              showInSnackBar(
+                                                  "Medicine already added in cart!",
+                                                  isSuccess: true,
+                                                  title: "The Medic");
+                                            }
                                           },
                                           style: ElevatedButton.styleFrom(
                                               padding:

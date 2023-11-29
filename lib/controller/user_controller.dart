@@ -15,7 +15,7 @@ class UserController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
 
-  final String uId = FirebaseAuth.instance.currentUser!.uid;
+  // final String uId = FirebaseAuth.instance.currentUser!.uid;
   Stream<QuerySnapshot>? dataSnapShot;
 
   Rx<UserModel> get user => _user;
@@ -32,22 +32,22 @@ class UserController extends GetxController {
     super.onInit();
     _fetchUser();
 
-    String uId = this.uId;
-    dataSnapShot = FirebaseFirestore.instance
-        .collection('users')
-        .where('id', isEqualTo: uId)
-        .snapshots();
+    // String uId = this.uId;
+    // dataSnapShot = FirebaseFirestore.instance
+    //     .collection('users')
+    //     .where('id', isEqualTo: uId)
+    //     .snapshots();
 
-    dataSnapShot!.listen((event) {
-      if (event.docs.isNotEmpty) {
-        _user.value = UserModel.fromDocumentSnapshot(event.docs.first);
-        nameController.text = _user.value.name ?? '';
-        emailController.text = _user.value.email ?? '';
-        update();
-      } else {
-        log("No user data found");
-      }
-    });
+    // dataSnapShot!.listen((event) {
+    //   if (event.docs.isNotEmpty) {
+    //     _user.value = UserModel.fromDocumentSnapshot(event.docs.first);
+    //     nameController.text = _user.value.name ?? '';
+    //     emailController.text = _user.value.email ?? '';
+    //     update();
+    //   } else {
+    //     log("No user data found");
+    //   }
+    // });
   }
 
   // fetch current logged in user detail using currentUser.uid from users collection from firestore database

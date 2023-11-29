@@ -82,9 +82,7 @@ class OrderHistory extends StatelessWidget {
             indicatorWeight: 2,
           ),
         ),
-        body: const TabBarView(
-            physics: NeverScrollableScrollPhysics(),
-            children: [CurrentOrder(), PastOrder()]),
+        body: const TabBarView(children: [CurrentOrder(), PastOrder()]),
       ),
     );
   }

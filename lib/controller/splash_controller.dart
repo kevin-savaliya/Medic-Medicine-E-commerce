@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:medic/controller/user_controller.dart';
@@ -12,6 +13,8 @@ import 'package:medic/utils/app_storage.dart';
 class SplashController extends GetxController {
   RxBool isUpdatingData = false.obs;
   RxBool timerCompleted = false.obs;
+
+  UserController userController = Get.put(UserController());
 
   final AppStorage appStorage = AppStorage();
 
@@ -37,7 +40,7 @@ class SplashController extends GetxController {
 
   Future<void> updateUserTokenToFirebase() async {
     // if user is logged in then update token to firebase
-    if (Get.find<UserController>().firebaseUser != null) {
+    if (userController.firebaseUser != null) {
       final String? token = await FirebaseMessaging.instance.getToken();
       if (token != null) {
         try {

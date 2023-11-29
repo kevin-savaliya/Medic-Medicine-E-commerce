@@ -165,7 +165,19 @@ class CartController extends GetxController {
       });
     }
 
+    int currentQty = medicine.quantity ?? 0;
     orderData.value.medicineData ??= [];
+    orderData.value.medicineQuantities ??= {};
+
+    if (orderData.value.medicineQuantities!.containsKey(medicine.id)) {
+      orderData.value.medicineQuantities!
+          .update(medicine.id!, (extQty) => extQty + currentQty);
+    } else {
+      orderData.value.medicineQuantities![medicine.id!] =
+          medicine.quantity ?? 1;
+    }
+
+    // debugPrint("Quantity : ${orderData.value.medicineQuantities}");
 
     MedicineData? existMedicine;
     try {
@@ -178,7 +190,8 @@ class CartController extends GetxController {
     }
 
     if (existMedicine != null) {
-      existMedicine.quantity = (existMedicine.quantity ?? 0) + qty;
+      existMedicine.quantity =
+          (existMedicine.quantity ?? 0) + medicine.quantity!;
     } else {
       orderData.value.medicineData?.add(medicine.copyWith(quantity: qty));
     }
@@ -186,6 +199,14 @@ class CartController extends GetxController {
   }
 
   void incrementQuantity(String medicineId) {
+    orderData.value.medicineQuantities ??= {};
+
+    orderData.value.medicineQuantities!.update(
+      medicineId,
+      (existingQty) => existingQty + 1,
+      ifAbsent: () => 1,
+    );
+
     var updatedMedicines =
         List<MedicineData>.from(orderData.value.medicineData ?? []);
     var medicine = updatedMedicines.firstWhere((m) => m.id == medicineId);
@@ -195,7 +216,35 @@ class CartController extends GetxController {
     update();
   }
 
+  void selectQuantity(String medicineId, int newQty) {
+    orderData.value.medicineQuantities ??= {};
+
+    orderData.value.medicineQuantities!.update(
+      medicineId,
+      (existingQty) => newQty,
+      ifAbsent: () => newQty,
+    );
+
+    var updatedMedicines =
+        List<MedicineData>.from(orderData.value.medicineData ?? []);
+    var medicine = updatedMedicines.firstWhere((m) => m.id == medicineId);
+    medicine.quantity = newQty;
+
+    orderData.value.medicineData = updatedMedicines;
+    update();
+  }
+
   void decrementQuantity(String medicineId) {
+    orderData.value.medicineQuantities ??= {};
+
+    if (orderData.value.medicineQuantities!.containsKey(medicineId) &&
+        orderData.value.medicineQuantities![medicineId]! > 0) {
+      orderData.value.medicineQuantities!.update(
+        medicineId,
+        (existingQty) => existingQty - 1,
+      );
+    }
+
     var updatedMedicines =
         List<MedicineData>.from(orderData.value.medicineData ?? []);
     var medicine = updatedMedicines.firstWhere((m) => m.id == medicineId);
@@ -234,6 +283,19 @@ class CartController extends GetxController {
         .fold(0, (sum, item) => sum + (item.quantity ?? 0));
   }
 
+  double getSubTotal() {
+    if (orderData.value.medicineData == null) {
+      return 0.0;
+    }
+
+    double total = orderData.value.medicineData!.fold(
+        0.0,
+        (sum, item) =>
+            sum + ((item.quantity ?? 0) * item.medicinePrice!.toInt()));
+
+    return total;
+  }
+
   double getTotalPrice(double discountPercentage, RxBool isDiscountValid) {
     if (orderData.value.medicineData == null) {
       return 0.0;
@@ -253,19 +315,10 @@ class CartController extends GetxController {
     double totalAmount = total + shippingFee.toDouble();
     orderData.value.shippingCharge = shippingFee.value;
     orderData.value.totalAmount = totalAmount;
+    orderData.value.subTotal = getSubTotal();
     orderData.value.quantity = getTotalQuantity();
 
     return totalAmount.toPrecision(1);
-  }
-
-  Future<void> _addToCart(MedicineData medicine, [int qty = 2]) async {
-    Map<String, dynamic> medicineQty = medicine.toMap();
-    medicineQty['quantity'] = qty;
-    await cartRef.doc(medicine.id).set(medicineQty);
-  }
-
-  Future<void> _removeFromCart(String medicineId) async {
-    await cartRef.doc(medicineId).delete();
   }
 
   Stream<List<MedicineData>> fetchMedicineFromCart() {
@@ -421,7 +474,9 @@ class CartController extends GetxController {
         totalAmount: orderData.value.totalAmount,
         discountAmount: orderData.value.discountAmount,
         shippingCharge: orderData.value.shippingCharge,
-        quantity: orderData.value.quantity);
+        medicineQuantities: orderData.value.medicineQuantities,
+        quantity: orderData.value.quantity,
+        orderStatus: "Placed");
 
     await orderRef.doc(orderData.value.id).set(_orderData.toMap());
     Get.back();
@@ -430,10 +485,35 @@ class CartController extends GetxController {
     preRequireList.clear();
   }
 
+  Future<double> calculateAverageRating(String medicineId) async {
+    var querySnapshot =
+        await reviewRef.where('medicineId', isEqualTo: medicineId).get();
+
+    double sumRating = 0.0;
+    int count = 0;
+    for (var doc in querySnapshot.docs) {
+      var data = doc.data() as Map<String, dynamic>;
+      var rating = (data['rating'] as num?)?.toDouble() ?? 0.0;
+      sumRating += rating;
+      count++;
+    }
+
+    if (count == 0) return 0.0;
+    return sumRating / count;
+  }
+
+  Future<void> updateMedicineRating(String medicineId) async {
+    double averageRating = await calculateAverageRating(medicineId);
+    String averageRatingStr = averageRating.toStringAsFixed(1);
+
+    await medicineRef.doc(medicineId).update({'ratings': averageRatingStr});
+  }
+
   Future<void> uploadReview(ReviewDataModel review) async {
-    await reviewRef.doc(review.id).set(review.toMap()).then((value) {
+    await reviewRef.doc(review.id).set(review.toMap()).then((value) async {
       Get.back();
       Get.back();
+      await updateMedicineRating(review.medicineId!);
       showInSnackBar("Review Added Successfully",
           isSuccess: true, title: "The Medic");
       rating.value = 0.0;
@@ -448,9 +528,10 @@ class CartController extends GetxController {
   }
 
   Future<void> editReview(ReviewDataModel review) async {
-    await reviewRef.doc(review.id).update(review.toMap()).then((value) {
+    await reviewRef.doc(review.id).update(review.toMap()).then((value) async {
       Get.back();
       Get.back();
+      await updateMedicineRating(review.medicineId!);
       showInSnackBar("Review Updated Successfully",
           isSuccess: true, title: "The Medic");
       rating.value = 0.0;

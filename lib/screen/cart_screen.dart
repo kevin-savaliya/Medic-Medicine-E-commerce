@@ -545,7 +545,7 @@ class CartScreen extends StatelessWidget {
                                         fontSize: 13),
                               ),
                               Text(
-                                "${controller.getTotalQuantity()} Item",
+                                "LE ${controller.getSubTotal()}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!

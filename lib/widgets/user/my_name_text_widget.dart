@@ -21,7 +21,7 @@ class MyNameTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: userController.streamUser(userController.uId),
+      stream: userController.streamUser(userController.currentUserId!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CupertinoActivityIndicator());
@@ -56,7 +56,7 @@ class MyNumberTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: userController.streamUser(userController.uId),
+      stream: userController.streamUser(userController.currentUserId!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CupertinoActivityIndicator());

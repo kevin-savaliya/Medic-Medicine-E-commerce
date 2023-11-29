@@ -336,7 +336,9 @@ class AddReviewScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30))),
               child: Text(
-                ConstString.sendReview,
+                review == null
+                    ? ConstString.sendReview
+                    : ConstString.editReview,
                 style: Theme.of(context).textTheme.displayMedium!.copyWith(
                     color: AppColors.white,
                     fontSize: 15,

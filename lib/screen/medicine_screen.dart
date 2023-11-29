@@ -26,9 +26,9 @@ class MedicineScreen extends StatelessWidget {
   CartController cartController = Get.put(CartController());
   HomeController homeController = Get.put(HomeController());
 
-  final Function(int, [String]) switchTab;
+  final Function(int, [String])? switchTab;
 
-  MedicineScreen(this.switchTab);
+  MedicineScreen({this.switchTab});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class MedicineScreen extends StatelessWidget {
           GestureDetector(
               onTap: () {
                 Get.back();
-                switchTab(2);
+                switchTab!(2);
                 // Get.to(() => CartScreen());
               },
               child: SvgPicture.asset(
@@ -93,7 +93,22 @@ class MedicineScreen extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return GridMedicine(itemCount: snapshot.data?.length);
         } else if (snapshot.hasError) {
-          return Center(child: Text("Error"));
+          return Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: AppColors.tilePrimaryColor),
+            child: Text(
+              "Error : ${snapshot.error}",
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall!
+                  .copyWith(
+                  color: AppColors.primaryColor,
+                  fontSize: 13,
+                  fontFamily: AppFont.fontMedium),
+            ),
+          );
         } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           List<MedicineData> medicineList = snapshot.data!;
           return Padding(
@@ -305,11 +320,20 @@ class MedicineScreen extends StatelessWidget {
                                     Expanded(
                                       child: ElevatedButton(
                                           onPressed: () async {
-                                            await cartController
-                                                .addToCart(medicineList[index]);
-                                            Get.back();
-                                            switchTab(2);
-                                            // Get.to(() => CartScreen());
+                                            if (!cartController
+                                                .checkMedicineInCart(
+                                                    medicineList[index].id!)) {
+                                              await cartController.addToCart(
+                                                  medicineList[index]);
+                                              Get.back();
+                                              switchTab!(2);
+                                              // Get.to(() => CartScreen());
+                                            } else {
+                                              showInSnackBar(
+                                                  "Medicine already added in cart!",
+                                                  isSuccess: true,
+                                                  title: "The Medic");
+                                            }
                                           },
                                           style: ElevatedButton.styleFrom(
                                               padding:

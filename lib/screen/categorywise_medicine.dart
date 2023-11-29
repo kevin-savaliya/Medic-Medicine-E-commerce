@@ -101,7 +101,7 @@ class CategoryWiseMedicine extends StatelessWidget {
                   onTap: () {
                     Get.to(() => MedicineDetails(
                           medicineData: medicineList[index],
-                      switchTab: homeController.pageUpdateOnHomeScreen,
+                          switchTab: homeController.pageUpdateOnHomeScreen,
                         ));
                   },
                   child: Container(
@@ -299,9 +299,18 @@ class CategoryWiseMedicine extends StatelessWidget {
                                     Expanded(
                                       child: ElevatedButton(
                                           onPressed: () async {
-                                            await cartController
-                                                .addToCart(medicineList[index]);
-                                            Get.to(() => CartScreen());
+                                            if (!cartController
+                                                .checkMedicineInCart(
+                                                    medicineList[index].id!)) {
+                                              await cartController.addToCart(
+                                                  medicineList[index]);
+                                              Get.to(() => CartScreen());
+                                            } else {
+                                              showInSnackBar(
+                                                  "Medicine already added in cart!",
+                                                  isSuccess: true,
+                                                  title: "The Medic");
+                                            }
                                           },
                                           style: ElevatedButton.styleFrom(
                                               padding:

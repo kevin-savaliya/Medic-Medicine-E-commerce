@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -102,7 +104,7 @@ class MedicineDetails extends StatelessWidget {
                                 child: TextButton(
                                     onPressed: () {},
                                     child: Text(
-                                      "${cartController.cartQty} item in cart",
+                                      "${cartController.orderData.value.medicineQuantities![medicineData!.id] ?? 1} item in cart",
                                       style: Theme.of(context)
                                           .textTheme
                                           .displayMedium!
@@ -414,6 +416,10 @@ class MedicineDetails extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ExpansionTileCard(
+              onExpansionChanged: (value) {
+                controller.descriptionExpand.value =
+                    !controller.descriptionExpand.value;
+              },
               contentPadding: EdgeInsets.zero,
               baseColor: AppColors.white,
               elevation: 0,
@@ -447,17 +453,26 @@ class MedicineDetails extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              height: 1,
-              color: AppColors.lineGrey,
-              width: double.infinity,
+          Obx(
+            () => Visibility(
+              visible: !controller.descriptionExpand.value,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  height: 1,
+                  color: AppColors.lineGrey,
+                  width: double.infinity,
+                ),
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ExpansionTileCard(
+              onExpansionChanged: (value) {
+                controller.benefitsExpand.value =
+                    !controller.benefitsExpand.value;
+              },
               contentPadding: EdgeInsets.zero,
               baseColor: AppColors.white,
               elevation: 0,
@@ -491,17 +506,25 @@ class MedicineDetails extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              height: 1,
-              color: AppColors.lineGrey,
-              width: double.infinity,
+          Obx(
+            () => Visibility(
+              visible: !controller.benefitsExpand.value,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  height: 1,
+                  color: AppColors.lineGrey,
+                  width: double.infinity,
+                ),
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ExpansionTileCard(
+              onExpansionChanged: (value) {
+                controller.usesExpand.value = !controller.usesExpand.value;
+              },
               contentPadding: EdgeInsets.zero,
               baseColor: AppColors.white,
               elevation: 0,
@@ -535,17 +558,26 @@ class MedicineDetails extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              height: 1,
-              color: AppColors.lineGrey,
-              width: double.infinity,
+          Obx(
+            () => Visibility(
+              visible: !controller.usesExpand.value,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  height: 1,
+                  color: AppColors.lineGrey,
+                  width: double.infinity,
+                ),
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ExpansionTileCard(
+              onExpansionChanged: (value) {
+                controller.directionExpand.value =
+                    !controller.directionExpand.value;
+              },
               contentPadding: EdgeInsets.zero,
               baseColor: AppColors.white,
               elevation: 0,
@@ -579,17 +611,25 @@ class MedicineDetails extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              height: 1,
-              color: AppColors.lineGrey,
-              width: double.infinity,
+          Obx(
+            () => Visibility(
+              visible: !controller.directionExpand.value,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  height: 1,
+                  color: AppColors.lineGrey,
+                  width: double.infinity,
+                ),
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ExpansionTileCard(
+              onExpansionChanged: (value) {
+                controller.safetyExpand.value = !controller.safetyExpand.value;
+              },
               contentPadding: EdgeInsets.zero,
               baseColor: AppColors.white,
               elevation: 0,
@@ -623,17 +663,25 @@ class MedicineDetails extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              height: 1,
-              color: AppColors.lineGrey,
-              width: double.infinity,
+          Obx(
+            () => Visibility(
+              visible: !controller.safetyExpand.value,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  height: 1,
+                  color: AppColors.lineGrey,
+                  width: double.infinity,
+                ),
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ExpansionTileCard(
+              onExpansionChanged: (value) {
+                controller.faqExpand.value = !controller.faqExpand.value;
+              },
               contentPadding: EdgeInsets.zero,
               baseColor: AppColors.white,
               elevation: 0,
@@ -736,14 +784,35 @@ class MedicineDetails extends StatelessWidget {
                           const SizedBox(
                             height: 5,
                           ),
-                          Text(
-                            "12345",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                    fontSize: 12,
-                                    fontFamily: AppFont.fontMedium),
+                          FutureBuilder(
+                            future: controller
+                                .fetchTotalReviewCount(medicineData!.id!),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CupertinoActivityIndicator();
+                              } else if (snapshot.hasData) {
+                                return Text(
+                                  "${snapshot.data ?? 0}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(
+                                          fontSize: 12,
+                                          fontFamily: AppFont.fontMedium),
+                                );
+                              } else {
+                                return Text(
+                                  "0",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(
+                                          fontSize: 12,
+                                          fontFamily: AppFont.fontMedium),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),
@@ -1104,7 +1173,9 @@ class MedicineDetails extends StatelessWidget {
                                   ),
                             ),
                             TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Get.to(() => MedicineScreen());
+                                },
                                 child: Text(
                                   ConstString.viewAll,
                                   style: Theme.of(context)
@@ -1166,7 +1237,10 @@ class MedicineDetails extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              // Get.to(() => MedicineDetails(medicineData: medicineList[index]));
+              Get.to(() => MedicineDetails(
+                    medicineData: medicineList[index],
+                    switchTab: switchTab(2),
+                  ));
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
@@ -1350,12 +1424,20 @@ class MedicineDetails extends StatelessWidget {
                               Expanded(
                                 child: ElevatedButton(
                                     onPressed: () async {
-                                      await cartController.addToCart(
+                                      if (!cartController.checkMedicineInCart(
+                                          medicineList[index].id!)) {
+                                        await cartController.addToCart(
                                           medicineList[index],
-                                          qty: cartController.qty.value);
-                                      Get.back();
-                                      switchTab(2);
-                                      // Get.to(() => const CartScreen());
+                                        );
+                                        Get.back();
+                                        switchTab(2);
+                                        // Get.to(() => const CartScreen());
+                                      } else {
+                                        showInSnackBar(
+                                            "Medicine already added in cart!",
+                                            isSuccess: true,
+                                            title: "The Medic");
+                                      }
                                     },
                                     style: ElevatedButton.styleFrom(
                                         backgroundColor:
@@ -1403,13 +1485,14 @@ class MedicineDetails extends StatelessWidget {
         position: PopupMenuPosition.under,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         onSelected: (int value) {
-          cartController.cartQty.value = value;
-          var updatedMedicines = List<MedicineData>.from(
-              cartController.orderData.value.medicineData ?? []);
-          var medicine =
-              updatedMedicines.firstWhere((m) => m.id == medicineData!.id);
-          medicine.quantity = value;
-          cartController.orderData.value.medicineData = updatedMedicines;
+          // cartController.cartQty.value = value;
+          // var updatedMedicines = List<MedicineData>.from(
+          //     cartController.orderData.value.medicineData ?? []);
+          // var medicine =
+          //     updatedMedicines.firstWhere((m) => m.id == medicineData!.id);
+          // medicine.quantity = value;
+          // cartController.orderData.value.medicineData = updatedMedicines;
+          cartController.selectQuantity(medicineData!.id!, value);
         },
         itemBuilder: (BuildContext context) {
           return List.generate(5, (index) {
@@ -1424,7 +1507,7 @@ class MedicineDetails extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              'Qty  ${cartController.cartQty}',
+              'Qty  ${cartController.orderData.value.medicineQuantities![medicineData!.id] ?? 1}',
               style: Theme.of(context)
                   .textTheme
                   .titleMedium!
@@ -1446,8 +1529,9 @@ class MedicineDetails extends StatelessWidget {
   ElevatedButton addToCartButton(BuildContext context) {
     return ElevatedButton(
         onPressed: () async {
-          await cartController.addToCart(medicineData!,
-              qty: cartController.qty.value);
+          await cartController.addToCart(
+            medicineData!,
+          );
         },
         style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 10),

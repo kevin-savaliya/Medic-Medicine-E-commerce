@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medic/_dart/_init.dart';
 import 'package:medic/model/user_model.dart';
+import 'package:medic/screen/cards_screen.dart';
 import 'package:medic/screen/edit_profile.dart';
 import 'package:medic/screen/myaddress_screen.dart';
 import 'package:medic/screen/notification_screen.dart';
@@ -43,6 +44,47 @@ class ProfileScreen extends StatelessWidget {
                 .copyWith(fontFamily: AppFont.fontBold)),
         elevation: 1.5,
         shadowColor: AppColors.txtGrey.withOpacity(0.2),
+        actions: [
+          Visibility(
+            visible: _authController.appStorage.getUserData() != null,
+            child: IconButton(
+                onPressed: () {
+                  {
+                    bool isUserLoggedIn =
+                        _authController.appStorage.getUserData() != null;
+                    if (isUserLoggedIn) {
+                      deleteDialogue(context, () async {
+                        Get.back();
+                        progressDialogue(title: "Delete Account");
+                        bool hasInternet = await Utils.hasInternetConnection();
+                        if (!hasInternet) {
+                          showInSnackBar(ConstString.noConnection);
+                          return;
+                        }
+
+                        await deleteUserFirestoreData();
+                        Get.back();
+                        Get.offAll(() => const PhoneLoginScreen());
+                        return;
+                      });
+                      /*
+                      await deleteAccountDialogue(context, _authController, (bool value) async {
+                        if (value) {
+                          showProgressDialogue(context);
+                          await _authController.signOut();
+                          Get.offAll(() => const PhoneLoginScreen());
+                        }
+                      });*/
+                    }
+                  }
+                },
+                icon: SvgPicture.asset(
+                  AppIcons.delete,
+                  height: 21,
+                  color: AppColors.red,
+                )),
+          )
+        ],
       ),
       body: Stack(
         children: [
@@ -146,7 +188,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget profileWidget(BuildContext context) {
     return StreamBuilder(
-      stream: controller.streamUser(controller.uId),
+      stream: controller.streamUser(controller.currentUserId!),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -166,8 +208,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Stack(
                     children: [
-                      user.profilePicture!.isNotEmpty &&
-                              user.profilePicture != ""
+                      user.profilePicture != "" && user.profilePicture != null
                           ? ClipOval(
                               child: CachedNetworkImage(
                                 fit: BoxFit.cover,
@@ -251,7 +292,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                     child: Container(
                       height: 1,
                       width: double.infinity,
@@ -282,7 +323,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                     child: Container(
                       height: 1,
                       width: double.infinity,
@@ -316,7 +357,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                     child: Container(
                       height: 1,
                       width: double.infinity,
@@ -351,7 +392,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                     child: Container(
                       height: 1,
                       width: double.infinity,
@@ -385,7 +426,38 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+                    child: Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: AppColors.lineGrey,
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Get.to(() => CardsScreen());
+                    },
+                    horizontalTitleGap: 5,
+                    leading: SvgPicture.asset(
+                      AppIcons.creditCard,
+                      height: 21,
+                      color: AppColors.txtGrey,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 15,
+                      color: AppColors.txtGrey,
+                    ),
+                    title: Text(
+                      ConstString.payment,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontFamily: AppFont.fontBold,
+                          color: AppColors.txtGrey),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
                     child: Container(
                       height: 1,
                       width: double.infinity,
@@ -418,67 +490,67 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Visibility(
-                    visible: _authController.appStorage.getUserData() != null,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
-                      child: Container(
-                        height: 1,
-                        width: double.infinity,
-                        color: AppColors.lineGrey,
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: _authController.appStorage.getUserData() != null,
-                    child: ListTile(
-                      onTap: () async {
-                        bool isUserLoggedIn =
-                            _authController.appStorage.getUserData() != null;
-                        if (isUserLoggedIn) {
-                          deleteDialogue(context, () async {
-                            Get.back();
-                            progressDialogue(title: "Delete Account");
-                            bool hasInternet =
-                                await Utils.hasInternetConnection();
-                            if (!hasInternet) {
-                              showInSnackBar(ConstString.noConnection);
-                              return;
-                            }
-
-                            await deleteUserFirestoreData();
-                            Get.back();
-                            Get.offAll(() => const PhoneLoginScreen());
-                            return;
-                          });
-                          /*
-                    await deleteAccountDialogue(context, _authController, (bool value) async {
-                      if (value) {
-                        showProgressDialogue(context);
-                        await _authController.signOut();
-                        Get.offAll(() => const PhoneLoginScreen());
-                      }
-                    });*/
-                        }
-                      },
-                      horizontalTitleGap: 5,
-                      leading: SvgPicture.asset(
-                        AppIcons.delete,
-                        height: 21,
-                        color: AppColors.red,
-                      ),
-                      title: Text(
-                        ConstString.deleteAccount,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(
-                                fontFamily: AppFont.fontBold,
-                                color: AppColors.red),
-                      ),
-                    ),
-                  ),
+                  // Visibility(
+                  //   visible: _authController.appStorage.getUserData() != null,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: 20, vertical: 5),
+                  //     child: Container(
+                  //       height: 1,
+                  //       width: double.infinity,
+                  //       color: AppColors.lineGrey,
+                  //     ),
+                  //   ),
+                  // ),
+                  // Visibility(
+                  //   visible: _authController.appStorage.getUserData() != null,
+                  //   child: ListTile(
+                  //     onTap: () async {
+                  //       bool isUserLoggedIn =
+                  //           _authController.appStorage.getUserData() != null;
+                  //       if (isUserLoggedIn) {
+                  //         deleteDialogue(context, () async {
+                  //           Get.back();
+                  //           progressDialogue(title: "Delete Account");
+                  //           bool hasInternet =
+                  //               await Utils.hasInternetConnection();
+                  //           if (!hasInternet) {
+                  //             showInSnackBar(ConstString.noConnection);
+                  //             return;
+                  //           }
+                  //
+                  //           await deleteUserFirestoreData();
+                  //           Get.back();
+                  //           Get.offAll(() => const PhoneLoginScreen());
+                  //           return;
+                  //         });
+                  //         /*
+                  //   await deleteAccountDialogue(context, _authController, (bool value) async {
+                  //     if (value) {
+                  //       showProgressDialogue(context);
+                  //       await _authController.signOut();
+                  //       Get.offAll(() => const PhoneLoginScreen());
+                  //     }
+                  //   });*/
+                  //       }
+                  //     },
+                  //     horizontalTitleGap: 5,
+                  //     leading: SvgPicture.asset(
+                  //       AppIcons.delete,
+                  //       height: 21,
+                  //       color: AppColors.red,
+                  //     ),
+                  //     title: Text(
+                  //       ConstString.deleteAccount,
+                  //       style: Theme.of(context)
+                  //           .textTheme
+                  //           .titleMedium!
+                  //           .copyWith(
+                  //               fontFamily: AppFont.fontBold,
+                  //               color: AppColors.red),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

@@ -463,7 +463,7 @@ class HomeScreen extends StatelessWidget {
                           child: ListView.builder(
                             physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
-                            itemCount: medicinelist.length,
+                            itemCount: 6,
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () {
@@ -567,8 +567,8 @@ class HomeScreen extends StatelessWidget {
                   ),
                   TextButton(
                       onPressed: () {
-                        Get.to(() =>
-                            MedicineScreen(controller.pageUpdateOnHomeScreen));
+                        Get.to(() => MedicineScreen(
+                            switchTab: controller.pageUpdateOnHomeScreen));
                       },
                       child: Text(
                         ConstString.viewAll,
@@ -841,14 +841,27 @@ class HomeScreen extends StatelessWidget {
                                                   Expanded(
                                                     child: ElevatedButton(
                                                         onPressed: () async {
-                                                          await _addToCart(
-                                                              cartController,
-                                                              medicineList
-                                                                  .elementAt(
-                                                                      index));
-                                                          await switchTab(2);
-                                                          // await Get.to(() =>
-                                                          //     const CartScreen());
+                                                          if (!cartController
+                                                              .checkMedicineInCart(
+                                                                  medicineList[
+                                                                          index]
+                                                                      .id!)) {
+                                                            await _addToCart(
+                                                                cartController,
+                                                                medicineList
+                                                                    .elementAt(
+                                                                        index));
+                                                            await switchTab(2);
+                                                            // await Get.to(() =>
+                                                            //     const CartScreen());
+                                                          } else {
+                                                            showInSnackBar(
+                                                                "Medicine already added in cart!",
+                                                                title:
+                                                                    "The Medic",
+                                                                isSuccess:
+                                                                    true);
+                                                          }
                                                         },
                                                         style: ElevatedButton.styleFrom(
                                                             backgroundColor:

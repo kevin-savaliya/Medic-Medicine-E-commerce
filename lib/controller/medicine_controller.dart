@@ -38,6 +38,13 @@ class MedicineController extends GetxController {
 
   final firebaseuser = FirebaseAuth.instance.currentUser;
 
+  RxBool descriptionExpand = false.obs;
+  RxBool benefitsExpand = false.obs;
+  RxBool usesExpand = false.obs;
+  RxBool directionExpand = false.obs;
+  RxBool safetyExpand = false.obs;
+  RxBool faqExpand = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -122,10 +129,7 @@ class MedicineController extends GetxController {
   }
 
   Stream<List<MedicineData>> fetchPopularMedicines() {
-    var data = medicineRef
-        .where('ratings', isGreaterThanOrEqualTo: '3.5')
-        .snapshots()
-        .map((event) {
+    var data = medicineRef.where('ratings').snapshots().map((event) {
       return event.docs.map((e) {
         return MedicineData.fromMap(e.data() as Map<String, dynamic>);
       }).toList();
@@ -282,5 +286,11 @@ class MedicineController extends GetxController {
 
       return ratingCounts;
     });
+  }
+
+  Future<int> fetchTotalReviewCount(String medicineId) async {
+    var reviewsCollection = FirebaseFirestore.instance.collection('reviews');
+    var querySnapshot = await reviewsCollection.where('medicineId', isEqualTo: medicineId).get();
+    return querySnapshot.docs.length; // Count of reviews
   }
 }

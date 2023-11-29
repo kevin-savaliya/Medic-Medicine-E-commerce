@@ -22,12 +22,14 @@ class OrderData {
   UserModel? userModel;
   UserAddress? userAddress;
   ReviewData? reviewData;
+  Map<String, int>? medicineQuantities;
   PrescriptionData? prescriptionData;
   List<MedicineData>? medicineData;
   DiscountDataModel? discountData;
   CategoryData? categoryData;
   DateTime? orderDate;
   double? totalAmount;
+  double? subTotal;
   double? shippingCharge;
   double? discountAmount;
   int? quantity;
@@ -45,12 +47,14 @@ class OrderData {
     this.userModel,
     this.userAddress,
     this.reviewData,
+    this.medicineQuantities,
     this.prescriptionData,
     this.medicineData,
     this.discountData,
     this.categoryData,
     this.orderDate,
     this.totalAmount,
+    this.subTotal,
     this.shippingCharge,
     this.discountAmount,
     this.quantity,
@@ -69,12 +73,14 @@ class OrderData {
     UserModel? userModel,
     UserAddress? userAddress,
     ReviewData? reviewData,
+    Map<String, int>? medicineQuantities,
     PrescriptionData? prescriptionData,
     MedicineData? medicineData,
     DiscountDataModel? discountData,
     CategoryData? categoryData,
     DateTime? orderDate,
     double? totalAmount,
+    double? subTotal,
     double? shippingCharge,
     double? discountAmount,
     int? quantity,
@@ -92,6 +98,7 @@ class OrderData {
       userModel: userModel ?? this.userModel,
       userAddress: userAddress ?? this.userAddress,
       reviewData: reviewData ?? this.reviewData,
+      medicineQuantities: medicineQuantities ?? this.medicineQuantities,
       prescriptionData: prescriptionData ?? this.prescriptionData,
       medicineData: medicineData != null
           ? List<MedicineData>.from(medicineData as Iterable)
@@ -100,6 +107,7 @@ class OrderData {
       categoryData: categoryData ?? this.categoryData,
       orderDate: orderDate ?? this.orderDate,
       totalAmount: totalAmount ?? this.totalAmount,
+      subTotal: subTotal ?? this.subTotal,
       shippingCharge: shippingCharge ?? this.shippingCharge,
       discountAmount: discountAmount ?? this.discountAmount,
       quantity: quantity ?? this.quantity,
@@ -119,31 +127,27 @@ class OrderData {
       'categoryId': categoryId,
       'orderDate': orderDate,
       'totalAmount': totalAmount,
+      'subTotal': subTotal,
       'shippingCharge': shippingCharge,
       'discountAmount': discountAmount,
       'quantity': quantity,
+      'medicineQuantities': medicineQuantities,
       'orderStatus': orderStatus,
     };
   }
-
-  // factory OrderData.fromMap(Map<String, dynamic> map) {
-  //   return OrderData(
-  //     id: map['id'],
-  //     creatorId: map['creatorId'],
-  //     addressId: map['addressId'],
-  //     reviewId: map['reviewId'],
-  //     prescriptionId: map['prescriptionId'],
-  //     medicineId: map['medicineId'],
-  //     discountId: map['discountId'],
-  //     categoryId: map['categoryId'],
-  //   );
-  // }
 
   factory OrderData.fromMap(Map<String, dynamic> map) {
     Map<String, dynamic> rawMedicineId = map['medicineId'] ?? {};
     Map<String, String> parsedMedicineId = rawMedicineId.map((key, value) {
       return MapEntry<String, String>(key, value.toString());
     });
+    Map<String, int> medicineQuantities = {};
+    if (map['medicineQuantities'] != null) {
+      var rawQuantities = map['medicineQuantities'] as Map<String, dynamic>;
+      rawQuantities.forEach((key, dynamic value) {
+        medicineQuantities[key] = (value is int) ? value : 0;
+      });
+    }
 
     return OrderData(
       id: map['id'],
@@ -158,9 +162,11 @@ class OrderData {
           ? FirebaseUtils.timestampToDateTime(map['orderDate'])
           : null,
       totalAmount: map['totalAmount'],
+      subTotal: map['subTotal'],
       shippingCharge: map['shippingCharge'],
       discountAmount: map['discountAmount'],
       quantity: map['quantity'],
+      medicineQuantities: medicineQuantities,
       orderStatus: map['orderStatus'],
     );
   }
