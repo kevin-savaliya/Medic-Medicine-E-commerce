@@ -1,20 +1,16 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:medic/controller/auth_controller.dart';
 import 'package:medic/controller/cart_controller.dart';
 import 'package:medic/controller/home_controller.dart';
 import 'package:medic/controller/medicine_controller.dart';
 import 'package:medic/model/category_data.dart';
 import 'package:medic/model/medicine_data.dart';
-import 'package:medic/screen/add_review_screen.dart';
 import 'package:medic/screen/cart_screen.dart';
 import 'package:medic/screen/categorywise_medicine.dart';
 import 'package:medic/screen/favourite_screen.dart';
@@ -123,7 +119,19 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(5.0),
                     child: SvgPicture.asset(AppIcons.notification),
                   ))
-              : const SizedBox()
+              : const SizedBox(),
+          IconButton(
+              icon: const Icon(
+                Icons.ads_click_outlined,
+                color: Colors.red,
+              ),
+              onPressed: () {
+                controller.interstitialAdCreator?.showInterstitialAd(
+                    successCallback: () {
+                  Get.back();
+                  // navigate to new screen here.
+                });
+              }),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
@@ -180,7 +188,7 @@ class HomeScreen extends StatelessWidget {
             )
           : const SizedBox(),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             Padding(
@@ -302,7 +310,7 @@ class HomeScreen extends StatelessWidget {
                           List<CategoryData>? categoryList = snapshot.data!;
 
                           return ListView.builder(
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemCount: 6,
                             itemBuilder: (context, index) {
@@ -461,7 +469,7 @@ class HomeScreen extends StatelessWidget {
                         return SizedBox(
                           height: 130,
                           child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemCount: 6,
                             itemBuilder: (context, index) {
@@ -549,7 +557,7 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Padding(
@@ -616,7 +624,7 @@ class HomeScreen extends StatelessWidget {
                         return SizedBox(
                           height: 260,
                           child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             scrollDirection: Axis.horizontal,
                             itemCount: 4,
                             itemBuilder: (context, index) {
@@ -951,7 +959,7 @@ class HomeScreen extends StatelessWidget {
               "Ready to Get Started? \nConfirm with 'Yes' and Login Your Account.",
           onPressed: () {
             Get.back();
-            Get.to(() => PhoneLoginScreen());
+            Get.to(() => const PhoneLoginScreen());
           });
       return;
     }

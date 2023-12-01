@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medic/ad_services/interstitial_ad_creator.dart';
 import 'package:medic/model/user_model.dart';
 import 'package:medic/theme/colors.dart';
 import 'package:medic/utils/app_font.dart';
@@ -29,12 +30,21 @@ class HomeController extends GetxController {
 
   // Rx<UserModel?> loggedInUser = Rx<UserModel?>(null);
 
+  InterstitialAdCreator? interstitialAdCreator;
+
   @override
   void onInit() {
     super.onInit();
     _fetchUser();
     fetchUser();
     checkUserNameExistOrNot();
+    getInterstitialAdInstance('ca-app-pub-3940256099942544/1033173712',
+        loadedCallback: (InterstitialAdCreator instance) {
+      log('InterstitialAd loaded');
+      interstitialAdCreator = instance;
+    }, loadFailCallback: () {
+      log('InterstitialAd load fail');
+    });
   }
 
   Future<void> _fetchUser({
