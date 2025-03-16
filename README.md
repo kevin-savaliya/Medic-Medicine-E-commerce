@@ -40,14 +40,9 @@ Medic is a Flutter-based e-commerce application that streamlines the online purc
 
 ## 🛠 Tech Stack  
 - **Framework:** Flutter (Dart)  
-- **Backend:** Firebase / Node.js  
-- **Database:** Firestore / MySQL  
+- **Backend:** Firebase
+- **Database:** Firestore 
 - **Payment Gateway:** Razorpay / Stripe  
-
----
-
-## 📸 Screenshots  
-(Include screenshots of your app here)
 
 ---
 
