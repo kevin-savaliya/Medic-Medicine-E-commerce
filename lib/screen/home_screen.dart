@@ -129,7 +129,6 @@ class HomeScreen extends StatelessWidget {
                 controller.interstitialAdCreator?.showInterstitialAd(
                     successCallback: () {
                   Get.back();
-                  // navigate to new screen here.
                 });
               }),
         ],
